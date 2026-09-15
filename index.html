@@ -34,6 +34,9 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .difficulty-row{display:flex;flex-direction:column;gap:10px;margin-bottom:15px;}
 .difficulty-row button{padding:12px 20px;font-size:16px;border:2px solid var(--cell-bg);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;margin-top:0;}
 .difficulty-row button.active{background:var(--accent);border-color:var(--accent);color:#e0e0e0;}
+.leader-tabs{display:flex;gap:5px;margin-bottom:15px;justify-content:center;flex-wrap:wrap;}
+.leader-tabs button{padding:8px 14px;font-size:14px;border:2px solid var(--cell-bg);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;margin-top:0;}
+.leader-tabs button.active{background:var(--accent);border-color:var(--accent);color:#e0e0e0;}
 .nick-input-row{display:flex;gap:10px;margin-bottom:20px;}
 .nick-input-row input{flex:1;padding:10px 15px;font-size:16px;border:2px solid var(--cell-bg);border-radius:8px;background:var(--bg);color:var(--text);outline:none;min-width:0;}
 .nick-input-row button{padding:10px 20px;font-size:16px;border:none;border-radius:8px;background:var(--cell-bg);color:#e0e0e0;cursor:pointer;margin-top:0;}
@@ -80,7 +83,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div id="board"></div>
 <button id="reset">Новая игра</button>
 
-<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button></div><button id="menu-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats">📊 Статистика игрока</button></div><button id="menu-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="stats-modal"><div class="modal"><h2>Статистика</h2><div class="stats-row"><div><span class="num win-color" id="stats-win">0</span><span class="label">Победы</span></div><div><span class="num lose-color" id="stats-lose">0</span><span class="label">Проигрыши</span></div><div><span class="num draw-color" id="stats-draw">0</span><span class="label">Ничьи</span></div></div><button id="stats-close">Закрыть</button></div></div>
 
@@ -97,6 +100,17 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div id="nick-status"></div>
 <button id="nick-close">Закрыть</button>
 </div></div>
+
+<div class="modal-overlay" id="leaders-modal"><div class="modal"><h2>🏆 Таблица лидеров</h2>
+<div class="leader-tabs" id="leader-tabs">
+<button data-lvl="easy">Легко</button>
+<button data-lvl="medium">Средне</button>
+<button data-lvl="hard" class="active">Сложно</button>
+</div>
+<div id="leaders-list" style="text-align:left;margin-bottom:15px;font-size:16px;"></div>
+<button id="leaders-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="player-stats-modal"><div class="modal"><h2>📊 Статистика игрока</h2><div class="nick-input-row"><input type="text" id="stats-nickname" placeholder="Введите ник" maxlength="15"><button id="stats-load">Показать</button></div><div id="player-stats-result" style="text-align:left;margin-bottom:15px;font-size:16px;"></div><button id="player-stats-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="modal"><div class="modal"><span class="emoji" id="modal-emoji">😢</span><h2 id="modal-text">Вы проиграли!</h2><button id="modal-close">Закрыть</button></div></div>
 
@@ -118,6 +132,8 @@ const menuSettings=document.getElementById('menu-settings');
 const menuDifficulty=document.getElementById('menu-difficulty');
 const menuMode=document.getElementById('menu-mode');
 const menuNick=document.getElementById('menu-nick');
+const menuLeaders=document.getElementById('menu-leaders');
+const menuPlayerStats=document.getElementById('menu-player-stats');
 const menuClose=document.getElementById('menu-close');
 const nickModal=document.getElementById('nick-modal');
 const nicknameInput=document.getElementById('nickname');
@@ -140,6 +156,15 @@ const modeModal=document.getElementById('mode-modal');
 const modeBotBtn=document.getElementById('mode-bot');
 const modeFriendBtn=document.getElementById('mode-friend');
 const modeClose=document.getElementById('mode-close');
+const leadersModal=document.getElementById('leaders-modal');
+const leadersList=document.getElementById('leaders-list');
+const leaderTabs=document.getElementById('leader-tabs');
+const leadersClose=document.getElementById('leaders-close');
+const playerStatsModal=document.getElementById('player-stats-modal');
+const statsNickname=document.getElementById('stats-nickname');
+const statsLoad=document.getElementById('stats-load');
+const playerStatsResult=document.getElementById('player-stats-result');
+const playerStatsClose=document.getElementById('player-stats-close');
 const modal=document.getElementById('modal');
 const modalText=document.getElementById('modal-text');
 const modalEmoji=document.getElementById('modal-emoji');
@@ -155,6 +180,7 @@ let vsBot=true;
 let difficulty="hard";
 let soundOn=true;
 let scoreX=0,scoreO=0,scoreDraw=0;
+let currentLeaderLevel="hard";
 
 const winCombos=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
@@ -165,6 +191,36 @@ function playWin(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[52
 function playLose(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[392,330,262].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.15+.25);o.stop(ctx.currentTime+i*.15+.25);});}
 function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6'];for(let i=0;i<50;i++){const cf=document.createElement('div');cf.classList.add('confetti');cf.style.left=Math.random()*100+'vw';cf.style.background=colors[Math.floor(Math.random()*colors.length)];cf.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(cf);setTimeout(()=>cf.remove(),2500);}}
 function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
+
+function isAdmin(){
+    const nick=localStorage.getItem('tictactoe_nick');
+    return nick && nick.toLowerCase()==='admin';
+}
+
+function saveStats(result){
+    if(!vsBot) return; // статистика только для игры с ботом
+    const nick=localStorage.getItem('tictactoe_nick');
+    if(!nick)return;
+    const ref=database.ref('stats/'+difficulty+'/'+nick.toLowerCase());
+    ref.once('value',s=>{
+        let d=s.val()||{wins:0,losses:0,draws:0};
+        if(result==='win')d.wins=(d.wins||0)+1;
+        if(result==='lose')d.losses=(d.losses||0)+1;
+        if(result==='draw')d.draws=(d.draws||0)+1;
+        ref.set(d);
+    });
+}
+
+function loadLeaders(level){
+    database.ref('stats/'+level).once('value',s=>{
+        const data=s.val()||{};
+        const arr=Object.keys(data).map(k=>({nick:k,...data[k]}));
+        arr.sort((a,b)=>(b.wins||0)-(a.wins||0));
+        arr.splice(20);
+        if(arr.length===0){leadersList.innerHTML='Пока нет данных';}
+        else{leadersList.innerHTML=arr.map((p,i)=>`${i+1}. <b>${p.nick}</b> — 🏆 ${p.wins||0} | 💀 ${p.losses||0} | 🤝 ${p.draws||0}`).join('<br>');}
+    });
+}
 
 themeToggle.addEventListener('click',()=>{document.body.classList.toggle('light');const l=document.body.classList.contains('light');themeToggle.textContent=l?'☀️ Тема':'🌙 Тема';});
 soundToggle.addEventListener('click',()=>{soundOn=!soundOn;soundToggle.textContent=soundOn?'🔊 Звук':'🔇 Звук';});
@@ -177,12 +233,54 @@ menuDifficulty.addEventListener('click',()=>{menuModal.classList.remove('active'
 menuMode.addEventListener('click',()=>{menuModal.classList.remove('active');modeModal.classList.add('active');});
 menuNick.addEventListener('click',()=>{menuModal.classList.remove('active');nickModal.classList.add('active');});
 
+menuLeaders.addEventListener('click',()=>{
+    menuModal.classList.remove('active');
+    if(!isAdmin()){alert('Доступ только для администратора');return;}
+    currentLeaderLevel="hard";
+    leaderTabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b.dataset.lvl==='hard'));
+    loadLeaders('hard');
+    leadersModal.classList.add('active');
+});
+
+leaderTabs.addEventListener('click',e=>{
+    if(e.target.tagName==='BUTTON' && e.target.dataset.lvl){
+        currentLeaderLevel=e.target.dataset.lvl;
+        leaderTabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+        e.target.classList.add('active');
+        loadLeaders(currentLeaderLevel);
+    }
+});
+
+menuPlayerStats.addEventListener('click',()=>{
+    menuModal.classList.remove('active');
+    if(!isAdmin()){alert('Доступ только для администратора');return;}
+    statsNickname.value='';
+    playerStatsResult.innerHTML='';
+    playerStatsModal.classList.add('active');
+});
+
+statsLoad.addEventListener('click',()=>{
+    const n=statsNickname.value.trim().toLowerCase();
+    if(!n)return;
+    database.ref('stats').once('value',s=>{
+        const all=s.val()||{};
+        let html=`<b>${n}</b><br>`;
+        ['easy','medium','hard'].forEach(lvl=>{
+            const d=(all[lvl] && all[lvl][n]) ? all[lvl][n] : {wins:0,losses:0,draws:0};
+            html+=`<br><b>${lvl==='easy'?'Легко':lvl==='medium'?'Средне':'Сложно'}:</b> 🏆 ${d.wins||0} | 💀 ${d.losses||0} | 🤝 ${d.draws||0}`;
+        });
+        playerStatsResult.innerHTML=html;
+    });
+});
+
 nickClose.addEventListener('click',()=>nickModal.classList.remove('active'));
 statsClose.addEventListener('click',()=>statsModal.classList.remove('active'));
 settingsClose.addEventListener('click',()=>settingsModal.classList.remove('active'));
 difficultyClose.addEventListener('click',()=>difficultyModal.classList.remove('active'));
 modeClose.addEventListener('click',()=>modeModal.classList.remove('active'));
 modalClose.addEventListener('click',()=>modal.classList.remove('active'));
+leadersClose.addEventListener('click',()=>leadersModal.classList.remove('active'));
+playerStatsClose.addEventListener('click',()=>playerStatsModal.classList.remove('active'));
 nickDisplay.addEventListener('click',()=>nickModal.classList.add('active'));
 
 function checkAndSaveNickname(){
@@ -227,11 +325,7 @@ saveNickBtn.addEventListener('click',checkAndSaveNickname);
 
 function loadNickname(){
     const s=localStorage.getItem('tictactoe_nick');
-    if(s){
-        nicknameInput.value=s;
-        playerNameEl.textContent=s;
-        playerNameScoreEl.textContent=s;
-    }
+    if(s){nicknameInput.value=s;playerNameEl.textContent=s;playerNameScoreEl.textContent=s;}
     setTimeout(()=>nickModal.classList.add('active'),500);
 }
 
@@ -248,9 +342,9 @@ function isFull(){return board.every(c=>c!=="");}
 function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
 function highlightWin(p){const c=getWinCombo(p);if(c)c.forEach(i=>{document.querySelectorAll('.cell')[i].classList.add(p==="O"?"lose":"win");});}
 
-function handleClick(i){if(board[i]!==""||gameOver)return;playClick();board[i]=currentPlayer;updateUI();if(checkWin(currentPlayer)){gameOver=true;highlightWin(currentPlayer);if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉","win");}else{scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢","lose");}return;}if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");return;}currentPlayer=currentPlayer==="X"?"O":"X";if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();setTimeout(botMove,300);}else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}}
+function handleClick(i){if(board[i]!==""||gameOver)return;playClick();board[i]=currentPlayer;updateUI();if(checkWin(currentPlayer)){gameOver=true;highlightWin(currentPlayer);if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉","win");saveStats('win');}else{scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢","lose");saveStats('lose');}return;}if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}currentPlayer=currentPlayer==="X"?"O":"X";if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();setTimeout(botMove,300);}else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}}
 
-function botMove(){if(gameOver)return;let m;if(difficulty==="easy")m=randomMove();else if(difficulty==="medium")m=mediumMove();else m=hardMove();if(m!==null&&m!==undefined){playClick();board[m]="O";updateUI();if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢","lose");return;}if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");return;}currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();}}
+function botMove(){if(gameOver)return;let m;if(difficulty==="easy")m=randomMove();else if(difficulty==="medium")m=mediumMove();else m=hardMove();if(m!==null&&m!==undefined){playClick();board[m]="O";updateUI();if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢","lose");saveStats('lose');return;}if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();}}
 
 function randomMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;return e[Math.floor(Math.random()*e.length)];}
 function mediumMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}if(e.includes(4))return 4;const c=[0,2,6,8].filter(i=>e.includes(i));if(c.length>0)return c[Math.floor(Math.random()*c.length)];return e[Math.floor(Math.random()*e.length)];}
