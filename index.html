@@ -195,20 +195,11 @@ let currentUID="";
 
 const winCombos=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
-const winMusic=new Audio('https://raw.githubusercontent.com/cykati/Krestiki-Noliki/main/win.mp3');
-const loseMusic=new Audio('https://raw.githubusercontent.com/cykati/Krestiki-Noliki/main/lose.mp3');
-
 let audioCtx=null;
 function getAudioCtx(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}if(audioCtx.state==='suspended'){audioCtx.resume();}return audioCtx;}
 function playClick(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=600;g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.1);o.stop(ctx.currentTime+.1);}
-function playMusic(type){
-    if(!soundOn)return;
-    try{
-        const audio=type==='win'?winMusic:loseMusic;
-        audio.currentTime=0;
-        audio.play().catch(()=>{});
-    }catch(e){}
-}
+function playWin(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.1+.2);o.stop(ctx.currentTime+i*.1+.2);});}
+function playLose(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[392,330,262].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.15+.25);o.stop(ctx.currentTime+i*.15+.25);});}
 function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6'];for(let i=0;i<50;i++){const cf=document.createElement('div');cf.classList.add('confetti');cf.style.left=Math.random()*100+'vw';cf.style.background=colors[Math.floor(Math.random()*colors.length)];cf.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(cf);setTimeout(()=>cf.remove(),2500);}}
 function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
 
@@ -390,8 +381,8 @@ function handleClick(i){
     playClick();board[i]=currentPlayer;updateUI();
     if(checkWin(currentPlayer)){
         gameOver=true;highlightWin(currentPlayer);
-        if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉");playMusic('win');saveStats('win');}
-        else{scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playMusic('lose');saveStats('lose');}
+        if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉");playWin();saveStats('win');}
+        else{scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');}
         return;
     }
     if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}
@@ -408,7 +399,7 @@ function botMove(){
     else m=hardMove();
     if(m!==null&&m!==undefined){
         playClick();board[m]="O";updateUI();
-        if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playMusic('lose');saveStats('lose');return;}
+        if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');return;}
         if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}
         currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();
     }
@@ -450,4 +441,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-</html>
+                                                                                                                                                                     </html>
