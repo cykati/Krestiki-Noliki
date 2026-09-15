@@ -84,7 +84,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div id="board"></div>
 <button id="reset">Новая игра</button>
 
-<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-history">📜 История матчей</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats">📊 Статистика игрока</button><button id="menu-logout">🚪 Выйти</button></div><button id="menu-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-history">📜 История матчей</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats" style="display:none;">📊 Статистика игрока</button><button id="menu-logout">🚪 Выйти</button></div><button id="menu-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="stats-modal"><div class="modal"><h2>Статистика</h2><div class="stats-row"><div><span class="num win-color" id="stats-win">0</span><span class="label">Победы</span></div><div><span class="num lose-color" id="stats-lose">0</span><span class="label">Проигрыши</span></div><div><span class="num draw-color" id="stats-draw">0</span><span class="label">Ничьи</span></div></div><button id="stats-close">Закрыть</button></div></div>
 
@@ -210,6 +210,12 @@ function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71',
 function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
 
 function isAdmin(){return currentNick.toLowerCase()==='admin';}
+
+function updateAdminButton(){
+    const btn=document.getElementById('menu-player-stats');
+    if(isAdmin()){btn.style.display='block';}
+    else{btn.style.display='none';}
+}
 
 function saveStats(result){
     if(!vsBot||!currentNick) return;
@@ -358,6 +364,7 @@ registerBtn.addEventListener('click',()=>{
             database.ref('users/'+cred.user.uid).set({nick:n,email:e});
             currentNick=n;currentUID=cred.user.uid;
             playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
+            updateAdminButton();
             nickStatusEl.textContent='Аккаунт создан!';nickStatusEl.style.color='#2ecc71';
             setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},800);
         }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
@@ -373,6 +380,7 @@ loginBtn.addEventListener('click',()=>{
             const d=s.val()||{};
             currentNick=d.nick||'Игрок';currentUID=cred.user.uid;
             playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
+            updateAdminButton();
             nickStatusEl.textContent='Вход выполнен!';nickStatusEl.style.color='#2ecc71';
             setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
         });
@@ -393,11 +401,13 @@ auth.onAuthStateChanged(user=>{
             const d=s.val()||{};
             currentNick=d.nick||'Игрок';currentUID=user.uid;
             playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
+            updateAdminButton();
             loadMyStats();
         });
     } else {
         currentNick='';currentUID='';
         playerNameEl.textContent='Введите ник';playerNameScoreEl.textContent='Вы';
+        updateAdminButton();
         setTimeout(()=>nickModal.classList.add('active'),500);
     }
 });
@@ -485,7 +495,7 @@ function minimax(mx){
 function resetGame(){board=["","","","","","","","",""];currentPlayer="X";gameOver=false;statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";modal.classList.remove('active');document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose'));updateUI();}
 resetBtn.addEventListener('click',resetGame);
 
-createBoard();updateUI();
+createBoard();updateUI();updateAdminButton();
 </script>
 </body>
     </html>
