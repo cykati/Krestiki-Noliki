@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Крестики-нолики</title>
+<style>
+:root{--bg:#1a1a1a;--text:#e0e0e0;--cell-bg:#2b5b8c;--cell-hover:#4a6a8c;--accent:#b36b3a;--win:#2ecc71;--lose:#e74c3c;}
+body.light{--bg:#f0f0f0;--text:#1a1a1a;--cell-bg:#d0d8e0;--cell-hover:#b0c0d0;--win:#27ae60;--lose:#c0392b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column;padding:20px;transition:.3s;}
+h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
+.top-bar{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:340px;margin-bottom:15px;gap:10px;}
+.nick-display{flex:1;display:flex;align-items:center;background:var(--cell-bg);padding:8px 12px;border-radius:8px;cursor:pointer;min-width:0;}
+.nick-display span{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.menu-btn{padding:8px 14px;font-size:22px;border:none;border-radius:8px;background:var(--cell-bg);color:#e0e0e0;cursor:pointer;line-height:1;}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);justify-content:center;align-items:center;z-index:1000;}
+.modal-overlay.active{display:flex;}
+.modal{background:var(--cell-bg);padding:25px 30px;border-radius:16px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:90vw;min-width:260px;}
+.modal h2{color:#f1c40f;margin-bottom:20px;font-size:22px;}
+.modal .emoji{font-size:48px;margin-bottom:15px;display:block;}
+.modal button{padding:10px 30px;font-size:16px;border:none;border-radius:8px;background:#b32e2e;color:#e0e0e0;cursor:pointer;margin-top:10px;}
+.menu-list{display:flex;flex-direction:column;gap:10px;margin-bottom:15px;}
+.menu-list button{width:100%;padding:14px 20px;font-size:16px;border:2px solid rgba(255,255,255,.2);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;text-align:left;margin-top:0;}
+.stats-row{display:flex;justify-content:space-around;margin-bottom:20px;gap:15px;}
+.stats-row div{text-align:center;}
+.stats-row .num{font-size:32px;font-weight:bold;display:block;}
+.stats-row .label{font-size:14px;opacity:.8;}
+.stats-row .win-color{color:#2ecc71;}
+.stats-row .lose-color{color:#e74c3c;}
+.stats-row .draw-color{color:#f1c40f;}
+.settings-row{display:flex;flex-direction:column;gap:15px;margin-bottom:20px;}
+.settings-row button{padding:12px 20px;font-size:16px;border:2px solid var(--cell-bg);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;margin-top:0;}
+.difficulty-row{display:flex;flex-direction:column;gap:10px;margin-bottom:15px;}
+.difficulty-row button{padding:12px 20px;font-size:16px;border:2px solid var(--cell-bg);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;margin-top:0;}
+.difficulty-row button.active{background:var(--accent);border-color:var(--accent);color:#e0e0e0;}
+.nick-input-row{display:flex;gap:10px;margin-bottom:20px;}
+.nick-input-row input{flex:1;padding:10px 15px;font-size:16px;border:2px solid var(--cell-bg);border-radius:8px;background:var(--bg);color:var(--text);outline:none;min-width:0;}
+.nick-input-row button{padding:10px 20px;font-size:16px;border:none;border-radius:8px;background:var(--cell-bg);color:#e0e0e0;cursor:pointer;margin-top:0;}
+#nick-status{font-size:14px;margin-bottom:15px;min-height:20px;}
+.scoreboard{display:flex;justify-content:center;gap:15px;margin-bottom:15px;font-size:16px;flex-wrap:wrap;}
+.scoreboard div{background:var(--cell-bg);padding:6px 14px;border-radius:8px;}
+.scoreboard .x{color:#e74c3c;}
+.scoreboard .o{color:#3498db;}
+.scoreboard .draw{color:#f1c40f;}
+#board{display:grid;grid-template-columns:repeat(3,100px);grid-template-rows:repeat(3,100px);gap:5px;margin-bottom:20px;}
+.cell{background:var(--cell-bg);border:none;border-radius:8px;font-size:60px;font-weight:900;cursor:pointer;transition:.2s;display:flex;justify-content:center;align-items:center;padding:0;line-height:1;color:var(--text);}
+.cell.x{color:#e74c3c;}
+.cell.o{color:#3498db;}
+.cell:disabled{cursor:default;}
+.cell.win{background:var(--win)!important;animation:pulse .6s ease infinite alternate;}
+.cell.lose{background:var(--lose)!important;}
+@keyframes pulse{from{transform:scale(1);}to{transform:scale(1.05);}}
+#status{font-size:20px;margin-bottom:20px;color:#f1c40f;}
+#reset{padding:10px 30px;font-size:16px;border:none;border-radius:8px;background:#b32e2e;color:#e0e0e0;cursor:pointer;}
+.flash{position:fixed;top:0;left:0;width:100%;height:100%;background:#e74c3c;opacity:0;pointer-events:none;z-index:998;animation:flashAnim .4s ease;}
+@keyframes flashAnim{0%{opacity:.6;}100%{opacity:0;}}
+.confetti{position:fixed;width:10px;height:10px;background:#f1c40f;animation:fall 2s linear forwards;z-index:999;}
+@keyframes fall{0%{transform:translateY(-100vh) rotate(0);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+@media(max-width:400px){#board{grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px);}.cell{font-size:48px;}.scoreboard{font-size:14px;gap:8px;}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</head>
+<body>
+<h1>Крестики-нолики</h1>
+
+<div class="top-bar">
+<div class="nick-display" id="nick-display"><span id="player-name">Введите ник</span></div>
+<button class="menu-btn" id="menu-btn">☰</button>
+</div>
+
+<div class="scoreboard">
+<div><span id="player-name-score">Вы</span>: <span class="x" id="score-x">0</span></div>
+<div>Бот: <span class="o" id="score-o">0</span></div>
+<div>Ничьи: <span class="draw" id="score-draw">0</span></div>
+</div>
+
+<div id="status">Ваш ход (X)</div>
+<div id="board"></div>
+<button id="reset">Новая игра</button>
+
+<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button></div><button id="menu-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="stats-modal"><div class="modal"><h2>Статистика</h2><div class="stats-row"><div><span class="num win-color" id="stats-win">0</span><span class="label">Победы</span></div><div><span class="num lose-color" id="stats-lose">0</span><span class="label">Проигрыши</span></div><div><span class="num draw-color" id="stats-draw">0</span><span class="label">Ничьи</span></div></div><button id="stats-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="settings-row"><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button></div><button id="settings-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="difficulty-modal"><div class="modal"><h2>Сложность</h2><div class="difficulty-row"><button data-level="easy">Легко</button><button data-level="medium">Средне</button><button data-level="hard" class="active">Сложно</button></div><button id="difficulty-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="mode-modal"><div class="modal"><h2>Режим игры</h2><div class="difficulty-row"><button id="mode-bot" class="active">Против бота</button><button id="mode-friend">Против друга</button></div><button id="mode-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="nick-modal"><div class="modal"><h2>Ваш ник</h2><div class="nick-input-row"><input type="text" id="nickname" placeholder="Введите ник" maxlength="15"><button id="save-nick">Сохранить</button></div><div id="nick-status"></div><button id="nick-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="modal"><div class="modal"><span class="emoji" id="modal-emoji">😢</span><h2 id="modal-text">Вы проиграли!</h2><button id="modal-close">Закрыть</button></div></div>
+
+<script>
+const firebaseConfig={apiKey:"AIzaSyB2It75ikFi-YGKA8-jUNd4x9Syv17XSQg",authDomain:"krestiki-noliki1.firebaseapp.com",databaseURL:"https://krestiki-noliki1-default-rtdb.europe-west1.firebasedatabase.app",projectId:"krestiki-noliki1",storageBucket:"krestiki-noliki1.firebasestorage.app",messagingSenderId:"108383530148",appId:"1:108383530148:web:14989e9fec349406d0ca31"};
+firebase.initializeApp(firebaseConfig);
+const database=firebase.database();
+
+const boardEl=document.getElementById('board');
+const statusEl=document.getElementById('status');
+const resetBtn=document.getElementById('reset');
+const nickDisplay=document.getElementById('nick-display');
+const playerNameEl=document.getElementById('player-name');
+const playerNameScoreEl=document.getElementById('player-name-score');
+const menuBtn=document.getElementById('menu-btn');
+const menuModal=document.getElementById('menu-modal');
+const menuStats=document.getElementById('menu-stats');
+const menuSettings=document.getElementById('menu-settings');
+const menuDifficulty=document.getElementById('menu-difficulty');
+const menuMode=document.getElementById('menu-mode');
+const menuNick=document.getElementById('menu-nick');
+const menuClose=document.getElementById('menu-close');
+const nickModal=document.getElementById('nick-modal');
+const nicknameInput=document.getElementById('nickname');
+const saveNickBtn=document.getElementById('save-nick');
+const nickStatusEl=document.getElementById('nick-status');
+const nickClose=document.getElementById('nick-close');
+const statsModal=document.getElementById('stats-modal');
+const statsWin=document.getElementById('stats-win');
+const statsLose=document.getElementById('stats-lose');
+const statsDraw=document.getElementById('stats-draw');
+const statsClose=document.getElementById('stats-close');
+const settingsModal=document.getElementById('settings-modal');
+const themeToggle=document.getElementById('theme-toggle');
+const soundToggle=document.getElementById('sound-toggle');
+const settingsClose=document.getElementById('settings-close');
+const difficultyModal=document.getElementById('difficulty-modal');
+const difficultyClose=document.getElementById('difficulty-close');
+const modeModal=document.getElementById('mode-modal');
+const modeBotBtn=document.getElementById('mode-bot');
+const modeFriendBtn=document.getElementById('mode-friend');
+const modeClose=document.getElementById('mode-close');
+const modal=document.getElementById('modal');
+const modalText=document.getElementById('modal-text');
+const modalEmoji=document.getElementById('modal-emoji');
+const modalClose=document.getElementById('modal-close');
+const scoreXEl=document.getElementById('score-x');
+const scoreOEl=document.getElementById('score-o');
+const scoreDrawEl=document.getElementById('score-draw');
+
+let board=["","","","","","","","",""];
+let currentPlayer="X";
+let gameOver=false;
+let vsBot=true;
+let difficulty="hard";
+let soundOn=true;
+let scoreX=0,scoreO=0,scoreDraw=0;
+
+const winCombos=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}if(audioCtx.state==='suspended'){audioCtx.resume();}return audioCtx;}
+function playClick(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=600;g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.1);o.stop(ctx.currentTime+.1);}
+function playWin(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.1+.2);o.stop(ctx.currentTime+i*.1+.2);});}
+function playLose(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[392,330,262].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.15+.25);o.stop(ctx.currentTime+i*.15+.25);});}
+function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6'];for(let i=0;i<50;i++){const cf=document.createElement('div');cf.classList.add('confetti');cf.style.left=Math.random()*100+'vw';cf.style.background=colors[Math.floor(Math.random()*colors.length)];cf.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(cf);setTimeout(()=>cf.remove(),2500);}}
+function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
+
+themeToggle.addEventListener('click',()=>{document.body.classList.toggle('light');const l=document.body.classList.contains('light');themeToggle.textContent=l?'☀️ Тема':'🌙 Тема';});
+soundToggle.addEventListener('click',()=>{soundOn=!soundOn;soundToggle.textContent=soundOn?'🔊 Звук':'🔇 Звук';});
+
+menuBtn.addEventListener('click',()=>menuModal.classList.add('active'));
+menuClose.addEventListener('click',()=>menuModal.classList.remove('active'));
+menuStats.addEventListener('click',()=>{menuModal.classList.remove('active');statsWin.textContent=scoreX;statsLose.textContent=scoreO;statsDraw.textContent=scoreDraw;statsModal.classList.add('active');});
+menuSettings.addEventListener('click',()=>{menuModal.classList.remove('active');settingsModal.classList.add('active');});
+menuDifficulty.addEventListener('click',()=>{menuModal.classList.remove('active');difficultyModal.classList.add('active');});
+menuMode.addEventListener('click',()=>{menuModal.classList.remove('active');modeModal.classList.add('active');});
+menuNick.addEventListener('click',()=>{menuModal.classList.remove('active');nickModal.classList.add('active');});
+
+nickClose.addEventListener('click',()=>nickModal.classList.remove('active'));
+statsClose.addEventListener('click',()=>statsModal.classList.remove('active'));
+settingsClose.addEventListener('click',()=>settingsModal.classList.remove('active'));
+difficultyClose.addEventListener('click',()=>difficultyModal.classList.remove('active'));
+modeClose.addEventListener('click',()=>modeModal.classList.remove('active'));
+modalClose.addEventListener('click',()=>modal.classList.remove('active'));
+nickDisplay.addEventListener('click',()=>nickModal.classList.add('active'));
+
+function checkAndSaveNickname(){const n=nicknameInput.value.trim();if(!n){nickStatusEl.textContent="Введите ник";nickStatusEl.style.color="#e74c3c";return;}const r=database.ref('usernames/'+n.toLowerCase());r.once('value',s=>{if(s.exists()){nickStatusEl.textContent="Этот ник уже занят!";nickStatusEl.style.color="#e74c3c";}else{r.set(n).then(()=>{playerNameEl.textContent=n;playerNameScoreEl.textContent=n;nickStatusEl.textContent="Ник сохранён!";nickStatusEl.style.color="#2ecc71";setTimeout(()=>nickModal.classList.remove('active'),1000);}).catch(e=>{nickStatusEl.textContent="Ошибка: "+e.message;nickStatusEl.style.color="#e74c3c";});}});}
+saveNickBtn.addEventListener('click',checkAndSaveNickname);
+nicknameInput.addEventListener('keypress',e=>{if(e.key==='Enter')checkAndSaveNickname();});
+
+difficultyModal.addEventListener('click',e=>{if(e.target.tagName==='BUTTON'&&e.target.dataset.level){difficulty=e.target.dataset.level;difficultyModal.querySelectorAll('.difficulty-row button').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');difficultyModal.classList.remove('active');resetGame();}});
+modeBotBtn.addEventListener('click',()=>{vsBot=true;modeBotBtn.classList.add('active');modeFriendBtn.classList.remove('active');modeModal.classList.remove('active');resetGame();});
+modeFriendBtn.addEventListener('click',()=>{vsBot=false;modeFriendBtn.classList.add('active');modeBotBtn.classList.remove('active');modeModal.classList.remove('active');resetGame();});
+
+function updateScore(){scoreXEl.textContent=scoreX;scoreOEl.textContent=scoreO;scoreDrawEl.textContent=scoreDraw;}
+function showModal(t,e,s){modalText.textContent=t;modalEmoji.textContent=e;modal.classList.add('active');if(s==='win')playWin();else if(s==='lose')playLose();}
+function createBoard(){boardEl.innerHTML="";for(let i=0;i<9;i++){const c=document.createElement('button');c.classList.add('cell');c.dataset.index=i;c.addEventListener('click',()=>handleClick(i));boardEl.appendChild(c);}}
+function updateUI(){const cs=document.querySelectorAll('.cell');cs.forEach((c,i)=>{c.textContent=board[i];c.classList.remove('x','o');if(board[i]==='X')c.classList.add('x');if(board[i]==='O')c.classList.add('o');c.disabled=board[i]!==""||gameOver;});}
+function checkWin(p){return winCombos.some(c=>c.every(i=>board[i]===p));}
+function isFull(){return board.every(c=>c!=="");}
+function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
+function highlightWin(p){const c=getWinCombo(p);if(c)c.forEach(i=>{document.querySelectorAll('.cell')[i].classList.add(p==="O"?"lose":"win");});}
+
+function handleClick(i){if(board[i]!==""||gameOver)return;playClick();board[i]=currentPlayer;updateUI();if(checkWin(currentPlayer)){gameOver=true;highlightWin(currentPlayer);if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉","win");}else{scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢","lose");}return;}if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");return;}currentPlayer=currentPlayer==="X"?"O":"X";if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();setTimeout(botMove,300);}else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}}
+
+function botMove(){if(gameOver)return;let m;if(difficulty==="easy")m=randomMove();else if(difficulty==="medium")m=mediumMove();else m=hardMove();if(m!==null&&m!==undefined){playClick();board[m]="O";updateUI();if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢","lose");return;}if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");return;}currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();}}
+
+function randomMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;return e[Math.floor(Math.random()*e.length)];}
+function mediumMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}if(e.includes(4))return 4;const c=[0,2,6,8].filter(i=>e.includes(i));if(c.length>0)return c[Math.floor(Math.random()*c.length)];return e[Math.floor(Math.random()*e.length)];}
+function hardMove(){let bs=-Infinity,bm=null;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";let s=minimax(false);board[i]="";if(s>bs){bs=s;bm=i;}}}return bm;}
+function minimax(mx){if(checkWin("O"))return 1;if(checkWin("X"))return -1;if(isFull())return 0;if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";}}return b;}}
+
+function resetGame(){board=["","","","","","","","",""];currentPlayer="X";gameOver=false;statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";modal.classList.remove('active');document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose'));updateUI();}
+resetBtn.addEventListener('click',resetGame);
+
+createBoard();updateUI();updateScore();
+</script>
+</body>
+  </html>
