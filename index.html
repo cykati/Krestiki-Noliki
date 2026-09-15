@@ -198,7 +198,7 @@ function isAdmin(){
 }
 
 function saveStats(result){
-    if(!vsBot) return; // статистика только для игры с ботом
+    if(!vsBot) return;
     const nick=localStorage.getItem('tictactoe_nick');
     if(!nick)return;
     const ref=database.ref('stats/'+difficulty+'/'+nick.toLowerCase());
@@ -208,6 +208,16 @@ function saveStats(result){
         if(result==='lose')d.losses=(d.losses||0)+1;
         if(result==='draw')d.draws=(d.draws||0)+1;
         ref.set(d);
+    });
+}
+
+function loadMyStats(){
+    const nick=localStorage.getItem('tictactoe_nick');
+    if(!nick) return;
+    database.ref('stats/'+difficulty+'/'+nick.toLowerCase()).once('value',s=>{
+        const d=s.val()||{wins:0,losses:0,draws:0};
+        scoreX=d.wins||0; scoreO=d.losses||0; scoreDraw=d.draws||0;
+        updateScore();
     });
 }
 
@@ -235,7 +245,6 @@ menuNick.addEventListener('click',()=>{menuModal.classList.remove('active');nick
 
 menuLeaders.addEventListener('click',()=>{
     menuModal.classList.remove('active');
-    if(!isAdmin()){alert('Доступ только для администратора');return;}
     currentLeaderLevel="hard";
     leaderTabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b.dataset.lvl==='hard'));
     loadLeaders('hard');
@@ -297,7 +306,7 @@ function checkAndSaveNickname(){
                     playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
                     nickStatusEl.textContent="Аккаунт обновлён!";nickStatusEl.style.color="#2ecc71";
                     localStorage.setItem('tictactoe_nick',n);
-                    setTimeout(()=>nickModal.classList.remove('active'),800);
+                    setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
                 });
                 return;
             }
@@ -305,7 +314,7 @@ function checkAndSaveNickname(){
                 playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
                 nickStatusEl.textContent="Вход выполнен!";nickStatusEl.style.color="#2ecc71";
                 localStorage.setItem('tictactoe_nick',n);
-                setTimeout(()=>nickModal.classList.remove('active'),800);
+                setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
             } else {
                 nickStatusEl.textContent="Неверный пароль!";nickStatusEl.style.color="#e74c3c";
             }
@@ -314,7 +323,7 @@ function checkAndSaveNickname(){
                 playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
                 nickStatusEl.textContent="Аккаунт создан!";nickStatusEl.style.color="#2ecc71";
                 localStorage.setItem('tictactoe_nick',n);
-                setTimeout(()=>nickModal.classList.remove('active'),800);
+                setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
             }).catch(e=>{
                 nickStatusEl.textContent="Ошибка: "+e.message;nickStatusEl.style.color="#e74c3c";
             });
@@ -329,7 +338,16 @@ function loadNickname(){
     setTimeout(()=>nickModal.classList.add('active'),500);
 }
 
-difficultyModal.addEventListener('click',e=>{if(e.target.tagName==='BUTTON'&&e.target.dataset.level){difficulty=e.target.dataset.level;difficultyModal.querySelectorAll('.difficulty-row button').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');difficultyModal.classList.remove('active');resetGame();}});
+difficultyModal.addEventListener('click',e=>{
+    if(e.target.tagName==='BUTTON'&&e.target.dataset.level){
+        difficulty=e.target.dataset.level;
+        difficultyModal.querySelectorAll('.difficulty-row button').forEach(b=>b.classList.remove('active'));
+        e.target.classList.add('active');
+        difficultyModal.classList.remove('active');
+        resetGame();
+        loadMyStats();
+    }
+});
 modeBotBtn.addEventListener('click',()=>{vsBot=true;modeBotBtn.classList.add('active');modeFriendBtn.classList.remove('active');modeModal.classList.remove('active');resetGame();});
 modeFriendBtn.addEventListener('click',()=>{vsBot=false;modeFriendBtn.classList.add('active');modeBotBtn.classList.remove('active');modeModal.classList.remove('active');resetGame();});
 
@@ -354,7 +372,7 @@ function minimax(mx){if(checkWin("O"))return 1;if(checkWin("X"))return -1;if(isF
 function resetGame(){board=["","","","","","","","",""];currentPlayer="X";gameOver=false;statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";modal.classList.remove('active');document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose'));updateUI();}
 resetBtn.addEventListener('click',resetGame);
 
-createBoard();updateUI();updateScore();loadNickname();
+createBoard();updateUI();loadNickname();setTimeout(loadMyStats,1000);
 </script>
 </body>
 </html>
