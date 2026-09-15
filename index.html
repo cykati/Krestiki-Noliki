@@ -232,8 +232,16 @@ function loadLeaders(level){
         const arr=Object.keys(data).map(k=>({nick:k,...data[k]}));
         arr.sort((a,b)=>(b.wins||0)-(a.wins||0));
         arr.splice(20);
-        if(arr.length===0){leadersList.innerHTML='Пока нет данных';}
-        else{leadersList.innerHTML=arr.map((p,i)=>`${i+1}. <b>${p.nick}</b> — 🏆 ${p.wins||0} | 💀 ${p.losses||0} | 🤝 ${p.draws||0}`).join('<br>');}
+        if(arr.length===0){
+            leadersList.innerHTML='Пока нет данных';
+        } else {
+            leadersList.innerHTML=arr.map((p,i)=>{
+                const wins=p.wins||0,losses=p.losses||0,draws=p.draws||0;
+                return (i+1)+'. <b>'+p.nick+'</b> — 🏆 '+wins+' | 💀 '+losses+' | 🤝 '+draws;
+            }).join('<br>');
+        }
+    }).catch(err=>{
+        leadersList.innerHTML='Ошибка чтения: '+err.message;
     });
 }
 
@@ -279,10 +287,10 @@ statsLoad.addEventListener('click',()=>{
     if(!n){playerStatsResult.innerHTML='Введите ник';return;}
     database.ref('stats').once('value',s=>{
         const all=s.val()||{};
-        let html=`<b>${n}</b><br>`;
+        let html='<b>'+n+'</b><br>';
         ['easy','medium','hard'].forEach(lvl=>{
             const d=(all[lvl]&&all[lvl][n])?all[lvl][n]:{wins:0,losses:0,draws:0};
-            html+=`<br><b>${lvl==='easy'?'Легко':lvl==='medium'?'Средне':'Сложно'}:</b> 🏆 ${d.wins||0} | 💀 ${d.losses||0} | 🤝 ${d.draws||0}`;
+            html+='<br><b>'+(lvl==='easy'?'Легко':lvl==='medium'?'Средне':'Сложно')+':</b> 🏆 '+(d.wins||0)+' | 💀 '+(d.losses||0)+' | 🤝 '+(d.draws||0);
         });
         playerStatsResult.innerHTML=html;
     });
@@ -441,4 +449,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-                                                                                                                                                                     </html>
+    </html>
