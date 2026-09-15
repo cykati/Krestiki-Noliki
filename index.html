@@ -417,4 +417,37 @@ function botMove(){
 function randomMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;return e[Math.floor(Math.random()*e.length)];}
 function mediumMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}if(e.includes(4))return 4;const c=[0,2,6,8].filter(i=>e.includes(i));if(c.length>0)return c[Math.floor(Math.random()*c.length)];return e[Math.floor(Math.random()*e.length)];}
 function hardMove(){let bs=-Infinity,bm=null;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";let s=minimax(false);board[i]="";if(s>bs){bs=s;bm=i;}}}return bm;}
-function minimax(mx){if(checkWin("O"))return 1;if(checkWin("X"))return -1;if(isFull())return 0;if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";
+function minimax(mx){
+    if(checkWin("O"))return 1;
+    if(checkWin("X"))return -1;
+    if(isFull())return 0;
+    if(mx){
+        let b=-Infinity;
+        for(let i=0;i<9;i++){
+            if(board[i]===""){
+                board[i]="O";
+                b=Math.max(b,minimax(false));
+                board[i]="";
+            }
+        }
+        return b;
+    } else {
+        let b=Infinity;
+        for(let i=0;i<9;i++){
+            if(board[i]===""){
+                board[i]="X";
+                b=Math.min(b,minimax(true));
+                board[i]="";
+            }
+        }
+        return b;
+    }
+}
+
+function resetGame(){board=["","","","","","","","",""];currentPlayer="X";gameOver=false;statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";modal.classList.remove('active');document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose'));updateUI();}
+resetBtn.addEventListener('click',resetGame);
+
+createBoard();updateUI();
+</script>
+</body>
+</html>
