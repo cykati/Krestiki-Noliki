@@ -84,19 +84,13 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div id="board"></div>
 <button id="reset">Новая игра</button>
 
-<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-settings">⚙️ Настройки</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-history">📜 История матчей</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats" style="display:none;">📊 Статистика игрока</button><button id="menu-logout">🚪 Выйти</button></div><button id="menu-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-history">📜 История матчей</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats" style="display:none;">📊 Статистика игрока</button><button id="menu-logout">🚪 Выйти</button></div><button id="menu-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>⚙️ Настройки</h2><div class="settings-row">
-<button id="menu-stats">📊 Статистика</button>
-<button id="menu-difficulty">🎚️ Сложность</button>
-<button id="menu-nick">👤 Сменить ник</button>
-<button id="theme-toggle">🌙 Тема</button>
-<button id="sound-toggle">🔊 Звук</button>
-</div><button id="settings-close">Закрыть</button></div></div>
-
-<div class="modal-overlay" id="stats-modal"><div class="modal"><h2>Статистика</h2><div class="stats-row"><div><span class="num win-color" id="stats-win">0</span><span class="label">Победы</span></div><div><span class="num lose-color" id="stats-lose">0</span><span class="label">Проигрыши</span></div><div><span class="num draw-color" id="stats-draw">0</span><span class="label">Ничьи</span></div></div><button id="stats-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="stats-modal"><div class="modal"><h2>Статистика</h2><div id="stats-all" style="text-align:left;margin-bottom:15px;font-size:15px;line-height:1.6;"></div><button id="stats-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="history-modal"><div class="modal"><h2>📜 История матчей</h2><div id="history-list" style="text-align:left;margin-bottom:15px;font-size:14px;max-height:50vh;overflow-y:auto;"></div><button id="history-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="settings-row"><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button></div><button id="settings-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="difficulty-modal"><div class="modal"><h2>Сложность</h2><div class="difficulty-row"><button data-level="easy">Легко</button><button data-level="medium">Средне</button><button data-level="hard" class="active">Сложно</button></div><button id="difficulty-close">Закрыть</button></div></div>
 
@@ -160,9 +154,6 @@ const nickStatusEl=document.getElementById('nick-status');
 const nickClose=document.getElementById('nick-close');
 const forgotBtn=document.getElementById('forgot-password');
 const statsModal=document.getElementById('stats-modal');
-const statsWin=document.getElementById('stats-win');
-const statsLose=document.getElementById('stats-lose');
-const statsDraw=document.getElementById('stats-draw');
 const statsClose=document.getElementById('stats-close');
 const historyModal=document.getElementById('history-modal');
 const historyList=document.getElementById('history-list');
@@ -216,12 +207,7 @@ function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71',
 function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
 
 function isAdmin(){return currentNick.toLowerCase()==='admin';}
-
-function updateAdminButton(){
-    const btn=document.getElementById('menu-player-stats');
-    if(isAdmin()){btn.style.display='block';}
-    else{btn.style.display='none';}
-}
+function updateAdminButton(){const btn=document.getElementById('menu-player-stats');if(isAdmin()){btn.style.display='block';}else{btn.style.display='none';}}
 
 function saveStats(result){
     if(!vsBot||!currentNick) return;
@@ -254,6 +240,26 @@ function loadMyStats(){
         const d=s.val()||{wins:0,losses:0,draws:0};
         scoreX=d.wins||0;scoreO=d.losses||0;scoreDraw=d.draws||0;
         updateScore();
+    });
+}
+
+function loadAllStats(){
+    if(!currentNick){document.getElementById('stats-all').innerHTML='Войдите в аккаунт';return;}
+    const n=currentNick.toLowerCase();
+    database.ref('stats').once('value',s=>{
+        const all=s.val()||{};
+        let html='';
+        ['easy','medium','hard'].forEach(lvl=>{
+            const d=(all[lvl]&&all[lvl][n])?all[lvl][n]:{wins:0,losses:0,draws:0};
+            const name=lvl==='easy'?'🟢 Легко':lvl==='medium'?'🟡 Средне':'🔴 Сложно';
+            html+='<div style="margin-bottom:12px;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;">';
+            html+='<b>'+name+'</b><br>';
+            html+='🏆 Победы: '+(d.wins||0)+'<br>';
+            html+='💀 Проигрыши: '+(d.losses||0)+'<br>';
+            html+='🤝 Ничьи: '+(d.draws||0);
+            html+='</div>';
+        });
+        document.getElementById('stats-all').innerHTML=html;
     });
 }
 
@@ -299,14 +305,13 @@ soundToggle.addEventListener('click',()=>{soundOn=!soundOn;soundToggle.textConte
 
 menuBtn.addEventListener('click',()=>menuModal.classList.add('active'));
 menuClose.addEventListener('click',()=>menuModal.classList.remove('active'));
+menuStats.addEventListener('click',()=>{menuModal.classList.remove('active');loadAllStats();statsModal.classList.add('active');});
 menuHistory.addEventListener('click',()=>{menuModal.classList.remove('active');loadHistory();historyModal.classList.add('active');});
-menuMode.addEventListener('click',()=>{menuModal.classList.remove('active');modeModal.classList.add('active');});
-menuLogout.addEventListener('click',()=>{menuModal.classList.remove('active');auth.signOut();});
-
 menuSettings.addEventListener('click',()=>{menuModal.classList.remove('active');settingsModal.classList.add('active');});
-menuStats.addEventListener('click',()=>{settingsModal.classList.remove('active');statsWin.textContent=scoreX;statsLose.textContent=scoreO;statsDraw.textContent=scoreDraw;statsModal.classList.add('active');});
-menuDifficulty.addEventListener('click',()=>{settingsModal.classList.remove('active');difficultyModal.classList.add('active');});
-menuNick.addEventListener('click',()=>{settingsModal.classList.remove('active');nickModal.classList.add('active');});
+menuDifficulty.addEventListener('click',()=>{menuModal.classList.remove('active');difficultyModal.classList.add('active');});
+menuMode.addEventListener('click',()=>{menuModal.classList.remove('active');modeModal.classList.add('active');});
+menuNick.addEventListener('click',()=>{menuModal.classList.remove('active');nickModal.classList.add('active');});
+menuLogout.addEventListener('click',()=>{menuModal.classList.remove('active');auth.signOut();});
 
 menuLeaders.addEventListener('click',()=>{
     menuModal.classList.remove('active');
@@ -338,12 +343,23 @@ statsLoad.addEventListener('click',()=>{
     if(!n){playerStatsResult.innerHTML='Введите ник';return;}
     database.ref('stats').once('value',s=>{
         const all=s.val()||{};
-        let html='<b>'+n+'</b><br>';
-        ['easy','medium','hard'].forEach(lvl=>{
-            const d=(all[lvl]&&all[lvl][n])?all[lvl][n]:{wins:0,losses:0,draws:0};
-            html+='<br><b>'+(lvl==='easy'?'Легко':lvl==='medium'?'Средне':'Сложно')+':</b> 🏆 '+(d.wins||0)+' | 💀 '+(d.losses||0)+' | 🤝 '+(d.draws||0);
+        database.ref('users').once('value',us=>{
+            const users=us.val()||{};
+            let email='—';
+            Object.keys(users).forEach(uid=>{
+                const u=users[uid];
+                if(u.nick && u.nick.toLowerCase()===n){email=u.email||'—';}
+            });
+            let html='<b>'+n+'</b><br>';
+            html+='📧 Email: '+email+'<br><br>';
+            ['easy','medium','hard'].forEach(lvl=>{
+                const d=(all[lvl]&&all[lvl][n])?all[lvl][n]:{wins:0,losses:0,draws:0};
+                const name=lvl==='easy'?'🟢 Легко':lvl==='medium'?'🟡 Средне':'🔴 Сложно';
+                html+='<b>'+name+'</b><br>';
+                html+='🏆 Победы: '+(d.wins||0)+' | 💀 Проигрыши: '+(d.losses||0)+' | 🤝 Ничьи: '+(d.draws||0)+'<br><br>';
+            });
+            playerStatsResult.innerHTML=html;
         });
-        playerStatsResult.innerHTML=html;
     });
 });
 
@@ -476,27 +492,8 @@ function minimax(mx){
     if(checkWin("O"))return 1;
     if(checkWin("X"))return -1;
     if(isFull())return 0;
-    if(mx){
-        let b=-Infinity;
-        for(let i=0;i<9;i++){
-            if(board[i]===""){
-                board[i]="O";
-                b=Math.max(b,minimax(false));
-                board[i]="";
-            }
-        }
-        return b;
-    } else {
-        let b=Infinity;
-        for(let i=0;i<9;i++){
-            if(board[i]===""){
-                board[i]="X";
-                b=Math.min(b,minimax(true));
-                board[i]="";
-            }
-        }
-        return b;
-    }
+    if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}
+    else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";}}return b;}
 }
 
 function resetGame(){board=["","","","","","","","",""];currentPlayer="X";gameOver=false;statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";modal.classList.remove('active');document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose'));updateUI();}
