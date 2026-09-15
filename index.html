@@ -343,13 +343,9 @@ statsLoad.addEventListener('click',()=>{
     if(!n){playerStatsResult.innerHTML='Введите ник';return;}
     database.ref('stats').once('value',s=>{
         const all=s.val()||{};
-        database.ref('users').once('value',us=>{
-            const users=us.val()||{};
-            let email='—';
-            Object.keys(users).forEach(uid=>{
-                const u=users[uid];
-                if(u.nick && u.nick.toLowerCase()===n){email=u.email||'—';}
-            });
+        database.ref('emails/'+n).once('value',es=>{
+            const em=es.val()||{};
+            const email=em.email||'—';
             let html='<b>'+n+'</b><br>';
             html+='📧 Email: '+email+'<br><br>';
             ['easy','medium','hard'].forEach(lvl=>{
@@ -359,6 +355,8 @@ statsLoad.addEventListener('click',()=>{
                 html+='🏆 Победы: '+(d.wins||0)+' | 💀 Проигрыши: '+(d.losses||0)+' | 🤝 Ничьи: '+(d.draws||0)+'<br><br>';
             });
             playerStatsResult.innerHTML=html;
+        }).catch(()=>{
+            playerStatsResult.innerHTML='<b>'+n+'</b><br>📧 Email: —<br><br>Нет доступа к email (только админ)';
         });
     });
 });
@@ -384,7 +382,8 @@ registerBtn.addEventListener('click',()=>{
         if(s.exists()){nickStatusEl.textContent='Этот ник уже занят';nickStatusEl.style.color='#e74c3c';return;}
         auth.createUserWithEmailAndPassword(e,p).then(cred=>{
             database.ref('nicknames/'+n.toLowerCase()).set(cred.user.uid);
-            database.ref('users/'+cred.user.uid).set({nick:n,email:e});
+            database.ref('users/'+cred.user.uid).set({nick:n});
+            database.ref('emails/'+n.toLowerCase()).set({email:e,uid:cred.user.uid});
             currentNick=n;currentUID=cred.user.uid;
             playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
             updateAdminButton();
