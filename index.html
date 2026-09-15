@@ -195,12 +195,20 @@ let currentUID="";
 
 const winCombos=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
+const winMusic=new Audio('https://raw.githubusercontent.com/cykati/Krestiki-Noliki/main/win.mp3');
+const loseMusic=new Audio('https://raw.githubusercontent.com/cykati/Krestiki-Noliki/main/lose.mp3');
+
 let audioCtx=null;
 function getAudioCtx(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}if(audioCtx.state==='suspended'){audioCtx.resume();}return audioCtx;}
 function playClick(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=600;g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.1);o.stop(ctx.currentTime+.1);}
-function playWin(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.1+.2);o.stop(ctx.currentTime+i*.1+.2);});}
-function playLose(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[392,330,262].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.15+.25);o.stop(ctx.currentTime+i*.15+.25);});}
-function say(text){if(!soundOn)return;try{const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=1;u.pitch=1;window.speechSynthesis.speak(u);}catch(e){}}
+function playMusic(type){
+    if(!soundOn)return;
+    try{
+        const audio=type==='win'?winMusic:loseMusic;
+        audio.currentTime=0;
+        audio.play().catch(()=>{});
+    }catch(e){}
+}
 function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6'];for(let i=0;i<50;i++){const cf=document.createElement('div');cf.classList.add('confetti');cf.style.left=Math.random()*100+'vw';cf.style.background=colors[Math.floor(Math.random()*colors.length)];cf.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(cf);setTimeout(()=>cf.remove(),2500);}}
 function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
 
@@ -299,7 +307,6 @@ leadersClose.addEventListener('click',()=>leadersModal.classList.remove('active'
 playerStatsClose.addEventListener('click',()=>playerStatsModal.classList.remove('active'));
 nickDisplay.addEventListener('click',()=>nickModal.classList.add('active'));
 
-// ===== FIREBASE AUTH =====
 registerBtn.addEventListener('click',()=>{
     const n=nicknameInput.value.trim();
     const e=emailInput.value.trim();
@@ -370,7 +377,7 @@ modeBotBtn.addEventListener('click',()=>{vsBot=true;modeBotBtn.classList.add('ac
 modeFriendBtn.addEventListener('click',()=>{vsBot=false;modeFriendBtn.classList.add('active');modeBotBtn.classList.remove('active');modeModal.classList.remove('active');resetGame();});
 
 function updateScore(){scoreXEl.textContent=scoreX;scoreOEl.textContent=scoreO;scoreDrawEl.textContent=scoreDraw;}
-function showModal(t,e,s){modalText.textContent=t;modalEmoji.textContent=e;modal.classList.add('active');if(s==='win')playWin();else if(s==='lose')playLose();}
+function showModal(t,e,s){modalText.textContent=t;modalEmoji.textContent=e;modal.classList.add('active');}
 function createBoard(){boardEl.innerHTML="";for(let i=0;i<9;i++){const c=document.createElement('button');c.classList.add('cell');c.dataset.index=i;c.addEventListener('click',()=>handleClick(i));boardEl.appendChild(c);}}
 function updateUI(){const cs=document.querySelectorAll('.cell');cs.forEach((c,i)=>{c.textContent=board[i];c.classList.remove('x','o');if(board[i]==='X')c.classList.add('x');if(board[i]==='O')c.classList.add('o');c.disabled=board[i]!==""||gameOver;});}
 function checkWin(p){return winCombos.some(c=>c.every(i=>board[i]===p));}
@@ -383,8 +390,8 @@ function handleClick(i){
     playClick();board[i]=currentPlayer;updateUI();
     if(checkWin(currentPlayer)){
         gameOver=true;highlightWin(currentPlayer);
-        if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉","win");say("win");saveStats('win');}
-        else{scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢","lose");say("loose");saveStats('lose');}
+        if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉");playMusic('win');saveStats('win');}
+        else{scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playMusic('lose');saveStats('lose');}
         return;
     }
     if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}
@@ -401,7 +408,7 @@ function botMove(){
     else m=hardMove();
     if(m!==null&&m!==undefined){
         playClick();board[m]="O";updateUI();
-        if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢","lose");say("loose");saveStats('lose');return;}
+        if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playMusic('lose');saveStats('lose');return;}
         if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}
         currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();
     }
@@ -410,12 +417,4 @@ function botMove(){
 function randomMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;return e[Math.floor(Math.random()*e.length)];}
 function mediumMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}if(e.includes(4))return 4;const c=[0,2,6,8].filter(i=>e.includes(i));if(c.length>0)return c[Math.floor(Math.random()*c.length)];return e[Math.floor(Math.random()*e.length)];}
 function hardMove(){let bs=-Infinity,bm=null;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";let s=minimax(false);board[i]="";if(s>bs){bs=s;bm=i;}}}return bm;}
-function minimax(mx){if(checkWin("O"))return 1;if(checkWin("X"))return -1;if(isFull())return 0;if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";}}return b;}}
-
-function resetGame(){board=["","","","","","","","",""];currentPlayer="X";gameOver=false;statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";modal.classList.remove('active');document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose'));updateUI();}
-resetBtn.addEventListener('click',resetGame);
-
-createBoard();updateUI();
-</script>
-</body>
-                                                                                                                                                                                                                                                                                                                                                                                                                </html>
+function minimax(mx){if(checkWin("O"))return 1;if(checkWin("X"))return -1;if(isFull())return 0;if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";
