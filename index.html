@@ -235,10 +235,13 @@ function loadLeaders(level){
         if(arr.length===0){
             leadersList.innerHTML='Пока нет данных';
         } else {
-            leadersList.innerHTML=arr.map((p,i)=>{
+            let html='<ol style="padding-left:25px;margin:0;">';
+            arr.forEach(p=>{
                 const wins=p.wins||0,losses=p.losses||0,draws=p.draws||0;
-                return (i+1)+'. <b>'+p.nick+'</b> — 🏆 '+wins+' | 💀 '+losses+' | 🤝 '+draws;
-            }).join('<br>');
+                html+='<li style="margin-bottom:8px;"><b>'+p.nick+'</b><br><span style="font-size:13px;opacity:.8;">🏆 '+wins+' | 💀 '+losses+' | 🤝 '+draws+'</span></li>';
+            });
+            html+='</ol>';
+            leadersList.innerHTML=html;
         }
     }).catch(err=>{
         leadersList.innerHTML='Ошибка чтения: '+err.message;
@@ -449,4 +452,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-    </html>
+                                                                                                      </html>
