@@ -84,9 +84,11 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div id="board"></div>
 <button id="reset">Новая игра</button>
 
-<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats">📊 Статистика игрока</button><button id="menu-logout">🚪 Выйти</button></div><button id="menu-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-history">📜 История матчей</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats">📊 Статистика игрока</button><button id="menu-logout">🚪 Выйти</button></div><button id="menu-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="stats-modal"><div class="modal"><h2>Статистика</h2><div class="stats-row"><div><span class="num win-color" id="stats-win">0</span><span class="label">Победы</span></div><div><span class="num lose-color" id="stats-lose">0</span><span class="label">Проигрыши</span></div><div><span class="num draw-color" id="stats-draw">0</span><span class="label">Ничьи</span></div></div><button id="stats-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="history-modal"><div class="modal"><h2>📜 История матчей</h2><div id="history-list" style="text-align:left;margin-bottom:15px;font-size:14px;max-height:50vh;overflow-y:auto;"></div><button id="history-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="settings-row"><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button></div><button id="settings-close">Закрыть</button></div></div>
 
@@ -133,6 +135,7 @@ const playerNameScoreEl=document.getElementById('player-name-score');
 const menuBtn=document.getElementById('menu-btn');
 const menuModal=document.getElementById('menu-modal');
 const menuStats=document.getElementById('menu-stats');
+const menuHistory=document.getElementById('menu-history');
 const menuSettings=document.getElementById('menu-settings');
 const menuDifficulty=document.getElementById('menu-difficulty');
 const menuMode=document.getElementById('menu-mode');
@@ -155,6 +158,9 @@ const statsWin=document.getElementById('stats-win');
 const statsLose=document.getElementById('stats-lose');
 const statsDraw=document.getElementById('stats-draw');
 const statsClose=document.getElementById('stats-close');
+const historyModal=document.getElementById('history-modal');
+const historyList=document.getElementById('history-list');
+const historyClose=document.getElementById('history-close');
 const settingsModal=document.getElementById('settings-modal');
 const themeToggle=document.getElementById('theme-toggle');
 const soundToggle=document.getElementById('sound-toggle');
@@ -217,12 +223,40 @@ function saveStats(result){
     });
 }
 
+function saveHistory(result){
+    if(!vsBot||!currentNick||!currentUID) return;
+    const ref=database.ref('history/'+currentUID);
+    ref.once('value',s=>{
+        let arr=s.val()||[];
+        const now=new Date();
+        const dateStr=now.toLocaleDateString('ru-RU')+' '+now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+        arr.unshift({date:dateStr,result:result,difficulty:difficulty});
+        arr=arr.slice(0,10);
+        ref.set(arr);
+    });
+}
+
 function loadMyStats(){
     if(!currentNick) return;
     database.ref('stats/'+difficulty+'/'+currentNick.toLowerCase()).once('value',s=>{
         const d=s.val()||{wins:0,losses:0,draws:0};
         scoreX=d.wins||0;scoreO=d.losses||0;scoreDraw=d.draws||0;
         updateScore();
+    });
+}
+
+function loadHistory(){
+    if(!currentUID){historyList.innerHTML='Войдите в аккаунт';return;}
+    database.ref('history/'+currentUID).once('value',s=>{
+        const arr=s.val()||[];
+        if(arr.length===0){historyList.innerHTML='Пока нет матчей';return;}
+        let html='';
+        arr.forEach((m,i)=>{
+            const emoji=m.result==='win'?'🏆':m.result==='lose'?'💀':'🤝';
+            const diff=m.difficulty==='easy'?'Легко':m.difficulty==='medium'?'Средне':'Сложно';
+            html+='<div style="padding:8px;margin-bottom:5px;background:rgba(0,0,0,.2);border-radius:6px;">'+(i+1)+'. '+emoji+' '+diff+' — '+m.date+'</div>';
+        });
+        historyList.innerHTML=html;
     });
 }
 
@@ -254,6 +288,7 @@ soundToggle.addEventListener('click',()=>{soundOn=!soundOn;soundToggle.textConte
 menuBtn.addEventListener('click',()=>menuModal.classList.add('active'));
 menuClose.addEventListener('click',()=>menuModal.classList.remove('active'));
 menuStats.addEventListener('click',()=>{menuModal.classList.remove('active');statsWin.textContent=scoreX;statsLose.textContent=scoreO;statsDraw.textContent=scoreDraw;statsModal.classList.add('active');});
+menuHistory.addEventListener('click',()=>{menuModal.classList.remove('active');loadHistory();historyModal.classList.add('active');});
 menuSettings.addEventListener('click',()=>{menuModal.classList.remove('active');settingsModal.classList.add('active');});
 menuDifficulty.addEventListener('click',()=>{menuModal.classList.remove('active');difficultyModal.classList.add('active');});
 menuMode.addEventListener('click',()=>{menuModal.classList.remove('active');modeModal.classList.add('active');});
@@ -301,6 +336,7 @@ statsLoad.addEventListener('click',()=>{
 
 nickClose.addEventListener('click',()=>nickModal.classList.remove('active'));
 statsClose.addEventListener('click',()=>statsModal.classList.remove('active'));
+historyClose.addEventListener('click',()=>historyModal.classList.remove('active'));
 settingsClose.addEventListener('click',()=>settingsModal.classList.remove('active'));
 difficultyClose.addEventListener('click',()=>difficultyModal.classList.remove('active'));
 modeClose.addEventListener('click',()=>modeModal.classList.remove('active'));
@@ -392,11 +428,11 @@ function handleClick(i){
     playClick();board[i]=currentPlayer;updateUI();
     if(checkWin(currentPlayer)){
         gameOver=true;highlightWin(currentPlayer);
-        if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉");playWin();saveStats('win');}
-        else{scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');}
+        if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉");playWin();saveStats('win');saveHistory('win');}
+        else{scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');saveHistory('lose');}
         return;
     }
-    if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}
+    if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');saveHistory('draw');return;}
     currentPlayer=currentPlayer==="X"?"O":"X";
     if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();setTimeout(botMove,300);}
     else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}
@@ -410,8 +446,8 @@ function botMove(){
     else m=hardMove();
     if(m!==null&&m!==undefined){
         playClick();board[m]="O";updateUI();
-        if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');return;}
-        if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}
+        if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');saveHistory('lose');return;}
+        if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');saveHistory('draw');return;}
         currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();
     }
 }
@@ -452,4 +488,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-                                                                                                      </html>
+    </html>
