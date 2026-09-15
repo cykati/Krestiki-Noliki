@@ -84,13 +84,19 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div id="board"></div>
 <button id="reset">Новая игра</button>
 
-<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-history">📜 История матчей</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats" style="display:none;">📊 Статистика игрока</button><button id="menu-logout">🚪 Выйти</button></div><button id="menu-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-settings">⚙️ Настройки</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-history">📜 История матчей</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats" style="display:none;">📊 Статистика игрока</button><button id="menu-logout">🚪 Выйти</button></div><button id="menu-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>⚙️ Настройки</h2><div class="settings-row">
+<button id="menu-stats">📊 Статистика</button>
+<button id="menu-difficulty">🎚️ Сложность</button>
+<button id="menu-nick">👤 Сменить ник</button>
+<button id="theme-toggle">🌙 Тема</button>
+<button id="sound-toggle">🔊 Звук</button>
+</div><button id="settings-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="stats-modal"><div class="modal"><h2>Статистика</h2><div class="stats-row"><div><span class="num win-color" id="stats-win">0</span><span class="label">Победы</span></div><div><span class="num lose-color" id="stats-lose">0</span><span class="label">Проигрыши</span></div><div><span class="num draw-color" id="stats-draw">0</span><span class="label">Ничьи</span></div></div><button id="stats-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="history-modal"><div class="modal"><h2>📜 История матчей</h2><div id="history-list" style="text-align:left;margin-bottom:15px;font-size:14px;max-height:50vh;overflow-y:auto;"></div><button id="history-close">Закрыть</button></div></div>
-
-<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="settings-row"><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button></div><button id="settings-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="difficulty-modal"><div class="modal"><h2>Сложность</h2><div class="difficulty-row"><button data-level="easy">Легко</button><button data-level="medium">Средне</button><button data-level="hard" class="active">Сложно</button></div><button id="difficulty-close">Закрыть</button></div></div>
 
@@ -293,13 +299,14 @@ soundToggle.addEventListener('click',()=>{soundOn=!soundOn;soundToggle.textConte
 
 menuBtn.addEventListener('click',()=>menuModal.classList.add('active'));
 menuClose.addEventListener('click',()=>menuModal.classList.remove('active'));
-menuStats.addEventListener('click',()=>{menuModal.classList.remove('active');statsWin.textContent=scoreX;statsLose.textContent=scoreO;statsDraw.textContent=scoreDraw;statsModal.classList.add('active');});
 menuHistory.addEventListener('click',()=>{menuModal.classList.remove('active');loadHistory();historyModal.classList.add('active');});
-menuSettings.addEventListener('click',()=>{menuModal.classList.remove('active');settingsModal.classList.add('active');});
-menuDifficulty.addEventListener('click',()=>{menuModal.classList.remove('active');difficultyModal.classList.add('active');});
 menuMode.addEventListener('click',()=>{menuModal.classList.remove('active');modeModal.classList.add('active');});
-menuNick.addEventListener('click',()=>{menuModal.classList.remove('active');nickModal.classList.add('active');});
 menuLogout.addEventListener('click',()=>{menuModal.classList.remove('active');auth.signOut();});
+
+menuSettings.addEventListener('click',()=>{menuModal.classList.remove('active');settingsModal.classList.add('active');});
+menuStats.addEventListener('click',()=>{settingsModal.classList.remove('active');statsWin.textContent=scoreX;statsLose.textContent=scoreO;statsDraw.textContent=scoreDraw;statsModal.classList.add('active');});
+menuDifficulty.addEventListener('click',()=>{settingsModal.classList.remove('active');difficultyModal.classList.add('active');});
+menuNick.addEventListener('click',()=>{settingsModal.classList.remove('active');nickModal.classList.add('active');});
 
 menuLeaders.addEventListener('click',()=>{
     menuModal.classList.remove('active');
