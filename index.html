@@ -63,8 +63,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 @media(max-width:400px){#board{grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px);}.cell{font-size:48px;}.scoreboard{font-size:14px;gap:8px;}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 <h1>Крестики-нолики</h1>
@@ -84,7 +84,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div id="board"></div>
 <button id="reset">Новая игра</button>
 
-<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats">📊 Статистика игрока</button></div><button id="menu-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-stats">📊 Статистика</button><button id="menu-settings">⚙️ Настройки</button><button id="menu-difficulty">🎚️ Сложность</button><button id="menu-mode">🎮 Режим игры</button><button id="menu-nick">👤 Сменить ник</button><button id="menu-leaders">🏆 Лидеры</button><button id="menu-player-stats">📊 Статистика игрока</button><button id="menu-logout">🚪 Выйти</button></div><button id="menu-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="stats-modal"><div class="modal"><h2>Статистика</h2><div class="stats-row"><div><span class="num win-color" id="stats-win">0</span><span class="label">Победы</span></div><div><span class="num lose-color" id="stats-lose">0</span><span class="label">Проигрыши</span></div><div><span class="num draw-color" id="stats-draw">0</span><span class="label">Ничьи</span></div></div><button id="stats-close">Закрыть</button></div></div>
 
@@ -95,20 +95,14 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="mode-modal"><div class="modal"><h2>Режим игры</h2><div class="difficulty-row"><button id="mode-bot" class="active">Против бота</button><button id="mode-friend">Против друга</button></div><button id="mode-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="nick-modal"><div class="modal"><h2>Вход / Регистрация</h2>
-<div class="nick-input-row"><input type="text" id="nickname" placeholder="Введите ник" maxlength="15"></div>
-<div class="nick-input-row"><input type="password" id="password" placeholder="Введите пароль" maxlength="30"></div>
-<div class="nick-input-row"><input type="email" id="email" placeholder="Введите email" maxlength="50"></div>
-<button id="save-nick">Войти / Зарегистрироваться</button>
+<div class="nick-input-row"><input type="text" id="nickname" placeholder="Ваш ник (для регистрации)" maxlength="15"></div>
+<div class="nick-input-row"><input type="email" id="email" placeholder="Email" maxlength="50"></div>
+<div class="nick-input-row"><input type="password" id="password" placeholder="Пароль" maxlength="30"></div>
+<button id="register-btn">Зарегистрироваться</button>
+<button id="login-btn" style="background:#2b5b8c;">Войти</button>
 <button id="forgot-password" style="background:#2b5b8c;margin-top:5px;">Забыли пароль?</button>
 <div id="nick-status"></div>
 <button id="nick-close">Закрыть</button>
-</div></div>
-
-<div class="modal-overlay" id="forgot-modal"><div class="modal"><h2>Восстановление пароля</h2>
-<div class="nick-input-row"><input type="text" id="forgot-nick" placeholder="Введите ваш ник" maxlength="15"></div>
-<button id="forgot-send">Отправить пароль на почту</button>
-<div id="forgot-status"></div>
-<button id="forgot-close">Закрыть</button>
 </div></div>
 
 <div class="modal-overlay" id="leaders-modal"><div class="modal"><h2>🏆 Таблица лидеров</h2>
@@ -128,7 +122,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 const firebaseConfig={apiKey:"AIzaSyB2It75ikFi-YGKA8-jUNd4x9Syv17XSQg",authDomain:"krestiki-noliki1.firebaseapp.com",databaseURL:"https://krestiki-noliki1-default-rtdb.europe-west1.firebasedatabase.app",projectId:"krestiki-noliki1",storageBucket:"krestiki-noliki1.firebasestorage.app",messagingSenderId:"108383530148",appId:"1:108383530148:web:14989e9fec349406d0ca31"};
 firebase.initializeApp(firebaseConfig);
 const database=firebase.database();
-emailjs.init("B6UKo7g9NMygrpPVL");
+const auth=firebase.auth();
 
 const boardEl=document.getElementById('board');
 const statusEl=document.getElementById('status');
@@ -145,20 +139,17 @@ const menuMode=document.getElementById('menu-mode');
 const menuNick=document.getElementById('menu-nick');
 const menuLeaders=document.getElementById('menu-leaders');
 const menuPlayerStats=document.getElementById('menu-player-stats');
+const menuLogout=document.getElementById('menu-logout');
 const menuClose=document.getElementById('menu-close');
 const nickModal=document.getElementById('nick-modal');
 const nicknameInput=document.getElementById('nickname');
-const passwordInput=document.getElementById('password');
 const emailInput=document.getElementById('email');
-const saveNickBtn=document.getElementById('save-nick');
+const passwordInput=document.getElementById('password');
+const registerBtn=document.getElementById('register-btn');
+const loginBtn=document.getElementById('login-btn');
 const nickStatusEl=document.getElementById('nick-status');
 const nickClose=document.getElementById('nick-close');
 const forgotBtn=document.getElementById('forgot-password');
-const forgotModal=document.getElementById('forgot-modal');
-const forgotNick=document.getElementById('forgot-nick');
-const forgotSend=document.getElementById('forgot-send');
-const forgotStatus=document.getElementById('forgot-status');
-const forgotClose=document.getElementById('forgot-close');
 const statsModal=document.getElementById('stats-modal');
 const statsWin=document.getElementById('stats-win');
 const statsLose=document.getElementById('stats-lose');
@@ -199,6 +190,8 @@ let difficulty="hard";
 let soundOn=true;
 let scoreX=0,scoreO=0,scoreDraw=0;
 let currentLeaderLevel="hard";
+let currentNick="";
+let currentUID="";
 
 const winCombos=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
@@ -211,13 +204,11 @@ function say(text){if(!soundOn)return;try{const u=new SpeechSynthesisUtterance(t
 function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6'];for(let i=0;i<50;i++){const cf=document.createElement('div');cf.classList.add('confetti');cf.style.left=Math.random()*100+'vw';cf.style.background=colors[Math.floor(Math.random()*colors.length)];cf.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(cf);setTimeout(()=>cf.remove(),2500);}}
 function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
 
-function isAdmin(){const nick=localStorage.getItem('tictactoe_nick');return nick && nick.toLowerCase()==='admin';}
+function isAdmin(){return currentNick.toLowerCase()==='admin';}
 
 function saveStats(result){
-    if(!vsBot) return;
-    const nick=localStorage.getItem('tictactoe_nick');
-    if(!nick)return;
-    const ref=database.ref('stats/'+difficulty+'/'+nick.toLowerCase());
+    if(!vsBot||!currentNick) return;
+    const ref=database.ref('stats/'+difficulty+'/'+currentNick.toLowerCase());
     ref.once('value',s=>{
         let d=s.val()||{wins:0,losses:0,draws:0};
         if(result==='win')d.wins=(d.wins||0)+1;
@@ -228,11 +219,10 @@ function saveStats(result){
 }
 
 function loadMyStats(){
-    const nick=localStorage.getItem('tictactoe_nick');
-    if(!nick) return;
-    database.ref('stats/'+difficulty+'/'+nick.toLowerCase()).once('value',s=>{
+    if(!currentNick) return;
+    database.ref('stats/'+difficulty+'/'+currentNick.toLowerCase()).once('value',s=>{
         const d=s.val()||{wins:0,losses:0,draws:0};
-        scoreX=d.wins||0; scoreO=d.losses||0; scoreDraw=d.draws||0;
+        scoreX=d.wins||0;scoreO=d.losses||0;scoreDraw=d.draws||0;
         updateScore();
     });
 }
@@ -258,6 +248,7 @@ menuSettings.addEventListener('click',()=>{menuModal.classList.remove('active');
 menuDifficulty.addEventListener('click',()=>{menuModal.classList.remove('active');difficultyModal.classList.add('active');});
 menuMode.addEventListener('click',()=>{menuModal.classList.remove('active');modeModal.classList.add('active');});
 menuNick.addEventListener('click',()=>{menuModal.classList.remove('active');nickModal.classList.add('active');});
+menuLogout.addEventListener('click',()=>{menuModal.classList.remove('active');auth.signOut();});
 
 menuLeaders.addEventListener('click',()=>{
     menuModal.classList.remove('active');
@@ -268,7 +259,7 @@ menuLeaders.addEventListener('click',()=>{
 });
 
 leaderTabs.addEventListener('click',e=>{
-    if(e.target.tagName==='BUTTON' && e.target.dataset.lvl){
+    if(e.target.tagName==='BUTTON'&&e.target.dataset.lvl){
         currentLeaderLevel=e.target.dataset.lvl;
         leaderTabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
         e.target.classList.add('active');
@@ -291,7 +282,7 @@ statsLoad.addEventListener('click',()=>{
         const all=s.val()||{};
         let html=`<b>${n}</b><br>`;
         ['easy','medium','hard'].forEach(lvl=>{
-            const d=(all[lvl] && all[lvl][n]) ? all[lvl][n] : {wins:0,losses:0,draws:0};
+            const d=(all[lvl]&&all[lvl][n])?all[lvl][n]:{wins:0,losses:0,draws:0};
             html+=`<br><b>${lvl==='easy'?'Легко':lvl==='medium'?'Средне':'Сложно'}:</b> 🏆 ${d.wins||0} | 💀 ${d.losses||0} | 🤝 ${d.draws||0}`;
         });
         playerStatsResult.innerHTML=html;
@@ -308,85 +299,63 @@ leadersClose.addEventListener('click',()=>leadersModal.classList.remove('active'
 playerStatsClose.addEventListener('click',()=>playerStatsModal.classList.remove('active'));
 nickDisplay.addEventListener('click',()=>nickModal.classList.add('active'));
 
-forgotBtn.addEventListener('click',()=>{nickModal.classList.remove('active');forgotModal.classList.add('active');});
-forgotClose.addEventListener('click',()=>forgotModal.classList.remove('active'));
-
-forgotSend.addEventListener('click',()=>{
-    const n=forgotNick.value.trim().toLowerCase();
-    if(!n){forgotStatus.textContent='Введите ник';forgotStatus.style.color='#e74c3c';return;}
-    database.ref('usernames/'+n).once('value',s=>{
-        if(!s.exists()){forgotStatus.textContent='Игрок не найден';forgotStatus.style.color='#e74c3c';return;}
-        const d=s.val();
-        const email=d.email;
-        const pass=d.password;
-        if(!email){forgotStatus.textContent='У аккаунта нет email';forgotStatus.style.color='#e74c3c';return;}
-        forgotStatus.textContent='Отправка письма...';forgotStatus.style.color='#f1c40f';
-        emailjs.send('service_xpyd2j5','template_75c1m1q',{
-            to_email: email,
-            email: email,
-            nick: n,
-            password: pass
-        }).then(()=>{
-            forgotStatus.textContent='Письмо отправлено на '+email;
-            forgotStatus.style.color='#2ecc71';
-        }).catch(err=>{
-            forgotStatus.textContent='Ошибка: '+err.text;
-            forgotStatus.style.color='#e74c3c';
-        });
+// ===== FIREBASE AUTH =====
+registerBtn.addEventListener('click',()=>{
+    const n=nicknameInput.value.trim();
+    const e=emailInput.value.trim();
+    const p=passwordInput.value.trim();
+    if(!n||!e||!p){nickStatusEl.textContent='Заполните все поля';nickStatusEl.style.color='#e74c3c';return;}
+    if(p.length<6){nickStatusEl.textContent='Пароль минимум 6 символов';nickStatusEl.style.color='#e74c3c';return;}
+    database.ref('nicknames/'+n.toLowerCase()).once('value',s=>{
+        if(s.exists()){nickStatusEl.textContent='Этот ник уже занят';nickStatusEl.style.color='#e74c3c';return;}
+        auth.createUserWithEmailAndPassword(e,p).then(cred=>{
+            database.ref('nicknames/'+n.toLowerCase()).set(cred.user.uid);
+            database.ref('users/'+cred.user.uid).set({nick:n,email:e});
+            currentNick=n;currentUID=cred.user.uid;
+            playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
+            nickStatusEl.textContent='Аккаунт создан!';nickStatusEl.style.color='#2ecc71';
+            setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},800);
+        }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
     });
 });
 
-function checkAndSaveNickname(){
-    const n=nicknameInput.value.trim();
+loginBtn.addEventListener('click',()=>{
+    const e=emailInput.value.trim();
     const p=passwordInput.value.trim();
-    const e=emailInput.value.trim().toLowerCase();
-    if(!n||!p||!e){nickStatusEl.textContent="Введите ник, пароль и email";nickStatusEl.style.color="#e74c3c";return;}
-    if(p.length<4){nickStatusEl.textContent="Пароль слишком короткий (мин. 4)";nickStatusEl.style.color="#e74c3c";return;}
-    if(!e.includes('@')||!e.includes('.')){nickStatusEl.textContent="Введите корректный email";nickStatusEl.style.color="#e74c3c";return;}
-    const nickRef=database.ref('usernames/'+n.toLowerCase());
-    const emailRef=database.ref('emails/'+e);
-    emailRef.once('value',es=>{
-        nickRef.once('value',ns=>{
-            if(ns.exists()){
-                const data=ns.val();
-                if(typeof data==='string'){
-                    if(es.exists() && es.val() !== n.toLowerCase()){nickStatusEl.textContent="Этот email уже привязан к другому нику!";nickStatusEl.style.color="#e74c3c";return;}
-                    nickRef.set({name:n,password:p,email:e});emailRef.set(n.toLowerCase());
-                    playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
-                    nickStatusEl.textContent="Аккаунт обновлён!";nickStatusEl.style.color="#2ecc71";
-                    localStorage.setItem('tictactoe_nick',n);
-                    setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
-                    return;
-                }
-                if(data.password===p){
-                    if(data.email && data.email !== e){nickStatusEl.textContent="Email не совпадает с аккаунтом!";nickStatusEl.style.color="#e74c3c";return;}
-                    playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
-                    nickStatusEl.textContent="Вход выполнен!";nickStatusEl.style.color="#2ecc71";
-                    localStorage.setItem('tictactoe_nick',n);
-                    setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
-                } else {
-                    nickStatusEl.textContent="Неверный пароль!";nickStatusEl.style.color="#e74c3c";
-                }
-            } else {
-                if(es.exists()){nickStatusEl.textContent="Этот email уже занят! Один email = один аккаунт.";nickStatusEl.style.color="#e74c3c";return;}
-                nickRef.set({name:n,password:p,email:e}).then(()=>{
-                    emailRef.set(n.toLowerCase());
-                    playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
-                    nickStatusEl.textContent="Аккаунт создан!";nickStatusEl.style.color="#2ecc71";
-                    localStorage.setItem('tictactoe_nick',n);
-                    setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
-                }).catch(err=>{nickStatusEl.textContent="Ошибка: "+err.message;nickStatusEl.style.color="#e74c3c";});
-            }
+    if(!e||!p){nickStatusEl.textContent='Введите email и пароль';nickStatusEl.style.color='#e74c3c';return;}
+    auth.signInWithEmailAndPassword(e,p).then(cred=>{
+        database.ref('users/'+cred.user.uid).once('value',s=>{
+            const d=s.val()||{};
+            currentNick=d.nick||'Игрок';currentUID=cred.user.uid;
+            playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
+            nickStatusEl.textContent='Вход выполнен!';nickStatusEl.style.color='#2ecc71';
+            setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
         });
-    });
-}
-saveNickBtn.addEventListener('click',checkAndSaveNickname);
+    }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
+});
 
-function loadNickname(){
-    const s=localStorage.getItem('tictactoe_nick');
-    if(s){nicknameInput.value=s;playerNameEl.textContent=s;playerNameScoreEl.textContent=s;}
-    setTimeout(()=>nickModal.classList.add('active'),500);
-}
+forgotBtn.addEventListener('click',()=>{
+    const e=emailInput.value.trim();
+    if(!e){nickStatusEl.textContent='Введите email в поле выше';nickStatusEl.style.color='#e74c3c';return;}
+    auth.sendPasswordResetEmail(e).then(()=>{
+        nickStatusEl.textContent='Письмо отправлено на '+e;nickStatusEl.style.color='#2ecc71';
+    }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
+});
+
+auth.onAuthStateChanged(user=>{
+    if(user){
+        database.ref('users/'+user.uid).once('value',s=>{
+            const d=s.val()||{};
+            currentNick=d.nick||'Игрок';currentUID=user.uid;
+            playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
+            loadMyStats();
+        });
+    } else {
+        currentNick='';currentUID='';
+        playerNameEl.textContent='Введите ник';playerNameScoreEl.textContent='Вы';
+        setTimeout(()=>nickModal.classList.add('active'),500);
+    }
+});
 
 difficultyModal.addEventListener('click',e=>{
     if(e.target.tagName==='BUTTON'&&e.target.dataset.level){
@@ -394,8 +363,7 @@ difficultyModal.addEventListener('click',e=>{
         difficultyModal.querySelectorAll('.difficulty-row button').forEach(b=>b.classList.remove('active'));
         e.target.classList.add('active');
         difficultyModal.classList.remove('active');
-        resetGame();
-        loadMyStats();
+        resetGame();loadMyStats();
     }
 });
 modeBotBtn.addEventListener('click',()=>{vsBot=true;modeBotBtn.classList.add('active');modeFriendBtn.classList.remove('active');modeModal.classList.remove('active');resetGame();});
@@ -412,9 +380,7 @@ function highlightWin(p){const c=getWinCombo(p);if(c)c.forEach(i=>{document.quer
 
 function handleClick(i){
     if(board[i]!==""||gameOver)return;
-    playClick();
-    board[i]=currentPlayer;
-    updateUI();
+    playClick();board[i]=currentPlayer;updateUI();
     if(checkWin(currentPlayer)){
         gameOver=true;highlightWin(currentPlayer);
         if(currentPlayer==="X"){scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉","win");say("win");saveStats('win');}
@@ -422,4 +388,34 @@ function handleClick(i){
         return;
     }
     if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}
-    currentPlayer=currentPlayer==
+    currentPlayer=currentPlayer==="X"?"O":"X";
+    if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();setTimeout(botMove,300);}
+    else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}
+}
+
+function botMove(){
+    if(gameOver)return;
+    let m;
+    if(difficulty==="easy")m=randomMove();
+    else if(difficulty==="medium")m=mediumMove();
+    else m=hardMove();
+    if(m!==null&&m!==undefined){
+        playClick();board[m]="O";updateUI();
+        if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢","lose");say("loose");saveStats('lose');return;}
+        if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');return;}
+        currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();
+    }
+}
+
+function randomMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;return e[Math.floor(Math.random()*e.length)];}
+function mediumMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}if(e.includes(4))return 4;const c=[0,2,6,8].filter(i=>e.includes(i));if(c.length>0)return c[Math.floor(Math.random()*c.length)];return e[Math.floor(Math.random()*e.length)];}
+function hardMove(){let bs=-Infinity,bm=null;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";let s=minimax(false);board[i]="";if(s>bs){bs=s;bm=i;}}}return bm;}
+function minimax(mx){if(checkWin("O"))return 1;if(checkWin("X"))return -1;if(isFull())return 0;if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";}}return b;}}
+
+function resetGame(){board=["","","","","","","","",""];currentPlayer="X";gameOver=false;statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";modal.classList.remove('active');document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose'));updateUI();}
+resetBtn.addEventListener('click',resetGame);
+
+createBoard();updateUI();
+</script>
+</body>
+    </html>
