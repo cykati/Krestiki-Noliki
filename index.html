@@ -439,7 +439,8 @@ auth.onAuthStateChanged(user=>{
         nickClose.style.cursor='not-allowed';
         currentNick='';currentUID='';
         playerNameEl.textContent='Введите ник';playerNameScoreEl.textContent='Вы';
-        setTimeout(()=>nickModal.classList.add('active'),500);
+        // Показываем окно регистрации сразу, без задержки
+        nickModal.classList.add('active');
     }
 });
 
@@ -533,4 +534,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-                                                                                                                                                              </html>
+    </html>
