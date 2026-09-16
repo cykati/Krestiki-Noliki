@@ -92,7 +92,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="settings-row"><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button></div><button id="settings-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="difficulty-modal"><div class="modal"><h2>Сложность</h2><div class="difficulty-row"><button data-level="easy">Легко</button><button data-level="medium">Средне</button><button data-level="hard" class="active">Сложно</button></div><button id="difficulty-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="difficulty-modal"><div class="modal"><h2>Сложность</h2><div class="difficulty-row"><button data-level="easy">Легко</button><button data-level="medium" class="active">Средне</button><button data-level="hard">Сложно</button></div><button id="difficulty-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="mode-modal"><div class="modal"><h2>Режим игры</h2><div class="difficulty-row"><button id="mode-bot" class="active">Против бота</button><button id="mode-friend">Против друга</button></div><button id="mode-close">Закрыть</button></div></div>
 
@@ -110,8 +110,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="leaders-modal"><div class="modal"><h2>🏆 Таблица лидеров</h2>
 <div class="leader-tabs" id="leader-tabs">
 <button data-lvl="easy">Легко</button>
-<button data-lvl="medium">Средне</button>
-<button data-lvl="hard" class="active">Сложно</button>
+<button data-lvl="medium" class="active">Средне</button>
+<button data-lvl="hard">Сложно</button>
 </div>
 <div id="leaders-list" style="text-align:left;margin-bottom:15px;font-size:16px;"></div>
 <button id="leaders-close">Закрыть</button></div></div>
@@ -189,10 +189,10 @@ let board=["","","","","","","","",""];
 let currentPlayer="X";
 let gameOver=false;
 let vsBot=true;
-let difficulty="hard";
+let difficulty="medium";
 let soundOn=true;
 let scoreX=0,scoreO=0,scoreDraw=0;
-let currentLeaderLevel="hard";
+let currentLeaderLevel="medium";
 let currentNick="";
 let currentUID="";
 
@@ -289,8 +289,8 @@ function loadLeaders(level){
         } else {
             let html='<ol style="padding-left:25px;margin:0;">';
             arr.forEach(p=>{
-                const wins=p.wins||0,losses=p.losses||0,draws=p.draws||0;
-                html+='<li style="margin-bottom:8px;"><b>'+p.nick+'</b><br><span style="font-size:13px;opacity:.8;">🏆 '+wins+' | 💀 '+losses+' | 🤝 '+draws+'</span></li>';
+                const wins=p.wins||0;
+                html+='<li style="margin-bottom:8px;"><b>'+p.nick+'</b> — 🏆 '+wins+'</li>';
             });
             html+='</ol>';
             leadersList.innerHTML=html;
@@ -315,9 +315,9 @@ menuLogout.addEventListener('click',()=>{menuModal.classList.remove('active');au
 
 menuLeaders.addEventListener('click',()=>{
     menuModal.classList.remove('active');
-    currentLeaderLevel="hard";
-    leaderTabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b.dataset.lvl==='hard'));
-    loadLeaders('hard');
+    currentLeaderLevel="medium";
+    leaderTabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b.dataset.lvl==='medium'));
+    loadLeaders('medium');
     leadersModal.classList.add('active');
 });
 
@@ -486,7 +486,19 @@ function botMove(){
 
 function randomMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;return e[Math.floor(Math.random()*e.length)];}
 function mediumMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}if(e.includes(4))return 4;const c=[0,2,6,8].filter(i=>e.includes(i));if(c.length>0)return c[Math.floor(Math.random()*c.length)];return e[Math.floor(Math.random()*e.length)];}
-function hardMove(){let bs=-Infinity,bm=null;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";let s=minimax(false);board[i]="";if(s>bs){bs=s;bm=i;}}}return bm;}
+function hardMove(){
+    if(Math.random()<0.2){return randomMove();}
+    let bs=-Infinity,bm=null;
+    for(let i=0;i<9;i++){
+        if(board[i]===""){
+            board[i]="O";
+            let s=minimax(false);
+            board[i]="";
+            if(s>bs){bs=s;bm=i;}
+        }
+    }
+    return bm;
+}
 function minimax(mx){
     if(checkWin("O"))return 1;
     if(checkWin("X"))return -1;
