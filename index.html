@@ -67,6 +67,12 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
+<div id="lock-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:2000;display:flex;justify-content:center;align-items:center;flex-direction:column;">
+    <h2 style="color:#f1c40f;margin-bottom:20px;">Войдите в аккаунт</h2>
+    <p style="margin-bottom:20px;opacity:.8;">Для игры нужна регистрация</p>
+    <button onclick="document.getElementById('nick-modal').classList.add('active')" style="padding:12px 30px;font-size:16px;border:none;border-radius:8px;background:#2b5b8c;color:#e0e0e0;cursor:pointer;">Войти / Зарегистрироваться</button>
+</div>
+
 <h1>Крестики-нолики</h1>
 
 <div class="top-bar">
@@ -198,9 +204,6 @@ function playWin(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[52
 function playLose(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[392,330,262].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.15+.25);o.stop(ctx.currentTime+i*.15+.25);});}
 function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6'];for(let i=0;i<50;i++){const cf=document.createElement('div');cf.classList.add('confetti');cf.style.left=Math.random()*100+'vw';cf.style.background=colors[Math.floor(Math.random()*colors.length)];cf.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(cf);setTimeout(()=>cf.remove(),2500);}}
 function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
-
-function isAdmin(){return currentNick.toLowerCase()==='admin';}
-function updateAdminButton(){/* no button in menu anymore */}
 
 function saveStats(result){
     if(!vsBot||!currentNick) return;
@@ -372,6 +375,7 @@ registerBtn.addEventListener('click',()=>{
             database.ref('emails/'+n.toLowerCase()).set({email:e,uid:cred.user.uid});
             currentNick=n;currentUID=cred.user.uid;
             playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
+            document.getElementById('lock-screen').style.display='none';
             nickStatusEl.textContent='Аккаунт создан!';nickStatusEl.style.color='#2ecc71';
             setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},800);
         }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
@@ -387,6 +391,7 @@ loginBtn.addEventListener('click',()=>{
             const d=s.val()||{};
             currentNick=d.nick||'Игрок';currentUID=cred.user.uid;
             playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
+            document.getElementById('lock-screen').style.display='none';
             nickStatusEl.textContent='Вход выполнен!';nickStatusEl.style.color='#2ecc71';
             setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
         });
@@ -403,6 +408,7 @@ forgotBtn.addEventListener('click',()=>{
 
 auth.onAuthStateChanged(user=>{
     if(user){
+        document.getElementById('lock-screen').style.display='none';
         database.ref('users/'+user.uid).once('value',s=>{
             const d=s.val()||{};
             currentNick=d.nick||'Игрок';currentUID=user.uid;
@@ -410,6 +416,7 @@ auth.onAuthStateChanged(user=>{
             loadMyStats();
         });
     } else {
+        document.getElementById('lock-screen').style.display='flex';
         currentNick='';currentUID='';
         playerNameEl.textContent='Введите ник';playerNameScoreEl.textContent='Вы';
         setTimeout(()=>nickModal.classList.add('active'),500);
@@ -506,4 +513,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-    </html>
+</html>
