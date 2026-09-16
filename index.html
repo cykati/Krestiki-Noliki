@@ -86,7 +86,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-leaders">🏆 Лидеры</button><button id="menu-settings">⚙️ Настройки</button></div><button id="menu-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list"><button id="set-stats">📊 Статистика</button><button id="set-history">📜 История матчей</button><button id="set-difficulty">🎚️ Сложность</button><button id="set-mode">🎮 Режим игры</button><button id="set-nick">👤 Сменить ник</button><button id="set-logout">🚪 Выйти</button><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button></div><button id="settings-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list"><button id="set-stats">📊 Статистика</button><button id="set-history">📜 История матчей</button><button id="set-difficulty">🎚️ Сложность</button><button id="set-mode">🎮 Режим игры</button><button id="set-nick">👤 Сменить ник</button><button id="set-logout">🚪 Выйти</button><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button><button id="set-all-players" style="border-color: #f1c40f; color: #f1c40f; display: none;">👥 Все игроки (Админ)</button><button id="set-admin-stats" style="border-color: #f1c40f; color: #f1c40f; display: none;">🔍 Статистика игрока (Админ)</button></div><button id="settings-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="stats-modal"><div class="modal"><h2>Статистика</h2><div id="stats-all" style="text-align:left;margin-bottom:15px;font-size:15px;line-height:1.6;"></div><button id="stats-close">Закрыть</button></div></div>
 
@@ -117,6 +117,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="leaders-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="player-stats-modal"><div class="modal"><h2>📊 Статистика игрока</h2><div class="nick-input-row"><input type="text" id="stats-nickname" placeholder="Введите ник" maxlength="15"><button id="stats-load">Показать</button></div><div id="player-stats-result" style="text-align:left;margin-bottom:15px;font-size:16px;"></div><button id="player-stats-close">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="all-players-modal"><div class="modal"><h2>👥 Все игроки</h2><div id="all-players-list" style="text-align:left;margin-bottom:15px;font-size:14px;max-height:55vh;overflow-y:auto;"></div><button id="all-players-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="modal"><div class="modal"><span class="emoji" id="modal-emoji">😢</span><h2 id="modal-text">Вы проиграли!</h2><button id="modal-close">Закрыть</button></div></div>
 
@@ -182,6 +184,9 @@ const statsNickname=document.getElementById('stats-nickname');
 const statsLoad=document.getElementById('stats-load');
 const playerStatsResult=document.getElementById('player-stats-result');
 const playerStatsClose=document.getElementById('player-stats-close');
+const allPlayersModal=document.getElementById('all-players-modal');
+const allPlayersList=document.getElementById('all-players-list');
+const allPlayersClose=document.getElementById('all-players-close');
 const modal=document.getElementById('modal');
 const modalText=document.getElementById('modal-text');
 const modalEmoji=document.getElementById('modal-emoji');
@@ -200,6 +205,7 @@ let scoreX=0,scoreO=0,scoreDraw=0;
 let currentLeaderLevel="medium";
 let currentNick="";
 let currentUID="";
+let isAdmin=false;
 
 const winCombos=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
@@ -302,6 +308,41 @@ function loadLeaders(level){
     });
 }
 
+// ==== ФУНКЦИЯ ЗАГРУЗКИ ВСЕХ ИГРОКОВ (ТОЛЬКО ДЛЯ АДМИНА) ====
+function loadAllPlayers(){
+    if(!isAdmin){allPlayersList.innerHTML='Доступ запрещён';return;}
+    allPlayersList.innerHTML='Загрузка...';
+    database.ref('stats').once('value',s=>{
+        const all=s.val()||{};
+        const nicksSet=new Set();
+        ['easy','medium','hard'].forEach(lvl=>{
+            if(all[lvl]){
+                Object.keys(all[lvl]).forEach(n=>nicksSet.add(n));
+            }
+        });
+        if(nicksSet.size===0){
+            allPlayersList.innerHTML='Пока нет игроков';
+            return;
+        }
+        const arr=Array.from(nicksSet).sort();
+        let html='<div style="margin-bottom:10px;opacity:0.8;">Всего игроков: <b>'+arr.length+'</b></div>';
+        arr.forEach(n=>{
+            const dE=(all.easy&&all.easy[n])?all.easy[n]:{wins:0,losses:0,draws:0};
+            const dM=(all.medium&&all.medium[n])?all.medium[n]:{wins:0,losses:0,draws:0};
+            const dH=(all.hard&&all.hard[n])?all.hard[n]:{wins:0,losses:0,draws:0};
+            html+='<div style="padding:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;border-left:3px solid #f1c40f;">';
+            html+='<b>'+n+'</b><br>';
+            html+='🟢 Легко: 🏆'+(dE.wins||0)+' 💀'+(dE.losses||0)+' 🤝'+(dE.draws||0)+'<br>';
+            html+='🟡 Средне: 🏆'+(dM.wins||0)+' 💀'+(dM.losses||0)+' 🤝'+(dM.draws||0)+'<br>';
+            html+='🔴 Сложно: 🏆'+(dH.wins||0)+' 💀'+(dH.losses||0)+' 🤝'+(dH.draws||0);
+            html+='</div>';
+        });
+        allPlayersList.innerHTML=html;
+    }).catch(err=>{
+        allPlayersList.innerHTML='Ошибка: '+err.message;
+    });
+}
+
 themeToggle.addEventListener('click',()=>{document.body.classList.toggle('light');const l=document.body.classList.contains('light');themeToggle.textContent=l?'☀️ Тема':'🌙 Тема';});
 soundToggle.addEventListener('click',()=>{soundOn=!soundOn;soundToggle.textContent=soundOn?'🔊 Звук':'🔇 Звук';});
 
@@ -332,6 +373,17 @@ document.getElementById('set-difficulty').addEventListener('click',()=>{settings
 document.getElementById('set-mode').addEventListener('click',()=>{settingsModal.classList.remove('active');modeModal.classList.add('active');});
 document.getElementById('set-nick').addEventListener('click',()=>{settingsModal.classList.remove('active');nickModal.classList.add('active');});
 document.getElementById('set-logout').addEventListener('click',()=>{settingsModal.classList.remove('active');auth.signOut();});
+
+// ==== АДМИН-КНОПКИ ====
+document.getElementById('set-admin-stats').addEventListener('click',()=>{
+    settingsModal.classList.remove('active');
+    playerStatsModal.classList.add('active');
+});
+document.getElementById('set-all-players').addEventListener('click',()=>{
+    settingsModal.classList.remove('active');
+    allPlayersModal.classList.add('active');
+    loadAllPlayers();
+});
 
 statsLoad.addEventListener('click',()=>{
     const n=statsNickname.value.trim().toLowerCase();
@@ -371,6 +423,7 @@ modeClose.addEventListener('click',()=>modeModal.classList.remove('active'));
 modalClose.addEventListener('click',()=>modal.classList.remove('active'));
 leadersClose.addEventListener('click',()=>leadersModal.classList.remove('active'));
 playerStatsClose.addEventListener('click',()=>playerStatsModal.classList.remove('active'));
+allPlayersClose.addEventListener('click',()=>allPlayersModal.classList.remove('active'));
 nickDisplay.addEventListener('click',()=>nickModal.classList.add('active'));
 
 registerBtn.addEventListener('click',()=>{
@@ -431,15 +484,26 @@ auth.onAuthStateChanged(user=>{
             const d=s.val()||{};
             currentNick=d.nick||'Игрок';currentUID=user.uid;
             playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
+            // ПРОВЕРКА НА АДМИНА (синхронизировано с Firebase Rules)
+            if(currentNick === 'Admin'){
+                isAdmin = true;
+                document.getElementById('set-all-players').style.display = 'block';
+                document.getElementById('set-admin-stats').style.display = 'block';
+            } else {
+                isAdmin = false;
+                document.getElementById('set-all-players').style.display = 'none';
+                document.getElementById('set-admin-stats').style.display = 'none';
+            }
             loadMyStats();
         });
     } else {
         nickClose.disabled=true;
         nickClose.style.opacity='0.5';
         nickClose.style.cursor='not-allowed';
-        currentNick='';currentUID='';
+        currentNick='';currentUID='';isAdmin=false;
         playerNameEl.textContent='Введите ник';playerNameScoreEl.textContent='Вы';
-        // Показываем окно регистрации сразу, без задержки
+        document.getElementById('set-all-players').style.display = 'none';
+        document.getElementById('set-admin-stats').style.display = 'none';
         nickModal.classList.add('active');
     }
 });
