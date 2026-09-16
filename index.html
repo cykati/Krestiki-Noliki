@@ -124,14 +124,14 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="consent-modal"><div class="modal">
 <h2>📄 Согласие на обработку данных</h2>
 <div style="text-align:left;font-size:14px;line-height:1.5;margin-bottom:20px;max-height:50vh;overflow-y:auto;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;">
-<p style="margin-bottom:10px;">Я даю согласие на:</p>
-<ul style="padding-left:20px;margin-bottom:10px;">
-<li>Хранение моего <b>email</b> для восстановления пароля.</li>
-<li>Хранение игровой статистики (победы, поражения, ничьи).</li>
-<li>Отображение моего ника в таблице лидеров.</li>
-</ul>
-<p style="margin-bottom:10px;">Мои данные не передаются третьим лицам. Я могу запросить удаление аккаунта через кнопку поддержки.</p>
-<p style="font-size:12px;opacity:0.7;">Нажимая «Я согласен», вы подтверждаете согласие на обработку указанных данных.</p>
+    <p style="margin-bottom:10px;">Я даю согласие на:</p>
+    <ul style="padding-left:20px;margin-bottom:10px;">
+        <li>Хранение моего <b>email</b> для восстановления пароля.</li>
+        <li>Хранение игровой статистики (победы, поражения, ничьи).</li>
+        <li>Отображение моего ника в таблице лидеров.</li>
+    </ul>
+    <p style="margin-bottom:10px;">Мои данные не передаются третьим лицам. Я могу запросить удаление аккаунта через кнопку поддержки.</p>
+    <p style="font-size:12px;opacity:0.7;">Нажимая «Я согласен», вы подтверждаете согласие на обработку указанных данных.</p>
 </div>
 <button id="consent-agree" style="background:#2ecc71;">✅ Я согласен</button>
 <button id="consent-cancel" style="background:#b32e2e;">Отмена</button>
@@ -153,13 +153,13 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="modal"><div class="modal"><span class="emoji" id="modal-emoji">😢</span><h2 id="modal-text">Вы проиграли!</h2><button id="modal-close">Закрыть</button></div></div>
 
 <div style="text-align: center; margin-top: 40px; margin-bottom: 30px; font-family: Arial, sans-serif; width: 100%; max-width: 340px;">
-<p style="color: var(--text); font-size: 15px; margin-bottom: 15px; opacity: 0.9;">
-Нашли ошибку или что-то не работает?<br>Напишите нам!
-</p>
-<a href="mailto:Safety.Krestiki.Noliki@gmail.com?subject=Баг%20в%20игре%20Крестики-Нолики&body=Здравствуйте!%0A%0AКогда%20возник%20баг,%20опишите%20подробнее:%0A1.%20Что%20вы%20делали?%0A2.%20Что%20пошло%20не%20так?%0A3.%20Ваше%20устройство%20(телефон/компьютер):%0A%0AПрикрепите%20фото%20по%20возможности!%0A%0AСпасибо!"
-style="display: inline-block; padding: 14px 28px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 10px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background-color 0.3s;">
-✉️ Написать в поддержку
-</a>
+    <p style="color: var(--text); font-size: 15px; margin-bottom: 15px; opacity: 0.9;">
+        Нашли ошибку или что-то не работает?<br>Напишите нам!
+    </p>
+    <a href="mailto:Safety.Krestiki.Noliki@gmail.com?subject=Баг%20в%20игре%20Крестики-Нолики&body=Здравствуйте!%0A%0AКогда%20возник%20баг,%20опишите%20подробнее:%0A1.%20Что%20вы%20делали?%0A2.%20Что%20пошло%20не%20так?%0A3.%20Ваше%20устройство%20(телефон/компьютер):%0A%0AПрикрепите%20фото%20по%20возможности!%0A%0AСпасибо!" 
+       style="display: inline-block; padding: 14px 28px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 10px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: background-color 0.3s;">
+       ✉️ Написать в поддержку
+    </a>
 </div>
 
 <script>
@@ -242,6 +242,60 @@ let currentStreak=0;
 
 const winCombos=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
+// ==== СПИСОК ЗАПРЕЩЁННЫХ СЛОВ ====
+const BANNED_WORDS = [
+    'хуй','хуе','хуё','хуи','хую','хуя',
+    'пизд','пизж',
+    'бля','блят','блядь',
+    'еб','ёб','еба','ебал','ебан','ебуч',
+    'сук','сука','суки','суч',
+    'муд','муда','муди',
+    'ганд','гандон',
+    'дроч',
+    'жоп','жопа','жопу',
+    'говн','говно',
+    'мраз','мрази',
+    'ублюд',
+    'пидор','пидар','пидр','педр',
+    'педик',
+    'гей','геи','гомик','гомосек',
+    'лох','лохи','лошар',
+    'дебил','дебилы',
+    'идиот','идиоты',
+    'кретин','кретины',
+    'дурак','дураки',
+    'тупой','тупая',
+    'ниггер','нигга','nigga','nigger',
+    'fuck','fuk','fck',
+    'shit','bitch','asshole',
+    'dick','cock','pussy',
+    'cunt','whore','slut',
+    'nazi','нацист'
+];
+
+function isNickAllowed(nick){
+    const lower = nick.toLowerCase();
+    if(lower === 'admin') return {ok: true};
+    for(const word of BANNED_WORDS){
+        if(lower.includes(word)){
+            return {ok: false, reason: 'Ник содержит запрещённые слова'};
+        }
+    }
+    if(lower.startsWith('admin')){
+        return {ok: false, reason: 'Ник не может начинаться с "admin"'};
+    }
+    if(!/^[a-zA-Zа-яА-Я0-9_]+$/.test(nick)){
+        return {ok: false, reason: 'Ник может содержать только буквы, цифры и _'};
+    }
+    if(nick.length < 3){
+        return {ok: false, reason: 'Ник должен быть не менее 3 символов'};
+    }
+    if(nick.length > 15){
+        return {ok: false, reason: 'Ник не должен превышать 15 символов'};
+    }
+    return {ok: true};
+}
+
 let audioCtx=null;
 function getAudioCtx(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}if(audioCtx.state==='suspended'){audioCtx.resume();}return audioCtx;}
 function playClick(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=600;g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.1);o.stop(ctx.currentTime+.1);}
@@ -251,186 +305,177 @@ function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71',
 function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
 
 function updateStreakUI(){
-if(currentStreak >= 2 && (difficulty==='medium' || difficulty==='hard')){
-winStreakEl.style.display='flex';
-streakCountEl.textContent=currentStreak;
-if(currentStreak >= 5){winStreakEl.classList.add('fire');} else {winStreakEl.classList.remove('fire');}
-} else {winStreakEl.style.display='none';}
+    if(currentStreak >= 2 && (difficulty==='medium' || difficulty==='hard')){
+        winStreakEl.style.display='flex';
+        streakCountEl.textContent=currentStreak;
+        if(currentStreak >= 5){winStreakEl.classList.add('fire');} else {winStreakEl.classList.remove('fire');}
+    } else {winStreakEl.style.display='none';}
 }
 
 function saveStats(result){
-if(!vsBot||!currentNick) return;
-const ref=database.ref('stats/'+difficulty+'/'+currentNick.toLowerCase());
-ref.once('value',s=>{
-let d=s.val()||{wins:0,losses:0,draws:0,streak:0,bestStreak:0};
-if(result==='win'){
-d.wins=(d.wins||0)+1;
-d.streak=(d.streak||0)+1;
-if(d.streak > (d.bestStreak||0)) d.bestStreak=d.streak;
-}
-if(result==='lose'){d.losses=(d.losses||0)+1;d.streak=0;}
-if(result==='draw'){d.draws=(d.draws||0)+1;}
-ref.set(d);
-});
+    if(!vsBot||!currentNick) return;
+    const ref=database.ref('stats/'+difficulty+'/'+currentNick.toLowerCase());
+    ref.once('value',s=>{
+        let d=s.val()||{wins:0,losses:0,draws:0,streak:0,bestStreak:0};
+        if(result==='win'){
+            d.wins=(d.wins||0)+1;
+            d.streak=(d.streak||0)+1;
+            if(d.streak > (d.bestStreak||0)) d.bestStreak=d.streak;
+        }
+        if(result==='lose'){d.losses=(d.losses||0)+1;d.streak=0;}
+        if(result==='draw'){d.draws=(d.draws||0)+1;}
+        ref.set(d);
+    });
 }
 
 function saveHistory(result){
-if(!vsBot||!currentNick||!currentUID) return;
-const ref=database.ref('history/'+currentUID);
-ref.once('value',s=>{
-let arr=s.val()||[];
-const now=new Date();
-const dateStr=now.toLocaleDateString('ru-RU')+' '+now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
-arr.unshift({date:dateStr,result:result,difficulty:difficulty});
-arr=arr.slice(0,10);
-ref.set(arr);
-});
+    if(!vsBot||!currentNick||!currentUID) return;
+    const ref=database.ref('history/'+currentUID);
+    ref.once('value',s=>{
+        let arr=s.val()||[];
+        const now=new Date();
+        const dateStr=now.toLocaleDateString('ru-RU')+' '+now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+        arr.unshift({date:dateStr,result:result,difficulty:difficulty});
+        arr=arr.slice(0,10);
+        ref.set(arr);
+    });
 }
 
 function loadMyStats(){
-if(!currentNick) return;
-database.ref('stats/'+difficulty+'/'+currentNick.toLowerCase()).once('value',s=>{
-const d=s.val()||{wins:0,losses:0,draws:0,streak:0,bestStreak:0};
-scoreX=d.wins||0;scoreO=d.losses||0;scoreDraw=d.draws||0;
-currentStreak=d.streak||0;
-updateScore();
-updateStreakUI();
-});
+    if(!currentNick) return;
+    database.ref('stats/'+difficulty+'/'+currentNick.toLowerCase()).once('value',s=>{
+        const d=s.val()||{wins:0,losses:0,draws:0,streak:0,bestStreak:0};
+        scoreX=d.wins||0;scoreO=d.losses||0;scoreDraw=d.draws||0;
+        currentStreak=d.streak||0;
+        updateScore();
+        updateStreakUI();
+    });
 }
 
 function loadProfile(){
-if(!currentNick){profileContent.innerHTML='Войдите в аккаунт';return;}
-profileContent.innerHTML='Загрузка...';
-database.ref('emails/'+currentNick.toLowerCase()).once('value',es=>{
-const em=es.val()||{};
-const email=em.email||'—';
-database.ref('stats').once('value',s=>{
-const all=s.val()||{};
-let html='<div style="padding:12px;background:rgba(0,0,0,.2);border-radius:8px;margin-bottom:12px;">';
-html+='<div style="font-size:18px;margin-bottom:6px;">👤 <b>'+currentNick+'</b></div>';
-html+='<div style="font-size:14px;opacity:0.9;">📧 '+email+'</div>';
-html+='</div>';
-
-['easy','medium','hard'].forEach(lvl=>{
-const d=(all[lvl]&&all[lvl][currentNick.toLowerCase()])?all[lvl][currentNick.toLowerCase()]:{wins:0,losses:0,draws:0,streak:0,bestStreak:0};
-const name=lvl==='easy'?'🟢 Легко':lvl==='medium'?'🟡 Средне':'🔴 Сложно';
-html+='<div style="margin-bottom:12px;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;">';
-html+='<b>'+name+'</b><br>';
-html+='🏆 Победы: '+(d.wins||0);
-if(lvl!=='easy'){ html+=' | 🔥 Рекорд серии: '+(d.bestStreak||0); }
-html+='<br>';
-html+='💀 Проигрыши: '+(d.losses||0)+' | 🤝 Ничьи: '+(d.draws||0);
-if(lvl!=='easy'){ html+='<br>🔥 Текущая серия: '+(d.streak||0); }
-html+='</div>';
-});
-profileContent.innerHTML=html;
-});
-});
+    if(!currentNick){profileContent.innerHTML='Войдите в аккаунт';return;}
+    profileContent.innerHTML='Загрузка...';
+    database.ref('emails/'+currentNick.toLowerCase()).once('value',es=>{
+        const em=es.val()||{};
+        const email=em.email||'—';
+        database.ref('stats').once('value',s=>{
+            const all=s.val()||{};
+            let html='<div style="padding:12px;background:rgba(0,0,0,.2);border-radius:8px;margin-bottom:12px;">';
+            html+='<div style="font-size:18px;margin-bottom:6px;">👤 <b>'+currentNick+'</b></div>';
+            html+='<div style="font-size:14px;opacity:0.9;">📧 '+email+'</div>';
+            html+='</div>';
+            ['easy','medium','hard'].forEach(lvl=>{
+                const d=(all[lvl]&&all[lvl][currentNick.toLowerCase()])?all[lvl][currentNick.toLowerCase()]:{wins:0,losses:0,draws:0,streak:0,bestStreak:0};
+                const name=lvl==='easy'?'🟢 Легко':lvl==='medium'?'🟡 Средне':'🔴 Сложно';
+                html+='<div style="margin-bottom:12px;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;">';
+                html+='<b>'+name+'</b><br>';
+                html+='🏆 Победы: '+(d.wins||0);
+                if(lvl!=='easy'){ html+=' | 🔥 Рекорд серии: '+(d.bestStreak||0); }
+                html+='<br>';
+                html+='💀 Проигрыши: '+(d.losses||0)+' | 🤝 Ничьи: '+(d.draws||0);
+                if(lvl!=='easy'){ html+='<br>🔥 Текущая серия: '+(d.streak||0); }
+                html+='</div>';
+            });
+            profileContent.innerHTML=html;
+        });
+    });
 }
 
 function loadHistory(){
-if(!currentUID){historyList.innerHTML='Войдите в аккаунт';return;}
-database.ref('history/'+currentUID).once('value',s=>{
-const arr=s.val()||[];
-if(arr.length===0){historyList.innerHTML='Пока нет матчей';return;}
-let html='';
-arr.forEach((m,i)=>{
-const emoji=m.result==='win'?'🏆':m.result==='lose'?'💀':'🤝';
-const diff=m.difficulty==='easy'?'Легко':m.difficulty==='medium'?'Средне':'Сложно';
-html+='<div style="padding:8px;margin-bottom:5px;background:rgba(0,0,0,.2);border-radius:6px;">'+(i+1)+'. '+emoji+' '+diff+' — '+m.date+'</div>';
-});
-historyList.innerHTML=html;
-});
+    if(!currentUID){historyList.innerHTML='Войдите в аккаунт';return;}
+    database.ref('history/'+currentUID).once('value',s=>{
+        const arr=s.val()||[];
+        if(arr.length===0){historyList.innerHTML='Пока нет матчей';return;}
+        let html='';
+        arr.forEach((m,i)=>{
+            const emoji=m.result==='win'?'🏆':m.result==='lose'?'💀':'🤝';
+            const diff=m.difficulty==='easy'?'Легко':m.difficulty==='medium'?'Средне':'Сложно';
+            html+='<div style="padding:8px;margin-bottom:5px;background:rgba(0,0,0,.2);border-radius:6px;">'+(i+1)+'. '+emoji+' '+diff+' — '+m.date+'</div>';
+        });
+        historyList.innerHTML=html;
+    });
 }
 
-// ==== ТАБЛИЦА ЛИДЕРОВ ====
 function loadLeaders(level){
-database.ref('stats/'+level).once('value',s=>{
-const data=s.val()||{};
-const adminData=data['admin']||{wins:0,losses:0,draws:0,bestStreak:0};
-const arr=Object.keys(data)
-.filter(k=>k!=='admin')
-.map(k=>({nick:k,...data[k]}));
-// Сортировка: сначала по победам, потом по рекорду серии
-arr.sort((a,b)=>{
-const diffWins=(b.wins||0)-(a.wins||0);
-if(diffWins!==0) return diffWins;
-return (b.bestStreak||0)-(a.bestStreak||0);
-});
-arr.splice(20);
-
-let html='';
-if(adminData.wins||adminData.losses||adminData.draws){
-html+='<div style="padding:12px;margin-bottom:15px;background:linear-gradient(135deg,#b36b3a,#f1c40f);border-radius:10px;text-align:center;color:#fff;">';
-html+='<div style="font-size:18px;margin-bottom:6px;">👑 <b>Администратор</b></div>';
-html+='<div style="font-size:14px;">🏆 Победы: <b>'+(adminData.wins||0)+'</b>';
-if(level!=='easy'){ html+=' | 🔥 Рекорд: '+(adminData.bestStreak||0); }
-html+='</div></div>';
-}
-html+='<div style="font-size:14px;opacity:0.8;margin-bottom:10px;text-align:center;">Таблица лидеров среди игроков:</div>';
-
-if(arr.length===0){
-html+='<div style="text-align:center;opacity:0.7;">Пока нет других игроков</div>';
-} else {
-html+='<ol style="padding-left:25px;margin:0;">';
-arr.forEach(p=>{
-const wins=p.wins||0;
-const best=p.bestStreak||0;
-html+='<li style="margin-bottom:8px;"><b>'+p.nick+'</b> — 🏆 '+wins;
-if(level!=='easy'){ html+=' | 🔥 '+best; }
-html+='</li>';
-});
-html+='</ol>';
-}
-leadersList.innerHTML=html;
-}).catch(err=>{
-leadersList.innerHTML='Ошибка чтения: '+err.message;
-});
+    database.ref('stats/'+level).once('value',s=>{
+        const data=s.val()||{};
+        const adminData=data['admin']||{wins:0,losses:0,draws:0,bestStreak:0};
+        const arr=Object.keys(data).filter(k=>k!=='admin').map(k=>({nick:k,...data[k]}));
+        arr.sort((a,b)=>{
+            const diffWins=(b.wins||0)-(a.wins||0);
+            if(diffWins!==0) return diffWins;
+            return (b.bestStreak||0)-(a.bestStreak||0);
+        });
+        arr.splice(20);
+        let html='';
+        if(adminData.wins||adminData.losses||adminData.draws){
+            html+='<div style="padding:12px;margin-bottom:15px;background:linear-gradient(135deg,#b36b3a,#f1c40f);border-radius:10px;text-align:center;color:#fff;">';
+            html+='<div style="font-size:18px;margin-bottom:6px;">👑 <b>Администратор</b></div>';
+            html+='<div style="font-size:14px;">🏆 Победы: <b>'+(adminData.wins||0)+'</b>';
+            if(level!=='easy'){ html+=' | 🔥 Рекорд: '+(adminData.bestStreak||0); }
+            html+='</div></div>';
+        }
+        html+='<div style="font-size:14px;opacity:0.8;margin-bottom:10px;text-align:center;">Таблица лидеров среди игроков:</div>';
+        if(arr.length===0){
+            html+='<div style="text-align:center;opacity:0.7;">Пока нет других игроков</div>';
+        } else {
+            html+='<ol style="padding-left:25px;margin:0;">';
+            arr.forEach(p=>{
+                const wins=p.wins||0;
+                const best=p.bestStreak||0;
+                html+='<li style="margin-bottom:8px;"><b>'+p.nick+'</b> — 🏆 '+wins;
+                if(level!=='easy'){ html+=' | 🔥 '+best; }
+                html+='</li>';
+            });
+            html+='</ol>';
+        }
+        leadersList.innerHTML=html;
+    }).catch(err=>{
+        leadersList.innerHTML='Ошибка чтения: '+err.message;
+    });
 }
 
 function loadAllPlayers(){
-if(!isAdmin){allPlayersList.innerHTML='Доступ запрещён';return;}
-allPlayersList.innerHTML='Загрузка...';
-database.ref('stats').once('value',s=>{
-const all=s.val()||{};
-const nicksSet=new Set();
-['easy','medium','hard'].forEach(lvl=>{
-if(all[lvl]){Object.keys(all[lvl]).forEach(n=>nicksSet.add(n));}
-});
-if(nicksSet.size===0){allPlayersList.innerHTML='Пока нет игроков';return;}
-const arr=Array.from(nicksSet).sort();
-const regular=arr.filter(n=>n!=='admin');
-const adminNick=arr.includes('admin')?'admin':null;
-
-let html='';
-if(adminNick){
-const dE=(all.easy&&all.easy[adminNick])?all.easy[adminNick]:{wins:0,losses:0,draws:0,bestStreak:0};
-const dM=(all.medium&&all.medium[adminNick])?all.medium[adminNick]:{wins:0,losses:0,draws:0,bestStreak:0};
-const dH=(all.hard&&all.hard[adminNick])?all.hard[adminNick]:{wins:0,losses:0,draws:0,bestStreak:0};
-html+='<div style="padding:12px;margin-bottom:15px;background:linear-gradient(135deg,#b36b3a,#f1c40f);border-radius:10px;color:#fff;">';
-html+='<div style="font-size:18px;margin-bottom:8px;">👑 <b>Администратор</b></div>';
-html+='🟢 Легко: 🏆'+(dE.wins||0)+' 💀'+(dE.losses||0)+' 🤝'+(dE.draws||0)+'<br>';
-html+='🟡 Средне: 🏆'+(dM.wins||0)+' 🔥'+(dM.bestStreak||0)+' 💀'+(dM.losses||0)+'<br>';
-html+='🔴 Сложно: 🏆'+(dH.wins||0)+' 🔥'+(dH.bestStreak||0)+' 💀'+(dH.losses||0);
-html+='</div>';
-}
-
-html+='<div style="margin-bottom:10px;opacity:0.8;">Всего игроков: <b>'+regular.length+'</b></div>';
-regular.forEach(n=>{
-const dE=(all.easy&&all.easy[n])?all.easy[n]:{wins:0,losses:0,draws:0,bestStreak:0};
-const dM=(all.medium&&all.medium[n])?all.medium[n]:{wins:0,losses:0,draws:0,bestStreak:0};
-const dH=(all.hard&&all.hard[n])?all.hard[n]:{wins:0,losses:0,draws:0,bestStreak:0};
-html+='<div style="padding:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;">';
-html+='<b>'+n+'</b><br>';
-html+='🟢 Легко: 🏆'+(dE.wins||0)+' 💀'+(dE.losses||0)+' 🤝'+(dE.draws||0)+'<br>';
-html+='🟡 Средне: 🏆'+(dM.wins||0)+' 🔥'+(dM.bestStreak||0)+' 💀'+(dM.losses||0)+'<br>';
-html+='🔴 Сложно: 🏆'+(dH.wins||0)+' 🔥'+(dH.bestStreak||0)+' 💀'+(dH.losses||0);
-html+='</div>';
-});
-allPlayersList.innerHTML=html;
-}).catch(err=>{
-allPlayersList.innerHTML='Ошибка: '+err.message;
-});
+    if(!isAdmin){allPlayersList.innerHTML='Доступ запрещён';return;}
+    allPlayersList.innerHTML='Загрузка...';
+    database.ref('stats').once('value',s=>{
+        const all=s.val()||{};
+        const nicksSet=new Set();
+        ['easy','medium','hard'].forEach(lvl=>{
+            if(all[lvl]){Object.keys(all[lvl]).forEach(n=>nicksSet.add(n));}
+        });
+        if(nicksSet.size===0){allPlayersList.innerHTML='Пока нет игроков';return;}
+        const arr=Array.from(nicksSet).sort();
+        const regular=arr.filter(n=>n!=='admin');
+        const adminNick=arr.includes('admin')?'admin':null;
+        let html='';
+        if(adminNick){
+            const dE=(all.easy&&all.easy[adminNick])?all.easy[adminNick]:{wins:0,losses:0,draws:0,bestStreak:0};
+            const dM=(all.medium&&all.medium[adminNick])?all.medium[adminNick]:{wins:0,losses:0,draws:0,bestStreak:0};
+            const dH=(all.hard&&all.hard[adminNick])?all.hard[adminNick]:{wins:0,losses:0,draws:0,bestStreak:0};
+            html+='<div style="padding:12px;margin-bottom:15px;background:linear-gradient(135deg,#b36b3a,#f1c40f);border-radius:10px;color:#fff;">';
+            html+='<div style="font-size:18px;margin-bottom:8px;">👑 <b>Администратор</b></div>';
+            html+='🟢 Легко: 🏆'+(dE.wins||0)+' 💀'+(dE.losses||0)+' 🤝'+(dE.draws||0)+'<br>';
+            html+='🟡 Средне: 🏆'+(dM.wins||0)+' 🔥'+(dM.bestStreak||0)+' 💀'+(dM.losses||0)+'<br>';
+            html+='🔴 Сложно: 🏆'+(dH.wins||0)+' 🔥'+(dH.bestStreak||0)+' 💀'+(dH.losses||0);
+            html+='</div>';
+        }
+        html+='<div style="margin-bottom:10px;opacity:0.8;">Всего игроков: <b>'+regular.length+'</b></div>';
+        regular.forEach(n=>{
+            const dE=(all.easy&&all.easy[n])?all.easy[n]:{wins:0,losses:0,draws:0,bestStreak:0};
+            const dM=(all.medium&&all.medium[n])?all.medium[n]:{wins:0,losses:0,draws:0,bestStreak:0};
+            const dH=(all.hard&&all.hard[n])?all.hard[n]:{wins:0,losses:0,draws:0,bestStreak:0};
+            html+='<div style="padding:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;">';
+            html+='<b>'+n+'</b><br>';
+            html+='🟢 Легко: 🏆'+(dE.wins||0)+' 💀'+(dE.losses||0)+' 🤝'+(dE.draws||0)+'<br>';
+            html+='🟡 Средне: 🏆'+(dM.wins||0)+' 🔥'+(dM.bestStreak||0)+' 💀'+(dM.losses||0)+'<br>';
+            html+='🔴 Сложно: 🏆'+(dH.wins||0)+' 🔥'+(dH.bestStreak||0)+' 💀'+(dH.losses||0);
+            html+='</div>';
+        });
+        allPlayersList.innerHTML=html;
+    }).catch(err=>{
+        allPlayersList.innerHTML='Ошибка: '+err.message;
+    });
 }
 
 themeToggle.addEventListener('click',()=>{document.body.classList.toggle('light');const l=document.body.classList.contains('light');themeToggle.textContent=l?'☀️ Тема':'🌙 Тема';});
@@ -441,26 +486,26 @@ menuClose.addEventListener('click',()=>menuModal.classList.remove('active'));
 menuSettings.addEventListener('click',()=>{menuModal.classList.remove('active');settingsModal.classList.add('active');});
 
 menuLeaders.addEventListener('click',()=>{
-menuModal.classList.remove('active');
-currentLeaderLevel="medium";
-leaderTabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b.dataset.lvl==='medium'));
-loadLeaders('medium');
-leadersModal.classList.add('active');
+    menuModal.classList.remove('active');
+    currentLeaderLevel="medium";
+    leaderTabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b.dataset.lvl==='medium'));
+    loadLeaders('medium');
+    leadersModal.classList.add('active');
 });
 
 leaderTabs.addEventListener('click',e=>{
-if(e.target.tagName==='BUTTON'&&e.target.dataset.lvl){
-currentLeaderLevel=e.target.dataset.lvl;
-leaderTabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-e.target.classList.add('active');
-loadLeaders(currentLeaderLevel);
-}
+    if(e.target.tagName==='BUTTON'&&e.target.dataset.lvl){
+        currentLeaderLevel=e.target.dataset.lvl;
+        leaderTabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+        e.target.classList.add('active');
+        loadLeaders(currentLeaderLevel);
+    }
 });
 
 document.getElementById('set-profile').addEventListener('click',()=>{
-settingsModal.classList.remove('active');
-loadProfile();
-profileModal.classList.add('active');
+    settingsModal.classList.remove('active');
+    loadProfile();
+    profileModal.classList.add('active');
 });
 
 document.getElementById('set-history').addEventListener('click',()=>{settingsModal.classList.remove('active');loadHistory();historyModal.classList.add('active');});
@@ -470,43 +515,43 @@ document.getElementById('set-nick').addEventListener('click',()=>{settingsModal.
 document.getElementById('set-logout').addEventListener('click',()=>{settingsModal.classList.remove('active');auth.signOut();});
 
 document.getElementById('set-admin-stats').addEventListener('click',()=>{
-settingsModal.classList.remove('active');
-playerStatsModal.classList.add('active');
+    settingsModal.classList.remove('active');
+    playerStatsModal.classList.add('active');
 });
 document.getElementById('set-all-players').addEventListener('click',()=>{
-settingsModal.classList.remove('active');
-allPlayersModal.classList.add('active');
-loadAllPlayers();
+    settingsModal.classList.remove('active');
+    allPlayersModal.classList.add('active');
+    loadAllPlayers();
 });
 
 statsLoad.addEventListener('click',()=>{
-const n=statsNickname.value.trim().toLowerCase();
-if(!n){playerStatsResult.innerHTML='Введите ник';return;}
-database.ref('stats').once('value',s=>{
-const all=s.val()||{};
-database.ref('emails/'+n).once('value',es=>{
-const em=es.val()||{};
-const email=em.email||'—';
-let html='<b>'+n+'</b><br>';
-html+='📧 Email: '+email+'<br><br>';
-['easy','medium','hard'].forEach(lvl=>{
-const d=(all[lvl]&&all[lvl][n])?all[lvl][n]:{wins:0,losses:0,draws:0,bestStreak:0};
-const name=lvl==='easy'?'🟢 Легко':lvl==='medium'?'🟡 Средне':'🔴 Сложно';
-html+='<b>'+name+'</b><br>';
-html+='🏆 Победы: '+(d.wins||0)+' | 💀 Проигрыши: '+(d.losses||0)+' | 🤝 Ничьи: '+(d.draws||0);
-if(lvl!=='easy'){ html+='<br>🔥 Рекорд серии: '+(d.bestStreak||0); }
-html+='<br><br>';
-});
-playerStatsResult.innerHTML=html;
-}).catch(()=>{
-playerStatsResult.innerHTML='<b>'+n+'</b><br>📧 Email: —<br><br>Нет доступа к email (только админ)';
-});
-});
+    const n=statsNickname.value.trim().toLowerCase();
+    if(!n){playerStatsResult.innerHTML='Введите ник';return;}
+    database.ref('stats').once('value',s=>{
+        const all=s.val()||{};
+        database.ref('emails/'+n).once('value',es=>{
+            const em=es.val()||{};
+            const email=em.email||'—';
+            let html='<b>'+n+'</b><br>';
+            html+='📧 Email: '+email+'<br><br>';
+            ['easy','medium','hard'].forEach(lvl=>{
+                const d=(all[lvl]&&all[lvl][n])?all[lvl][n]:{wins:0,losses:0,draws:0,bestStreak:0};
+                const name=lvl==='easy'?'🟢 Легко':lvl==='medium'?'🟡 Средне':'🔴 Сложно';
+                html+='<b>'+name+'</b><br>';
+                html+='🏆 Победы: '+(d.wins||0)+' | 💀 Проигрыши: '+(d.losses||0)+' | 🤝 Ничьи: '+(d.draws||0);
+                if(lvl!=='easy'){ html+='<br>🔥 Рекорд серии: '+(d.bestStreak||0); }
+                html+='<br><br>';
+            });
+            playerStatsResult.innerHTML=html;
+        }).catch(()=>{
+            playerStatsResult.innerHTML='<b>'+n+'</b><br>📧 Email: —<br><br>Нет доступа к email (только админ)';
+        });
+    });
 });
 
 nickClose.addEventListener('click',()=>{
-if(!currentNick){alert('Сначала войдите или зарегистрируйтесь');return;}
-nickModal.classList.remove('active');
+    if(!currentNick){alert('Сначала войдите или зарегистрируйтесь');return;}
+    nickModal.classList.remove('active');
 });
 profileClose.addEventListener('click',()=>profileModal.classList.remove('active'));
 historyClose.addEventListener('click',()=>historyModal.classList.remove('active'));
@@ -520,116 +565,118 @@ allPlayersClose.addEventListener('click',()=>allPlayersModal.classList.remove('a
 nickDisplay.addEventListener('click',()=>{loadProfile();profileModal.classList.add('active');});
 
 document.getElementById('consent-btn').addEventListener('click',()=>{
-document.getElementById('consent-modal').classList.add('active');
+    document.getElementById('consent-modal').classList.add('active');
 });
 
 document.getElementById('consent-agree').addEventListener('click',()=>{
-userConsent=true;
-document.getElementById('consent-modal').classList.remove('active');
-document.getElementById('consent-btn').style.borderColor='#2ecc71';
-document.getElementById('consent-btn').style.color='#2ecc71';
-document.getElementById('consent-btn').textContent='✅ Согласие получено';
-document.getElementById('consent-status').textContent='';
+    userConsent=true;
+    document.getElementById('consent-modal').classList.remove('active');
+    document.getElementById('consent-btn').style.borderColor='#2ecc71';
+    document.getElementById('consent-btn').style.color='#2ecc71';
+    document.getElementById('consent-btn').textContent='✅ Согласие получено';
+    document.getElementById('consent-status').textContent='';
 });
 
 document.getElementById('consent-cancel').addEventListener('click',()=>{
-document.getElementById('consent-modal').classList.remove('active');
+    document.getElementById('consent-modal').classList.remove('active');
 });
 
 registerBtn.addEventListener('click',()=>{
-const n=nicknameInput.value.trim();
-const e=emailInput.value.trim();
-const p=passwordInput.value.trim();
-if(!n||!e||!p){nickStatusEl.textContent='Заполните все поля';nickStatusEl.style.color='#e74c3c';return;}
-if(p.length<6){nickStatusEl.textContent='Пароль минимум 6 символов';nickStatusEl.style.color='#e74c3c';return;}
-if(!userConsent){document.getElementById('consent-status').textContent='Дайте согласие';return;}
-database.ref('nicknames/'+n.toLowerCase()).once('value',s=>{
-if(s.exists()){nickStatusEl.textContent='Этот ник уже занят';nickStatusEl.style.color='#e74c3c';return;}
-auth.createUserWithEmailAndPassword(e,p).then(cred=>{
-database.ref('nicknames/'+n.toLowerCase()).set(cred.user.uid);
-database.ref('users/'+cred.user.uid).set({nick:n});
-database.ref('emails/'+n.toLowerCase()).set({
-email:e, uid:cred.user.uid,
-consentGiven:true, consentDate:new Date().toISOString()
-});
-currentNick=n;currentUID=cred.user.uid;
-playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
-nickClose.disabled=false;
-nickClose.style.opacity='1';
-nickClose.style.cursor='pointer';
-nickStatusEl.textContent='Аккаунт создан!';nickStatusEl.style.color='#2ecc71';
-setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},800);
-}).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
-});
+    const n=nicknameInput.value.trim();
+    const e=emailInput.value.trim();
+    const p=passwordInput.value.trim();
+    if(!n||!e||!p){nickStatusEl.textContent='Заполните все поля';nickStatusEl.style.color='#e74c3c';return;}
+    if(p.length<6){nickStatusEl.textContent='Пароль минимум 6 символов';nickStatusEl.style.color='#e74c3c';return;}
+    if(!userConsent){document.getElementById('consent-status').textContent='Дайте согласие';return;}
+    const check=isNickAllowed(n);
+    if(!check.ok){nickStatusEl.textContent=check.reason;nickStatusEl.style.color='#e74c3c';return;}
+    database.ref('nicknames/'+n.toLowerCase()).once('value',s=>{
+        if(s.exists()){nickStatusEl.textContent='Этот ник уже занят';nickStatusEl.style.color='#e74c3c';return;}
+        auth.createUserWithEmailAndPassword(e,p).then(cred=>{
+            database.ref('nicknames/'+n.toLowerCase()).set(cred.user.uid);
+            database.ref('users/'+cred.user.uid).set({nick:n});
+            database.ref('emails/'+n.toLowerCase()).set({
+                email:e, uid:cred.user.uid,
+                consentGiven:true, consentDate:new Date().toISOString()
+            });
+            currentNick=n;currentUID=cred.user.uid;
+            playerNameEl.textContent=n;playerNameScoreEl.textContent=n;
+            nickClose.disabled=false;
+            nickClose.style.opacity='1';
+            nickClose.style.cursor='pointer';
+            nickStatusEl.textContent='Аккаунт создан!';nickStatusEl.style.color='#2ecc71';
+            setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},800);
+        }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
+    });
 });
 
 loginBtn.addEventListener('click',()=>{
-const e=emailInput.value.trim();
-const p=passwordInput.value.trim();
-if(!e||!p){nickStatusEl.textContent='Введите email и пароль';nickStatusEl.style.color='#e74c3c';return;}
-auth.signInWithEmailAndPassword(e,p).then(cred=>{
-database.ref('users/'+cred.user.uid).once('value',s=>{
-const d=s.val()||{};
-currentNick=d.nick||'Игрок';currentUID=cred.user.uid;
-playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
-nickClose.disabled=false;
-nickClose.style.opacity='1';
-nickClose.style.cursor='pointer';
-nickStatusEl.textContent='Вход выполнен!';nickStatusEl.style.color='#2ecc71';
-setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
-});
-}).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
+    const e=emailInput.value.trim();
+    const p=passwordInput.value.trim();
+    if(!e||!p){nickStatusEl.textContent='Введите email и пароль';nickStatusEl.style.color='#e74c3c';return;}
+    auth.signInWithEmailAndPassword(e,p).then(cred=>{
+        database.ref('users/'+cred.user.uid).once('value',s=>{
+            const d=s.val()||{};
+            currentNick=d.nick||'Игрок';currentUID=cred.user.uid;
+            playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
+            nickClose.disabled=false;
+            nickClose.style.opacity='1';
+            nickClose.style.cursor='pointer';
+            nickStatusEl.textContent='Вход выполнен!';nickStatusEl.style.color='#2ecc71';
+            setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
+        });
+    }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
 });
 
 forgotBtn.addEventListener('click',()=>{
-const e=emailInput.value.trim();
-if(!e){nickStatusEl.textContent='Введите email в поле выше';nickStatusEl.style.color='#e74c3c';return;}
-auth.sendPasswordResetEmail(e).then(()=>{
-nickStatusEl.textContent='Письмо отправлено на '+e;nickStatusEl.style.color='#2ecc71';
-}).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
+    const e=emailInput.value.trim();
+    if(!e){nickStatusEl.textContent='Введите email в поле выше';nickStatusEl.style.color='#e74c3c';return;}
+    auth.sendPasswordResetEmail(e).then(()=>{
+        nickStatusEl.textContent='Письмо отправлено на '+e;nickStatusEl.style.color='#2ecc71';
+    }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
 });
 
 auth.onAuthStateChanged(user=>{
-if(user){
-nickClose.disabled=false;
-nickClose.style.opacity='1';
-nickClose.style.cursor='pointer';
-database.ref('users/'+user.uid).once('value',s=>{
-const d=s.val()||{};
-currentNick=d.nick||'Игрок';currentUID=user.uid;
-playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
-if(currentNick === 'Admin'){
-isAdmin = true;
-document.getElementById('set-all-players').style.display = 'block';
-document.getElementById('set-admin-stats').style.display = 'block';
-} else {
-isAdmin = false;
-document.getElementById('set-all-players').style.display = 'none';
-document.getElementById('set-admin-stats').style.display = 'none';
-}
-loadMyStats();
-});
-} else {
-nickClose.disabled=true;
-nickClose.style.opacity='0.5';
-nickClose.style.cursor='not-allowed';
-currentNick='';currentUID='';isAdmin=false;userConsent=false;currentStreak=0;
-playerNameEl.textContent='Введите ник';playerNameScoreEl.textContent='Вы';
-document.getElementById('set-all-players').style.display = 'none';
-document.getElementById('set-admin-stats').style.display = 'none';
-winStreakEl.style.display='none';
-nickModal.classList.add('active');
-}
+    if(user){
+        nickClose.disabled=false;
+        nickClose.style.opacity='1';
+        nickClose.style.cursor='pointer';
+        database.ref('users/'+user.uid).once('value',s=>{
+            const d=s.val()||{};
+            currentNick=d.nick||'Игрок';currentUID=user.uid;
+            playerNameEl.textContent=currentNick;playerNameScoreEl.textContent=currentNick;
+            if(currentNick === 'Admin'){
+                isAdmin = true;
+                document.getElementById('set-all-players').style.display = 'block';
+                document.getElementById('set-admin-stats').style.display = 'block';
+            } else {
+                isAdmin = false;
+                document.getElementById('set-all-players').style.display = 'none';
+                document.getElementById('set-admin-stats').style.display = 'none';
+            }
+            loadMyStats();
+        });
+    } else {
+        nickClose.disabled=true;
+        nickClose.style.opacity='0.5';
+        nickClose.style.cursor='not-allowed';
+        currentNick='';currentUID='';isAdmin=false;userConsent=false;currentStreak=0;
+        playerNameEl.textContent='Введите ник';playerNameScoreEl.textContent='Вы';
+        document.getElementById('set-all-players').style.display = 'none';
+        document.getElementById('set-admin-stats').style.display = 'none';
+        winStreakEl.style.display='none';
+        nickModal.classList.add('active');
+    }
 });
 
 difficultyModal.addEventListener('click',e=>{
-if(e.target.tagName==='BUTTON'&&e.target.dataset.level){
-difficulty=e.target.dataset.level;
-difficultyModal.querySelectorAll('.difficulty-row button').forEach(b=>b.classList.remove('active'));
-e.target.classList.add('active');
-difficultyModal.classList.remove('active');
-resetGame();loadMyStats();
-}
+    if(e.target.tagName==='BUTTON'&&e.target.dataset.level){
+        difficulty=e.target.dataset.level;
+        difficultyModal.querySelectorAll('.difficulty-row button').forEach(b=>b.classList.remove('active'));
+        e.target.classList.add('active');
+        difficultyModal.classList.remove('active');
+        resetGame();loadMyStats();
+    }
 });
 modeBotBtn.addEventListener('click',()=>{vsBot=true;modeBotBtn.classList.add('active');modeFriendBtn.classList.remove('active');modeModal.classList.remove('active');resetGame();});
 modeFriendBtn.addEventListener('click',()=>{vsBot=false;modeFriendBtn.classList.add('active');modeBotBtn.classList.remove('active');modeModal.classList.remove('active');resetGame();});
@@ -644,72 +691,72 @@ function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
 function highlightWin(p){const c=getWinCombo(p);if(c)c.forEach(i=>{document.querySelectorAll('.cell')[i].classList.add(p==="O"?"lose":"win");});}
 
 function handleClick(i){
-if(board[i]!==""||gameOver)return;
-playClick();board[i]=currentPlayer;updateUI();
-if(checkWin(currentPlayer)){
-gameOver=true;highlightWin(currentPlayer);
-if(currentPlayer==="X"){
-scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉");playWin();saveStats('win');saveHistory('win');
-if(difficulty==='medium'||difficulty==='hard'){currentStreak++;updateStreakUI();}
-}
-else{
-scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');saveHistory('lose');
-currentStreak=0;updateStreakUI();
-}
-return;
-}
-if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');saveHistory('draw');return;}
-currentPlayer=currentPlayer==="X"?"O":"X";
-if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();setTimeout(botMove,300);}
-else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}
+    if(board[i]!==""||gameOver)return;
+    playClick();board[i]=currentPlayer;updateUI();
+    if(checkWin(currentPlayer)){
+        gameOver=true;highlightWin(currentPlayer);
+        if(currentPlayer==="X"){
+            scoreX++;updateScore();createConfetti();showModal("Вы выиграли!","🎉");playWin();saveStats('win');saveHistory('win');
+            if(difficulty==='medium'||difficulty==='hard'){currentStreak++;updateStreakUI();}
+        }
+        else{
+            scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');saveHistory('lose');
+            currentStreak=0;updateStreakUI();
+        }
+        return;
+    }
+    if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');saveHistory('draw');return;}
+    currentPlayer=currentPlayer==="X"?"O":"X";
+    if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();setTimeout(botMove,300);}
+    else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}
 }
 
 function botMove(){
-if(gameOver)return;
-let m;
-if(difficulty==="easy")m=randomMove();
-else if(difficulty==="medium")m=mediumMove();
-else m=hardMove();
-if(m!==null&&m!==undefined){
-playClick();board[m]="O";updateUI();
-if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');saveHistory('lose');currentStreak=0;updateStreakUI();return;}
-if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');saveHistory('draw');return;}
-currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();
-}
+    if(gameOver)return;
+    let m;
+    if(difficulty==="easy")m=randomMove();
+    else if(difficulty==="medium")m=mediumMove();
+    else m=hardMove();
+    if(m!==null&&m!==undefined){
+        playClick();board[m]="O";updateUI();
+        if(checkWin("O")){gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();saveStats('lose');saveHistory('lose');currentStreak=0;updateStreakUI();return;}
+        if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");saveStats('draw');saveHistory('draw');return;}
+        currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();
+    }
 }
 
 function randomMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;return e[Math.floor(Math.random()*e.length)];}
 function mediumMove(){
-if(Math.random()<0.5){return randomMove();}
-const e=[];
-for(let i=0;i<9;i++)if(board[i]==="")e.push(i);
-if(e.length===0)return null;
-for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}
-for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}
-if(e.includes(4))return 4;
-const c=[0,2,6,8].filter(i=>e.includes(i));
-if(c.length>0)return c[Math.floor(Math.random()*c.length)];
-return e[Math.floor(Math.random()*e.length)];
+    if(Math.random()<0.5){return randomMove();}
+    const e=[];
+    for(let i=0;i<9;i++)if(board[i]==="")e.push(i);
+    if(e.length===0)return null;
+    for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}
+    for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}
+    if(e.includes(4))return 4;
+    const c=[0,2,6,8].filter(i=>e.includes(i));
+    if(c.length>0)return c[Math.floor(Math.random()*c.length)];
+    return e[Math.floor(Math.random()*e.length)];
 }
 function hardMove(){
-if(Math.random()<0.2){return randomMove();}
-let bs=-Infinity,bm=null;
-for(let i=0;i<9;i++){
-if(board[i]===""){
-board[i]="O";
-let s=minimax(false);
-board[i]="";
-if(s>bs){bs=s;bm=i;}
-}
-}
-return bm;
+    if(Math.random()<0.2){return randomMove();}
+    let bs=-Infinity,bm=null;
+    for(let i=0;i<9;i++){
+        if(board[i]===""){
+            board[i]="O";
+            let s=minimax(false);
+            board[i]="";
+            if(s>bs){bs=s;bm=i;}
+        }
+    }
+    return bm;
 }
 function minimax(mx){
-if(checkWin("O"))return 1;
-if(checkWin("X"))return -1;
-if(isFull())return 0;
-if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}
-else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";}}return b;}
+    if(checkWin("O"))return 1;
+    if(checkWin("X"))return -1;
+    if(isFull())return 0;
+    if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}
+    else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";}}return b;}
 }
 
 function resetGame(){board=["","","","","","","","",""];currentPlayer="X";gameOver=false;statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";modal.classList.remove('active');document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose'));updateUI();}
