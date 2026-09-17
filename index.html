@@ -53,9 +53,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .confetti{position:fixed;width:10px;height:10px;background:#f1c40f;animation:fall 2s linear forwards;z-index:999;}
 @keyframes fall{0%{transform:translateY(-100vh) rotate(0);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
 #win-streak{display:none;align-items:center;gap:6px;background:linear-gradient(135deg,#e67e22,#f1c40f);color:#fff;padding:8px 16px;border-radius:20px;font-size:15px;font-weight:bold;margin-bottom:12px;box-shadow:0 4px 10px rgba(241,196,15,.4);animation:streakPulse 1.5s ease infinite;}
-#win-streak.fire{animation:streakPulse 1s ease infinite, fireGlow 1.5s ease infinite alternate;}
 @keyframes streakPulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
-@keyframes fireGlow{from{box-shadow:0 4px 10px rgba(241,196,15,.4);}to{box-shadow:0 4px 20px rgba(231,76,60,.8);}}
 #maintenance-warning{display:none;background:linear-gradient(135deg,#f39c12,#e67e22);color:#fff;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:bold;margin-bottom:10px;text-align:center;box-shadow:0 4px 10px rgba(243,156,18,.4);}
 #survival-bar{display:none;flex-direction:column;align-items:center;gap:6px;background:linear-gradient(135deg,#8e44ad,#c0392b);color:#fff;padding:10px 20px;border-radius:14px;font-size:15px;font-weight:bold;margin-bottom:12px;box-shadow:0 4px 12px rgba(142,68,173,.5);width:100%;max-width:340px;}
 #survival-bar .lvl{font-size:22px;font-weight:900;}
@@ -154,7 +152,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .quest-card .q-progress-fill{height:100%;background:linear-gradient(90deg,#3498db,#2ecc71);transition:width .4s;border-radius:4px;}
 .quest-card .q-footer{display:flex;justify-content:space-between;align-items:center;font-size:12px;opacity:0.85;}
 .quest-card .q-claim-btn{padding:8px 16px;font-size:13px;font-weight:bold;border:none;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;margin-top:0;transition:.2s;animation:claimPulse 1.5s ease infinite;}
-.quest-card .q-claim-btn:hover{transform:scale(1.05);}
 @keyframes claimPulse{0%,100%{box-shadow:0 0 0 rgba(46,204,113,0);}50%{box-shadow:0 0 15px rgba(46,204,113,.7);}}
 .quest-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:bold;margin-left:6px;text-transform:uppercase;letter-spacing:.5px;}
 .quest-badge.daily{background:#3498db;color:#fff;}
@@ -413,9 +410,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div style="text-align: center; margin-top: 40px; margin-bottom: 30px; width: 100%; max-width: 340px;">
     <p style="color: var(--text); font-size: 15px; margin-bottom: 15px; opacity: 0.9;">Нашли ошибку? Напишите нам!</p>
     <a href="mailto:Safety.Krestiki.Noliki@gmail.com?subject=Баг" style="display: inline-block; padding: 14px 28px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 10px; font-size: 16px; font-weight: bold;">✉️ Поддержка</a>
-</div>
-
-<script>
+    </div>
+    <script>
 const firebaseConfig={apiKey:"AIzaSyB2It75ikFi-YGKA8-jUNd4x9Syv17XSQg",authDomain:"krestiki-noliki1.firebaseapp.com",databaseURL:"https://krestiki-noliki1-default-rtdb.europe-west1.firebasedatabase.app",projectId:"krestiki-noliki1",storageBucket:"krestiki-noliki1.firebasestorage.app",messagingSenderId:"108383530148",appId:"1:108383530148:web:14989e9fec349406d0ca31"};
 firebase.initializeApp(firebaseConfig);
 const database=firebase.database();
@@ -598,7 +594,6 @@ function isReservedNick(nick){
     for(const r of RESERVED_NICKS){if(lower.startsWith(r)&&lower!==r)return true;}
     return false;
 }
-
 let audioCtx=null;
 function getAudioCtx(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}if(audioCtx.state==='suspended'){audioCtx.resume();}return audioCtx;}
 function playClick(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=600;g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.1);o.stop(ctx.currentTime+.1);}
@@ -965,7 +960,6 @@ function updateBoostBadge(){
     if(boosts.length>0){const b=boosts[0];const badge=document.createElement('span');badge.className='boost-badge';const minutesLeft=Math.ceil((b.expiresAt-Date.now())/60000);badge.textContent=b.icon+' x'+b.multiplier+' · '+minutesLeft+'м';el.appendChild(badge);}
 }
 setInterval(updateBoostBadge,60000);
-
 function renderShop(){
     const list=document.getElementById('shop-list');if(!list)return;
     const owned=getOwnedItems();
@@ -1239,13 +1233,13 @@ function renderTitleBadge(titleKey){
     if(titleKey==='admin_all')return '<span class="title-badge title-admin-god" data-title="'+titleKey+'" style="cursor:pointer;padding:3px 10px;font-size:10px;">👑 ADMIN</span>';
     return '<span class="title-badge '+t.cssClass+'" data-title="'+titleKey+'" style="cursor:pointer;">'+t.name+'</span>';
 }
+function renderBadgeForUser(nick,savedTitle){if(!savedTitle)return'';return renderTitleBadge(savedTitle);}
 function applyTitleToNick(){
     const badge=renderTitleBadge(currentTitle);
     const premium=localStorage.getItem('premium_badge')==='1'?' 👑':'';
     const hasRich=currentTitle==='shop_rich';
     const nickClass=hasRich?'rich-nickname':'';
-    if(isAdmin)playerNameEl.innerHTML='👑 <span class="'+nickClass+'">'+currentNick+'</span>'+premium+badge;
-    else playerNameEl.innerHTML='<span class="'+nickClass+'">'+currentNick+'</span>'+premium+badge;
+    playerNameEl.innerHTML='<span class="'+nickClass+'">'+currentNick+'</span>'+premium+badge;
     playerNameScoreEl.innerHTML='<span class="'+nickClass+'">'+currentNick+'</span>'+badge;
 }
 document.addEventListener('click',(e)=>{
@@ -1316,9 +1310,7 @@ function showRichUnlockEffect(){
     playRichFanfare();
     setTimeout(()=>bigText.remove(),2500);
     setTimeout(()=>overlay.remove(),3000);
-}
-
-/* ===== СТАТИСТИКА (parseInt) ===== */
+        }
 function loadAllPlayerStats(){
     if(!currentNick)return Promise.resolve();
     const n=currentNick.toLowerCase();
@@ -1345,8 +1337,6 @@ function updateStreakUI(){
     if(difficulty!=='survival'&&currentStreak>=2&&(difficulty==='medium'||difficulty==='hard')){
         winStreakEl.style.display='flex';
         streakCountEl.textContent=currentStreak;
-        if(currentStreak>=5)winStreakEl.classList.add('fire');
-        else winStreakEl.classList.remove('fire');
     } else winStreakEl.style.display='none';
 }
 function getPeriodKeys(){const now=new Date();return{month:now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'),year:String(now.getFullYear())};}
@@ -1406,8 +1396,7 @@ function loadMyStats(){
         scoreO=parseInt(d.losses)||0;
         scoreDraw=parseInt(d.draws)||0;
         currentStreak=parseInt(d.streak)||0;
-        updateScore();
-        updateStreakUI();
+        updateScore();updateStreakUI();
     });
     loadAllPlayerStats();
 }
@@ -1421,26 +1410,11 @@ function checkMyBan(){
     const n=currentNick.toLowerCase();
     database.ref('bans/'+n).once('value').then(s=>{
         const ban=s.val();
-        if(!ban){
-            const wasBanned=myCurrentBanData!==null;
-            hideBanScreen();
-            myCurrentBanData=null;
-            if(wasBanned)setTimeout(()=>loadMyStats(),500);
-            return;
-        }
+        if(!ban){const wasBanned=myCurrentBanData!==null;hideBanScreen();myCurrentBanData=null;if(wasBanned)setTimeout(()=>loadMyStats(),500);return;}
         if(ban.permanent){myCurrentBanData=ban;showBanScreen({permanent:true,reason:ban.reason||'Нарушение',bannedBy:ban.bannedBy||'Admin',bannedAt:ban.bannedAt||Date.now()});return;}
         const now=Date.now();
-        if(ban.expiresAt&&ban.expiresAt>now){
-            myCurrentBanData=ban;
-            showBanScreen({permanent:false,expiresAt:ban.expiresAt,reason:ban.reason||'Нарушение',bannedBy:ban.bannedBy||'Admin',bannedAt:ban.bannedAt||Date.now()});
-        } else {
-            database.ref('bans/'+n).remove().catch(()=>{});
-            logBanHistory({nick:currentNick,type:'expired',reason:'Срок истёк',by:'System'});
-            const wasBanned=myCurrentBanData!==null;
-            hideBanScreen();
-            myCurrentBanData=null;
-            if(wasBanned)setTimeout(()=>loadMyStats(),500);
-        }
+        if(ban.expiresAt&&ban.expiresAt>now){myCurrentBanData=ban;showBanScreen({permanent:false,expiresAt:ban.expiresAt,reason:ban.reason||'Нарушение',bannedBy:ban.bannedBy||'Admin',bannedAt:ban.bannedAt||Date.now()});}
+        else{database.ref('bans/'+n).remove().catch(()=>{});logBanHistory({nick:currentNick,type:'expired',reason:'Срок истёк',by:'System'});const wasBanned=myCurrentBanData!==null;hideBanScreen();myCurrentBanData=null;if(wasBanned)setTimeout(()=>loadMyStats(),500);}
     });
 }
 function showBanScreen(ban){
@@ -1490,12 +1464,7 @@ document.getElementById('appeal-send').addEventListener('click',()=>{
     const status=document.getElementById('appeal-status');
     if(reason.length<10){status.style.color='#e74c3c';status.textContent='Мин. 10 символов';return;}
     if(!myCurrentBanData){status.style.color='#e74c3c';status.textContent='Нет бана';return;}
-    database.ref('appeals').push({
-        nick:currentNick.toLowerCase(),displayNick:currentNick,reason:reason,
-        banAt:myCurrentBanData.bannedAt,bannedBy:myCurrentBanData.bannedBy||'Admin',
-        banReason:myCurrentBanData.reason||'—',permanent:myCurrentBanData.permanent||false,
-        createdAt:Date.now(),resolved:false
-    }).then(()=>{status.style.color='#2ecc71';status.textContent='✅ Отправлено!';setTimeout(()=>document.getElementById('appeal-modal').classList.remove('active'),1500);updateAppealCount();}).catch(err=>{status.style.color='#e74c3c';status.textContent='Ошибка: '+err.message;});
+    database.ref('appeals').push({nick:currentNick.toLowerCase(),displayNick:currentNick,reason:reason,banAt:myCurrentBanData.bannedAt,bannedBy:myCurrentBanData.bannedBy||'Admin',banReason:myCurrentBanData.reason||'—',permanent:myCurrentBanData.permanent||false,createdAt:Date.now(),resolved:false}).then(()=>{status.style.color='#2ecc71';status.textContent='✅ Отправлено!';setTimeout(()=>document.getElementById('appeal-modal').classList.remove('active'),1500);updateAppealCount();}).catch(err=>{status.style.color='#e74c3c';status.textContent='Ошибка: '+err.message;});
 });
 function renderBanUsersList(filter){
     const list=document.getElementById('ban-users-list');if(!list)return;
@@ -1658,8 +1627,6 @@ function updateAppealCount(){
         if(badge){if(pending>0){badge.style.display='inline-block';badge.textContent=pending;}else badge.style.display='none';}
     });
 }
-
-/* ===== ТЕХ. ПЕРЕРЫВ ===== */
 const maintenanceModal=document.getElementById('maintenance-modal');
 const maintenanceBody=document.getElementById('maintenance-body');
 const maintenanceClose=document.getElementById('maintenance-close');
@@ -1701,22 +1668,13 @@ database.ref('system/maintenanceRequest').on('value',s=>{
 });
 document.getElementById('maint-approve-yes').addEventListener('click',()=>{database.ref('system/maintenanceRequest').once('value').then(s=>{const req=s.val()||{};database.ref('system/maintenance').set({active:true,message:req.reason||'Перерыв',startedAt:Date.now(),startedBy:req.from,approvedBy:currentNick});database.ref('system/maintenanceRequest').remove();maintApproveModal.classList.remove('active');});});
 document.getElementById('maint-approve-no').addEventListener('click',()=>{database.ref('system/maintenanceRequest').remove();maintApproveModal.classList.remove('active');});
-
-/* ===== UI СОБЫТИЯ ===== */
-themeToggle.addEventListener('click',()=>{document.body.classList.toggle('light');const l=document.body.classList.contains('light');themeToggle.textContent=l?'☀️ Тема':'🌙 Тема';});
+        themeToggle.addEventListener('click',()=>{document.body.classList.toggle('light');const l=document.body.classList.contains('light');themeToggle.textContent=l?'☀️ Тема':'🌙 Тема';});
 soundToggle.addEventListener('click',()=>{soundOn=!soundOn;soundToggle.textContent=soundOn?'🔊 Звук':'🔇 Звук';});
 menuBtn.addEventListener('click',()=>menuModal.classList.add('active'));
 menuClose.addEventListener('click',()=>menuModal.classList.remove('active'));
 document.getElementById('menu-settings').addEventListener('click',()=>{menuModal.classList.remove('active');settingsModal.classList.add('active');});
 document.getElementById('menu-leaders').addEventListener('click',()=>{menuModal.classList.remove('active');loadLeaders('medium');document.getElementById('leaders-modal').classList.add('active');});
-leaderTabs.addEventListener('click',e=>{
-    if(e.target.tagName==='BUTTON'&&e.target.dataset.lvl){
-        currentLeaderLevel=e.target.dataset.lvl;
-        leaderTabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-        e.target.classList.add('active');
-        loadLeaders(currentLeaderLevel);
-    }
-});
+leaderTabs.addEventListener('click',e=>{if(e.target.tagName==='BUTTON'&&e.target.dataset.lvl){currentLeaderLevel=e.target.dataset.lvl;leaderTabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');loadLeaders(currentLeaderLevel);}});
 document.getElementById('set-profile').addEventListener('click',()=>{settingsModal.classList.remove('active');loadProfile();document.getElementById('profile-modal').classList.add('active');});
 document.getElementById('set-inventory').addEventListener('click',()=>{settingsModal.classList.remove('active');loadAllPlayerStats().then(()=>{renderColorGrid();colorStatus.textContent='';inventoryModal.classList.add('active');});});
 document.getElementById('set-titles').addEventListener('click',()=>{settingsModal.classList.remove('active');loadUserTitles(currentUID).then(()=>{renderTitlesGrid();titleStatus.textContent='';titlesModal.classList.add('active');});});
@@ -1758,53 +1716,12 @@ document.getElementById('set-admin-panel').addEventListener('click',()=>{setting
 document.getElementById('admin-panel-close').addEventListener('click',()=>document.getElementById('admin-panel-modal').classList.remove('active'));
 document.getElementById('admin-all-players').addEventListener('click',()=>{document.getElementById('admin-panel-modal').classList.remove('active');document.getElementById('all-players-modal').classList.add('active');loadAllPlayers();});
 document.getElementById('admin-give-titles').addEventListener('click',()=>{document.getElementById('admin-panel-modal').classList.remove('active');renderAdminTitlesList();document.getElementById('admin-titles-modal').classList.add('active');});
-document.getElementById('admin-title-history').addEventListener('click',()=>{
-    document.getElementById('admin-panel-modal').classList.remove('active');
-    const list=document.getElementById('title-history-list');
-    list.innerHTML='Загрузка...';
-    database.ref('titleHistory').once('value').then(s=>{
-        const data=s.val()||{};
-        const arr=Object.entries(data).map(([key,val])=>({key,...val}));
-        if(arr.length===0){list.innerHTML='<div style="text-align:center;opacity:0.7;">Пусто</div>';document.getElementById('title-history-modal').classList.add('active');return;}
-        arr.sort((a,b)=>(b.issuedAt||0)-(a.issuedAt||0));
-        let html='';
-        arr.forEach(item=>{
-            const t=TITLES[item.title]||{name:item.title,cssClass:''};
-            const date=new Date(item.issuedAt).toLocaleString('ru-RU');
-            html+='<div style="padding:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;"><div style="font-size:14px;margin-bottom:5px;"><b>'+item.nick+'</b> — <span class="title-badge '+t.cssClass+'">'+t.name+'</span></div><div style="font-size:12px;opacity:0.85;">✅ <b>'+(item.issuedBy||'Admin')+'</b><br>📅 '+date+'</div></div>';
-        });
-        list.innerHTML=html;
-        document.getElementById('title-history-modal').classList.add('active');
-    });
-});
-document.getElementById('admin-init-titles').addEventListener('click',()=>{
-    document.getElementById('admin-panel-modal').classList.remove('active');
-    if(!isAdmin)return;
-    if(!confirm('Инициализировать?'))return;
-    database.ref('users').once('value').then(snap=>{
-        const users=snap.val()||{};
-        let done=0,created=0;
-        const promises=Object.keys(users).map(uid=>{const u=users[uid]||{};if(u.titles){done++;return Promise.resolve();}return database.ref('users/'+uid+'/titles').set({}).then(()=>{created++;done++;});});
-        Promise.all(promises).then(()=>alert('✅ Обработано: '+done+', создано: '+created));
-    });
-});
-document.getElementById('admin-maintenance').addEventListener('click',()=>{
-    document.getElementById('admin-panel-modal').classList.remove('active');
-    database.ref('system/maintenance').once('value').then(s=>{
-        const data=s.val()||{};
-        document.getElementById('maintenance-control-body').innerHTML='<div style="padding:12px;background:rgba(0,0,0,.25);border-radius:8px;"><b>Статус:</b> '+(data.active?'🔴 ВКЛ':'🟢 ВЫКЛ')+'<br><b>Причина:</b> '+(data.message||'—')+'</div>';
-        maintControlModal.classList.add('active');
-    });
-});
+document.getElementById('admin-title-history').addEventListener('click',()=>{document.getElementById('admin-panel-modal').classList.remove('active');const list=document.getElementById('title-history-list');list.innerHTML='Загрузка...';database.ref('titleHistory').once('value').then(s=>{const data=s.val()||{};const arr=Object.entries(data).map(([key,val])=>({key,...val}));if(arr.length===0){list.innerHTML='<div style="text-align:center;opacity:0.7;">Пусто</div>';document.getElementById('title-history-modal').classList.add('active');return;}arr.sort((a,b)=>(b.issuedAt||0)-(a.issuedAt||0));let html='';arr.forEach(item=>{const t=TITLES[item.title]||{name:item.title,cssClass:''};const date=new Date(item.issuedAt).toLocaleString('ru-RU');html+='<div style="padding:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;"><div style="font-size:14px;margin-bottom:5px;"><b>'+item.nick+'</b> — <span class="title-badge '+t.cssClass+'">'+t.name+'</span></div><div style="font-size:12px;opacity:0.85;">✅ <b>'+(item.issuedBy||'Admin')+'</b><br>📅 '+date+'</div></div>';});list.innerHTML=html;document.getElementById('title-history-modal').classList.add('active');});});
+document.getElementById('admin-init-titles').addEventListener('click',()=>{document.getElementById('admin-panel-modal').classList.remove('active');if(!isAdmin)return;if(!confirm('Инициализировать?'))return;database.ref('users').once('value').then(snap=>{const users=snap.val()||{};let done=0,created=0;const promises=Object.keys(users).map(uid=>{const u=users[uid]||{};if(u.titles){done++;return Promise.resolve();}return database.ref('users/'+uid+'/titles').set({}).then(()=>{created++;done++;});});Promise.all(promises).then(()=>alert('✅ Обработано: '+done+', создано: '+created));});});
+document.getElementById('admin-maintenance').addEventListener('click',()=>{document.getElementById('admin-panel-modal').classList.remove('active');database.ref('system/maintenance').once('value').then(s=>{const data=s.val()||{};document.getElementById('maintenance-control-body').innerHTML='<div style="padding:12px;background:rgba(0,0,0,.25);border-radius:8px;"><b>Статус:</b> '+(data.active?'🔴 ВКЛ':'🟢 ВЫКЛ')+'<br><b>Причина:</b> '+(data.message||'—')+'</div>';maintControlModal.classList.add('active');});});
 document.getElementById('admin-bans').addEventListener('click',()=>{document.getElementById('admin-panel-modal').classList.remove('active');document.getElementById('ban-search').value='';renderBanUsersList('');document.getElementById('ban-modal').classList.add('active');});
 document.getElementById('admin-ban-history').addEventListener('click',()=>{document.getElementById('admin-panel-modal').classList.remove('active');document.getElementById('ban-history-search').value='';renderBanHistory('');document.getElementById('ban-history-modal').classList.add('active');});
-document.getElementById('admin-appeals').addEventListener('click',()=>{
-    document.getElementById('admin-panel-modal').classList.remove('active');
-    currentAppealTab='pending';
-    document.querySelectorAll('#appeals-modal .shop-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.appealTab==='pending'));
-    renderAppealsList();
-    document.getElementById('appeals-modal').classList.add('active');
-});
+document.getElementById('admin-appeals').addEventListener('click',()=>{document.getElementById('admin-panel-modal').classList.remove('active');currentAppealTab='pending';document.querySelectorAll('#appeals-modal .shop-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.appealTab==='pending'));renderAppealsList();document.getElementById('appeals-modal').classList.add('active');});
 document.querySelectorAll('#appeals-modal .shop-tabs button').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('#appeals-modal .shop-tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentAppealTab=btn.dataset.appealTab;renderAppealsList();});});
 
 function renderAdminCoinsList(filter){
@@ -1819,14 +1736,8 @@ function renderAdminCoinsList(filter){
         if(entries.length===0){list.innerHTML='<div style="text-align:center;padding:20px;opacity:0.7;">Не найдено</div>';return;}
         let html='';
         entries.forEach(e=>{
-            const isAdminRow=e.nick==='Admin';
-            html+='<div class="ban-user-row"><div class="ban-nick"><span>👤 '+e.nick+(isAdminRow?' 👑':'')+'</span><span style="color:#f1c40f;font-weight:bold;">🪙 '+e.coins+'</span></div>';
-            html+='<div class="ban-actions">';
-            html+='<button class="ban-btn-sm" style="background:#3498db;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="edit">✏️ Изменить</button>';
-            html+='<button class="ban-btn-sm" style="background:#2ecc71;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="add100">+100</button>';
-            html+='<button class="ban-btn-sm" style="background:#f39c12;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="add1000">+1000</button>';
-            html+='<button class="ban-btn-sm" style="background:#e74c3c;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="reset">Сброс</button>';
-            html+='</div></div>';
+            html+='<div class="ban-user-row"><div class="ban-nick"><span>👤 '+e.nick+'</span><span style="color:#f1c40f;font-weight:bold;">🪙 '+e.coins+'</span></div>';
+            html+='<div class="ban-actions"><button class="ban-btn-sm" style="background:#3498db;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="edit">✏️ Изменить</button><button class="ban-btn-sm" style="background:#2ecc71;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="add100">+100</button><button class="ban-btn-sm" style="background:#f39c12;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="add1000">+1000</button><button class="ban-btn-sm" style="background:#e74c3c;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="reset">Сброс</button></div></div>';
         });
         list.innerHTML=html;
         list.querySelectorAll('button[data-action]').forEach(btn=>{
@@ -1840,42 +1751,13 @@ function renderAdminCoinsList(filter){
         });
     });
 }
-function openCoinsEdit(uid,nick,coins){
-    currentCoinsTarget={uid,nick,coins:parseInt(coins)||0};
-    document.getElementById('admin-coins-edit-title').textContent='💰 '+nick;
-    document.getElementById('admin-coins-edit-body').innerHTML='<div style="padding:12px;background:rgba(0,0,0,.25);border-radius:8px;margin-bottom:12px;"><b>Текущий баланс:</b> <span style="color:#f1c40f;font-weight:bold;">🪙 '+coins+'</span></div>';
-    document.getElementById('admin-coins-input').value='';
-    document.getElementById('admin-coins-edit-modal').classList.add('active');
-}
-function setPlayerCoins(uid,newAmount,nick,actionLabel){
-    newAmount=Math.max(0,Math.round(newAmount));
-    database.ref('users/'+uid+'/coins').set(newAmount).then(()=>{
-        database.ref('users/'+uid+'/coins_update').set({value:newAmount,by:currentNick,at:Date.now(),action:actionLabel});
-        alert('✅ '+nick+' → 🪙 '+newAmount+' ('+actionLabel+')');
-        renderAdminCoinsList(document.getElementById('admin-coins-search').value);
-    }).catch(err=>alert('Ошибка: '+err.message));
-}
+function openCoinsEdit(uid,nick,coins){currentCoinsTarget={uid,nick,coins:parseInt(coins)||0};document.getElementById('admin-coins-edit-title').textContent='💰 '+nick;document.getElementById('admin-coins-edit-body').innerHTML='<div style="padding:12px;background:rgba(0,0,0,.25);border-radius:8px;margin-bottom:12px;"><b>Текущий баланс:</b> <span style="color:#f1c40f;font-weight:bold;">🪙 '+coins+'</span></div>';document.getElementById('admin-coins-input').value='';document.getElementById('admin-coins-edit-modal').classList.add('active');}
+function setPlayerCoins(uid,newAmount,nick,actionLabel){newAmount=Math.max(0,Math.round(newAmount));database.ref('users/'+uid+'/coins').set(newAmount).then(()=>{database.ref('users/'+uid+'/coins_update').set({value:newAmount,by:currentNick,at:Date.now(),action:actionLabel});alert('✅ '+nick+' → 🪙 '+newAmount+' ('+actionLabel+')');renderAdminCoinsList(document.getElementById('admin-coins-search').value);}).catch(err=>alert('Ошибка: '+err.message));}
 document.getElementById('admin-coins').addEventListener('click',()=>{document.getElementById('admin-panel-modal').classList.remove('active');document.getElementById('admin-coins-search').value='';renderAdminCoinsList('');document.getElementById('admin-coins-modal').classList.add('active');});
 document.getElementById('admin-coins-close').addEventListener('click',()=>document.getElementById('admin-coins-modal').classList.remove('active'));
 document.getElementById('admin-coins-search').addEventListener('input',e=>renderAdminCoinsList(e.target.value));
 document.getElementById('admin-coins-edit-cancel').addEventListener('click',()=>{document.getElementById('admin-coins-edit-modal').classList.remove('active');currentCoinsTarget=null;});
-document.querySelectorAll('#admin-coins-edit-modal button[data-coins-op]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-        if(!currentCoinsTarget)return;
-        const val=parseInt(document.getElementById('admin-coins-input').value);
-        if(isNaN(val)||val<0){alert('Введи корректное число');return;}
-        const op=btn.dataset.coinsOp;
-        let newAmount=currentCoinsTarget.coins;
-        if(op==='set')newAmount=val;
-        else if(op==='add')newAmount+=val;
-        else if(op==='remove')newAmount-=val;
-        setPlayerCoins(currentCoinsTarget.uid,newAmount,currentCoinsTarget.nick,op==='set'?'Установлено '+val:op==='add'?'+'+val:'−'+val);
-        document.getElementById('admin-coins-edit-modal').classList.remove('active');
-        currentCoinsTarget=null;
-    });
-});
-
-/* ===== ПРОЧИЕ ФУНКЦИИ ===== */
+document.querySelectorAll('#admin-coins-edit-modal button[data-coins-op]').forEach(btn=>{btn.addEventListener('click',()=>{if(!currentCoinsTarget)return;const val=parseInt(document.getElementById('admin-coins-input').value);if(isNaN(val)||val<0){alert('Введи корректное число');return;}const op=btn.dataset.coinsOp;let newAmount=currentCoinsTarget.coins;if(op==='set')newAmount=val;else if(op==='add')newAmount+=val;else if(op==='remove')newAmount-=val;setPlayerCoins(currentCoinsTarget.uid,newAmount,currentCoinsTarget.nick,op==='set'?'Установлено '+val:op==='add'?'+'+val:'−'+val);document.getElementById('admin-coins-edit-modal').classList.remove('active');currentCoinsTarget=null;});});
 function loadProfile(){
     const content=document.getElementById('profile-content');
     if(!currentNick){content.innerHTML='Войдите';return;}
@@ -1886,7 +1768,7 @@ function loadProfile(){
         database.ref('stats').once('value',s=>{
             const all=s.val()||{};
             let html='<div style="padding:12px;background:rgba(0,0,0,.2);border-radius:8px;margin-bottom:12px;">';
-            const profileBadge=renderTitleBadge(currentTitle);
+            const profileBadge=renderBadgeForUser(currentNick,currentTitle);
             const isRichNick=currentTitle==='shop_rich';
             const nickStyle=isRichNick?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;':'';
             html+='<div style="font-size:18px;margin-bottom:6px;">👤 <b style="'+nickStyle+'">'+currentNick+'</b>'+profileBadge+'</div>';
@@ -1927,8 +1809,16 @@ function loadLeaders(level){
     if(level==='rich'){
         database.ref('users').once('value').then(s=>{
             const users=s.val()||{};
-            const entries=[];
-            Object.keys(users).forEach(uid=>{const u=users[uid]||{};if(u.nick)entries.push({nick:u.nick,coins:parseInt(u.coins)||0,title:u.title||null});});
+            const byNick={};
+            Object.keys(users).forEach(uid=>{
+                const u=users[uid]||{};
+                if(!u.nick)return;
+                const key=u.nick.toLowerCase();
+                const coins=parseInt(u.coins)||0;
+                if(!byNick[key]||coins>byNick[key].coins){byNick[key]={nick:u.nick,coins:coins,title:u.title||null};}
+                else if(coins===byNick[key].coins&&!byNick[key].title&&u.title){byNick[key].title=u.title;}
+            });
+            const entries=Object.values(byNick);
             entries.sort((a,b)=>b.coins-a.coins);
             entries.splice(30);
             let html='<div style="padding:14px;margin-bottom:15px;background:linear-gradient(135deg,#f1c40f,#e67e22);border-radius:12px;color:#fff;font-weight:bold;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">💰 ТОП БОГАЧЕЙ 💰</div><div style="font-size:12px;opacity:0.9;">Самые богатые игроки проекта</div></div>';
@@ -1936,13 +1826,14 @@ function loadLeaders(level){
             html+='<ol style="padding-left:0;list-style:none;margin:0;">';
             entries.forEach((p,idx)=>{
                 const medal=idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'#'+(idx+1);
-                const badge=renderTitleBadge(p.title);
+                const badge=renderBadgeForUser(p.nick,p.title);
                 const isRich=p.title==='shop_rich';
                 const rowBg=idx===0?'linear-gradient(135deg,rgba(255,215,0,.25),rgba(255,165,0,.1))':idx===1?'rgba(192,192,192,.2)':idx===2?'rgba(205,127,50,.2)':'rgba(0,0,0,.2)';
-                html+='<li style="margin-bottom:8px;padding:10px 14px;background:'+rowBg+';border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.1);">';
+                html+='<li style="margin-bottom:8px;padding:10px 14px;background:'+rowBg+';border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.1);flex-wrap:wrap;">';
                 html+='<div style="display:flex;align-items:center;gap:6px;min-width:0;flex:1;flex-wrap:wrap;">';
-                html+='<span style="font-size:16px;min-width:26px;text-align:center;font-weight:bold;flex-shrink:0;">'+medal+'</span>';
-                html+='<span style="font-weight:bold;overflow:hidden;text-overflow:ellipsis;'+(isRich?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;':'')+'">'+p.nick+'</span>';
+                html+='<span style="font-size:16px;min-width:26px;text-align:center;font-weight:bold;">'+medal+'</span>';
+                if(isRich){html+='<span class="rainbow-text" style="font-weight:bold;overflow:hidden;text-overflow:ellipsis;">'+p.nick+'</span>';}
+                else{html+='<span style="font-weight:bold;overflow:hidden;text-overflow:ellipsis;">'+p.nick+'</span>';}
                 html+=badge+'</div>';
                 html+='<span style="color:#f1c40f;font-weight:bold;white-space:nowrap;font-size:14px;">🪙 '+p.coins.toLocaleString('ru-RU')+'</span>';
                 html+='</li>';
@@ -1955,7 +1846,9 @@ function loadLeaders(level){
     database.ref('stats/'+level).once('value').then(s=>{
         const data=s.val()||{};
         if(level==='survival'){
-            const arr=Object.keys(data).map(k=>({nick:k,...data[k]}));
+            const byNick={};
+            Object.keys(data).forEach(k=>{const key=k.toLowerCase();const best=parseInt(data[k].best)||0;if(!byNick[key]||best>byNick[key].best){byNick[key]={nick:k,best:best};}});
+            const arr=Object.values(byNick);
             arr.sort((a,b)=>(parseInt(b.best)||0)-(parseInt(a.best)||0));
             arr.splice(30);
             database.ref('users').once('value').then(us=>{
@@ -1968,12 +1861,13 @@ function loadLeaders(level){
                     html+='<ol style="padding-left:0;list-style:none;">';
                     arr.forEach((p,idx)=>{
                         const medal=idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'#'+(idx+1);
-                        const badge=renderTitleBadge(titleMap[p.nick.toLowerCase()]);
+                        const badge=renderBadgeForUser(p.nick,titleMap[p.nick.toLowerCase()]);
                         const isRich=titleMap[p.nick.toLowerCase()]==='shop_rich';
                         html+='<li style="margin-bottom:8px;padding:10px 14px;background:rgba(0,0,0,.2);border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">';
                         html+='<div style="display:flex;align-items:center;gap:6px;min-width:0;flex:1;flex-wrap:wrap;">';
                         html+='<span style="font-size:16px;min-width:26px;text-align:center;font-weight:bold;">'+medal+'</span>';
-                        html+='<span style="font-weight:bold;'+(isRich?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;':'')+'">'+p.nick+'</span>';
+                        if(isRich){html+='<span class="rainbow-text" style="font-weight:bold;">'+p.nick+'</span>';}
+                        else{html+='<span style="font-weight:bold;">'+p.nick+'</span>';}
                         html+=badge+'</div>';
                         html+='<span style="color:#c39bd3;font-weight:bold;white-space:nowrap;font-size:14px;">🌪️ Lvl. '+(parseInt(p.best)||0)+'</span>';
                         html+='</li>';
@@ -1984,7 +1878,9 @@ function loadLeaders(level){
             });
             return;
         }
-        const arr=Object.keys(data).map(k=>({nick:k,...data[k]}));
+        const byNick={};
+        Object.keys(data).forEach(k=>{const key=k.toLowerCase();const wins=parseInt(data[k].wins)||0;if(!byNick[key]||wins>byNick[key].wins){byNick[key]={nick:k,wins:wins};}});
+        const arr=Object.values(byNick);
         arr.sort((a,b)=>(parseInt(b.wins)||0)-(parseInt(a.wins)||0));
         arr.splice(20);
         database.ref('users').once('value').then(us=>{
@@ -1997,13 +1893,14 @@ function loadLeaders(level){
                 html='<ol style="padding-left:0;list-style:none;">';
                 arr.forEach((p,idx)=>{
                     const medal=idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'#'+(idx+1);
-                    const badge=renderTitleBadge(titleMap[p.nick.toLowerCase()]);
+                    const badge=renderBadgeForUser(p.nick,titleMap[p.nick.toLowerCase()]);
                     const isRich=titleMap[p.nick.toLowerCase()]==='shop_rich';
                     const rowBg=idx===0?'linear-gradient(135deg,rgba(255,215,0,.25),rgba(255,165,0,.1))':idx===1?'rgba(192,192,192,.2)':idx===2?'rgba(205,127,50,.2)':'rgba(0,0,0,.2)';
                     html+='<li style="margin-bottom:8px;padding:10px 14px;background:'+rowBg+';border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">';
                     html+='<div style="display:flex;align-items:center;gap:6px;min-width:0;flex:1;flex-wrap:wrap;">';
                     html+='<span style="font-size:16px;min-width:26px;text-align:center;font-weight:bold;">'+medal+'</span>';
-                    html+='<span style="font-weight:bold;'+(isRich?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;':'')+'">'+p.nick+'</span>';
+                    if(isRich){html+='<span class="rainbow-text" style="font-weight:bold;">'+p.nick+'</span>';}
+                    else{html+='<span style="font-weight:bold;">'+p.nick+'</span>';}
                     html+=badge+'</div>';
                     html+='<span style="color:#2ecc71;font-weight:bold;white-space:nowrap;font-size:14px;">🏆 '+(parseInt(p.wins)||0)+'</span>';
                     html+='</li>';
@@ -2018,14 +1915,14 @@ function loadAllPlayers(){
     const list=document.getElementById('all-players-list');
     if(!isAdmin){list.innerHTML='Доступ запрещён';return;}
     list.innerHTML='Загрузка...';
-    database.ref('stats').once('value').then(s=>{
-        const all=s.val()||{};
+    database.ref('users').once('value').then(us=>{
+        const users=us.val()||{};
         const nicksSet=new Set();
-        ['easy','medium','hard','survival'].forEach(lvl=>{if(all[lvl])Object.keys(all[lvl]).forEach(n=>nicksSet.add(n));});
-        if(nicksSet.size===0){list.innerHTML='Пока нет игроков';return;}
+        Object.keys(users).forEach(uid=>{const u=users[uid]||{};if(u.nick)nicksSet.add(u.nick.toLowerCase());});
+        if(nicksSet.size===0){list.innerHTML='Нет игроков';return;}
         const arr=Array.from(nicksSet).sort();
-        database.ref('users').once('value').then(us=>{
-            const users=us.val()||{};
+        database.ref('stats').once('value').then(s=>{
+            const all=s.val()||{};
             const titleMap={},coinsMap={};
             Object.keys(users).forEach(uid=>{const u=users[uid]||{};if(u.nick){titleMap[u.nick.toLowerCase()]=u.title||null;coinsMap[u.nick.toLowerCase()]=parseInt(u.coins)||0;}});
             let html='<div style="margin-bottom:10px;">Всего: <b>'+arr.length+'</b></div>';
@@ -2033,16 +1930,14 @@ function loadAllPlayers(){
                 const dE=(all.easy&&all.easy[n])?all.easy[n]:{};
                 const dM=(all.medium&&all.medium[n])?all.medium[n]:{};
                 const dH=(all.hard&&all.hard[n])?all.hard[n]:{};
-                const badge=renderTitleBadge(titleMap[n]);
+                const badge=renderBadgeForUser(n,titleMap[n]);
                 const isRich=titleMap[n]==='shop_rich';
-                const nickStyle=isRich?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;font-weight:bold;':'font-weight:bold;';
                 html+='<div style="padding:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;">';
                 html+='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">';
-                html+='<span><span style="'+nickStyle+'">'+n+'</span>'+badge+'</span>';
+                if(isRich){html+='<span><span class="rainbow-text" style="font-weight:bold;">'+n+'</span>'+badge+'</span>';}
+                else{html+='<span><span style="font-weight:bold;">'+n+'</span>'+badge+'</span>';}
                 html+='<span style="color:#f1c40f;font-weight:bold;">🪙 '+(coinsMap[n]||0).toLocaleString('ru-RU')+'</span>';
-                html+='</div>';
-                html+='🟢 '+(parseInt(dE.wins)||0)+' / 🟡 '+(parseInt(dM.wins)||0)+' / 🔴 '+(parseInt(dH.wins)||0);
-                html+='</div>';
+                html+='</div>🟢 '+(parseInt(dE.wins)||0)+' / 🟡 '+(parseInt(dM.wins)||0)+' / 🔴 '+(parseInt(dH.wins)||0)+'</div>';
             });
             list.innerHTML=html;
         });
@@ -2062,48 +1957,32 @@ function renderAdminTitlesList(){
         const keys=Object.keys(TITLES).filter(k=>TITLES[k].adminOnly);
         nicks.forEach(n=>{
             const info=nickToUid[n];
-            const equippedBadge=renderTitleBadge(info.currentTitle);
+            const equippedBadge=renderBadgeForUser(info.nick,info.currentTitle);
             html+='<div class="admin-user-row"><div class="nick">👤 '+info.nick+equippedBadge+'</div><div class="titles">';
-            keys.forEach(k=>{
-                const on=info.titles[k]?true:false;
-                html+='<span class="title-chip '+(on?'on':'off')+'" data-uid="'+info.uid+'" data-nick="'+info.nick+'" data-title="'+k+'">'+TITLES[k].name+'</span>';
-            });
+            keys.forEach(k=>{const on=info.titles[k]?true:false;html+='<span class="title-chip '+(on?'on':'off')+'" data-uid="'+info.uid+'" data-nick="'+info.nick+'" data-title="'+k+'">'+TITLES[k].name+'</span>';});
             html+='</div></div>';
         });
         list.innerHTML=html;
         list.querySelectorAll('.title-chip').forEach(chip=>{
             chip.addEventListener('click',()=>{
                 const isOn=chip.classList.contains('on');
-                if(isOn){
-                    if(!confirm('Снять?'))return;
-                    database.ref('users/'+chip.dataset.uid+'/titles/'+chip.dataset.title).remove().then(()=>{chip.classList.remove('on');chip.classList.add('off');});
-                } else {
-                    database.ref('users/'+chip.dataset.uid+'/titles/'+chip.dataset.title).set(true).then(()=>{chip.classList.remove('off');chip.classList.add('on');});
-                }
+                if(isOn){if(!confirm('Снять?'))return;database.ref('users/'+chip.dataset.uid+'/titles/'+chip.dataset.title).remove().then(()=>{chip.classList.remove('on');chip.classList.add('off');});}
+                else{database.ref('users/'+chip.dataset.uid+'/titles/'+chip.dataset.title).set(true).then(()=>{chip.classList.remove('off');chip.classList.add('on');});}
             });
         });
     });
 }
-function loadUserTitles(uid){
-    return database.ref('users/'+uid+'/titles').once('value').then(s=>{
-        const obj=s.val()||{};
-        userTitles=Object.keys(obj).filter(k=>obj[k]===true);
-        knownTitles=[...userTitles];
-        return userTitles;
-    });
-}
+function loadUserTitles(uid){return database.ref('users/'+uid+'/titles').once('value').then(s=>{const obj=s.val()||{};userTitles=Object.keys(obj).filter(k=>obj[k]===true);knownTitles=[...userTitles];return userTitles;});}
 function listenForNewTitles(uid){
     database.ref('users/'+uid+'/titles').on('value',s=>{
         const obj=s.val()||{};
         const nowTitles=Object.keys(obj).filter(k=>obj[k]===true);
         const added=nowTitles.filter(k=>!knownTitles.includes(k));
         added.forEach(k=>{if(TITLES[k]&&!pendingAwardTitle&&!isAdmin){setTimeout(()=>{if(!pendingAwardTitle)showAwardNotification(k);},300);}});
-        knownTitles=nowTitles;
-        userTitles=nowTitles;
+        knownTitles=nowTitles;userTitles=nowTitles;
     });
 }
 
-/* ===== ОНЛАЙН 1 НА 1 (исправлено) ===== */
 document.getElementById('mode-online').addEventListener('click',()=>{
     if(maintenanceActive&&!isAdmin&&!userTitles.includes('tester')){alert('🚧 Перерыв');return;}
     document.getElementById('mode-modal').classList.remove('active');
@@ -2111,7 +1990,6 @@ document.getElementById('mode-online').addEventListener('click',()=>{
     document.getElementById('online-modal').classList.add('active');
 });
 document.getElementById('online-close').addEventListener('click',()=>document.getElementById('online-modal').classList.remove('active'));
-
 function renderOnlineMenu(){
     document.getElementById('online-content').innerHTML='<p style="font-size:14px;opacity:0.9;margin-bottom:15px;">Играй с другом по сети. Один создаёт комнату, второй присоединяется по коду.</p><button id="create-room-btn" style="width:100%;padding:14px;font-size:16px;background:#2ecc71;border-radius:8px;border:none;color:#fff;cursor:pointer;font-weight:bold;margin-bottom:12px;">🏠 Создать комнату</button><div style="font-size:12px;opacity:0.7;margin:10px 0;text-align:center;">— или по коду —</div><div class="nick-input-row"><input type="text" id="room-code-input" placeholder="Код комнаты" maxlength="6" style="text-transform:uppercase;"><button id="join-btn" style="background:#3498db;">Войти</button></div><div id="online-status" style="font-size:13px;min-height:20px;margin-top:10px;"></div>';
     document.getElementById('create-room-btn').addEventListener('click',createRoomOnly);
@@ -2124,11 +2002,7 @@ function createRoomOnly(){
         statusEl.style.color='#2ecc71';
         statusEl.innerHTML='✅ Комната создана!<br>Код: <b style="font-size:22px;color:#f1c40f;letter-spacing:3px;">'+roomCode+'</b><br><span style="font-size:12px;opacity:0.8;">Передай код другу</span>';
         const roomRef=database.ref('rooms/'+roomCode);
-        roomRef.on('value',s=>{
-            const room=s.val();
-            if(!room)return;
-            if(room.status==='playing'&&room.player2){roomRef.off();document.getElementById('online-modal').classList.remove('active');startOnlineGame(roomCode,'player1');}
-        });
+        roomRef.on('value',s=>{const room=s.val();if(!room)return;if(room.status==='playing'&&room.player2){roomRef.off();document.getElementById('online-modal').classList.remove('active');startOnlineGame(roomCode,'player1');}});
     }).catch(err=>{statusEl.style.color='#e74c3c';statusEl.textContent='Ошибка: '+err.message;});
 }
 function joinRoomByCode(){
@@ -2141,21 +2015,12 @@ function joinRoomByCode(){
         const room=s.val();
         if(room.status!=='waiting'){statusEl.style.color='#e74c3c';statusEl.textContent='❌ Комната занята';return;}
         if(room.player1uid===currentUID){statusEl.style.color='#e74c3c';statusEl.textContent='❌ Это твоя комната';return;}
-        database.ref('rooms/'+code).update({player2:currentNick,player2uid:currentUID,status:'playing'}).then(()=>{
-            document.getElementById('online-modal').classList.remove('active');
-            startOnlineGame(code,'player2');
-        }).catch(err=>{statusEl.style.color='#e74c3c';statusEl.textContent='Ошибка: '+err.message;});
+        database.ref('rooms/'+code).update({player2:currentNick,player2uid:currentUID,status:'playing'}).then(()=>{document.getElementById('online-modal').classList.remove('active');startOnlineGame(code,'player2');}).catch(err=>{statusEl.style.color='#e74c3c';statusEl.textContent='Ошибка: '+err.message;});
     });
 }
 function startOnlineGame(roomCode,role){
-    onlineMode=true;
-    onlineRole=role;
-    onlineRoomRef=database.ref('rooms/'+roomCode);
-    vsBot=false;
-    difficulty='online';
-    survivalActive=false;
-    survivalBar.style.display='none';
-    winStreakEl.style.display='none';
+    onlineMode=true;onlineRole=role;onlineRoomRef=database.ref('rooms/'+roomCode);vsBot=false;difficulty='online';
+    survivalActive=false;survivalBar.style.display='none';winStreakEl.style.display='none';
     document.getElementById('online-score').style.display='flex';
     document.getElementById('emoji-bar').style.display='flex';
     document.getElementById('online-score-you').textContent='0';
@@ -2164,11 +2029,7 @@ function startOnlineGame(roomCode,role){
     createBoard();
     const myMark=(role==='player1')?'X':'O';
     statusEl.textContent='Игра началась! Ваш знак: '+myMark;
-    onlineRoomRef.on('value',snapshot=>{
-        const room=snapshot.val();
-        if(!room)return;
-        updateOnlineBoard(room);
-    });
+    onlineRoomRef.on('value',snapshot=>{const room=snapshot.val();if(!room)return;updateOnlineBoard(room);});
     updateQuestProgress('online');
     listenOnlineReactions();
 }
@@ -2189,10 +2050,7 @@ function updateOnlineBoard(room){
         if(board[i]==='O')c.classList.add('o');
         c.disabled=(board[i]!=="")||gameOver||!isMyTurn;
     });
-    if(gameOver&&room.winner&&room.winner!=='draw'){
-        const combo=getWinComboFor(room.winner,board);
-        if(combo)combo.forEach(i=>{const cell=document.querySelectorAll('.cell')[i];if(cell)cell.classList.add(room.winner==='O'?'lose':'win');});
-    }
+    if(gameOver&&room.winner&&room.winner!=='draw'){const combo=getWinComboFor(room.winner,board);if(combo)combo.forEach(i=>{const cell=document.querySelectorAll('.cell')[i];if(cell)cell.classList.add(room.winner==='O'?'lose':'win');});}
     applyXColor(currentXColor);
     if(room.status==='finished'){
         const winner=room.winner;
@@ -2208,7 +2066,7 @@ function updateOnlineBoard(room){
             endModal.classList.add('active');
         }
     } else if(room.status==='waiting'){statusEl.textContent='Ожидание соперника...';}
-    else if(isMyTurn){statusEl.textContent='Ваш ход ('+myMark+')';const endModal=document.getElementById('online-end-modal');if(endModal)endModal.classList.remove('active');}
+    else if(isMyTurn){statusEl.textContent='Ваш ход ('+myMark+')';const em=document.getElementById('online-end-modal');if(em)em.classList.remove('active');}
     else{const oppMark=(myMark==='X')?'O':'X';statusEl.textContent='Ход соперника ('+oppMark+')...';}
 }
 function getWinComboFor(mark,b){for(const c of winCombos){if(c.every(i=>b[i]===mark))return c;}return null;}
@@ -2241,11 +2099,7 @@ document.getElementById('online-rematch').addEventListener('click',()=>{
     document.getElementById('online-end-modal').classList.remove('active');
 });
 document.getElementById('online-exit').addEventListener('click',()=>{
-    if(onlineRoomRef){
-        onlineRoomRef.off();
-        if(onlineRole==='player1'){onlineRoomRef.remove().catch(()=>{});}
-        else{onlineRoomRef.update({player2:'',player2uid:'',status:'waiting'}).catch(()=>{});}
-    }
+    if(onlineRoomRef){onlineRoomRef.off();if(onlineRole==='player1'){onlineRoomRef.remove().catch(()=>{});}else{onlineRoomRef.update({player2:'',player2uid:'',status:'waiting'}).catch(()=>{});}}
     onlineMode=false;onlineRoomRef=null;onlineRole=null;onlineMovePending=false;
     document.getElementById('online-end-modal').classList.remove('active');
     document.getElementById('online-score').style.display='none';
@@ -2257,21 +2111,10 @@ document.getElementById('emoji-bar').addEventListener('click',e=>{if(e.target.ta
 function listenOnlineReactions(){if(!onlineRoomRef)return;onlineRoomRef.child('reaction').on('value',s=>{const r=s.val();if(r&&r.from!==currentUID&&Date.now()-r.time<3000){showFloatingEmoji(r.emoji);}});}
 function showFloatingEmoji(emoji){const el=document.createElement('div');el.className='floating-emoji';el.textContent=emoji;el.style.left=(20+Math.random()*60)+'vw';el.style.top=(60+Math.random()*20)+'vh';document.body.appendChild(el);setTimeout(()=>el.remove(),2000);}
 
-/* ===== РЕГИСТРАЦИЯ ===== */
 document.getElementById('consent-btn').addEventListener('click',()=>document.getElementById('consent-modal').classList.add('active'));
-document.getElementById('consent-agree').addEventListener('click',()=>{
-    userConsent=true;
-    document.getElementById('consent-modal').classList.remove('active');
-    document.getElementById('consent-btn').style.borderColor='#2ecc71';
-    document.getElementById('consent-btn').style.color='#2ecc71';
-    document.getElementById('consent-btn').textContent='✅ Согласие получено';
-    document.getElementById('consent-status').textContent='';
-});
+document.getElementById('consent-agree').addEventListener('click',()=>{userConsent=true;document.getElementById('consent-modal').classList.remove('active');document.getElementById('consent-btn').style.borderColor='#2ecc71';document.getElementById('consent-btn').style.color='#2ecc71';document.getElementById('consent-btn').textContent='✅ Согласие получено';document.getElementById('consent-status').textContent='';});
 document.getElementById('consent-cancel').addEventListener('click',()=>document.getElementById('consent-modal').classList.remove('active'));
-document.getElementById('toggle-password').addEventListener('click',()=>{
-    if(passwordInput.type==='password'){passwordInput.type='text';document.getElementById('toggle-password').textContent='🙈';}
-    else{passwordInput.type='password';document.getElementById('toggle-password').textContent='👁';}
-});
+document.getElementById('toggle-password').addEventListener('click',()=>{if(passwordInput.type==='password'){passwordInput.type='text';document.getElementById('toggle-password').textContent='🙈';}else{passwordInput.type='password';document.getElementById('toggle-password').textContent='👁';}});
 registerBtn.addEventListener('click',()=>{
     const n=nicknameInput.value.trim(),e=emailInput.value.trim(),p=passwordInput.value.trim();
     if(!n||!e||!p){nickStatusEl.textContent='Заполните поля';nickStatusEl.style.color='#e74c3c';return;}
@@ -2297,8 +2140,7 @@ loginBtn.addEventListener('click',()=>{
     auth.signInWithEmailAndPassword(e,p).then(cred=>{
         database.ref('users/'+cred.user.uid).once('value',s=>{
             const d=s.val()||{};
-            currentNick=d.nick||'Игрок';
-            currentUID=cred.user.uid;
+            currentNick=d.nick||'Игрок';currentUID=cred.user.uid;
             nickClose.disabled=false;nickClose.style.opacity='1';nickClose.style.cursor='pointer';
             nickStatusEl.textContent='Вход выполнен!';nickStatusEl.style.color='#2ecc71';
             setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
@@ -2308,10 +2150,7 @@ loginBtn.addEventListener('click',()=>{
 document.getElementById('forgot-password').addEventListener('click',()=>{
     const e=emailInput.value.trim();
     if(!e){nickStatusEl.textContent='Введите email';nickStatusEl.style.color='#e74c3c';return;}
-    auth.sendPasswordResetEmail(e).then(()=>{
-        document.getElementById('reset-email-body').innerHTML='<div style="padding:14px;background:rgba(46,204,113,.2);border-radius:10px;">✅ Отправлено на <b>'+e+'</b><br><br>Проверьте «Спам»!</div>';
-        document.getElementById('reset-email-modal').classList.add('active');
-    }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
+    auth.sendPasswordResetEmail(e).then(()=>{document.getElementById('reset-email-body').innerHTML='<div style="padding:14px;background:rgba(46,204,113,.2);border-radius:10px;">✅ Отправлено на <b>'+e+'</b><br><br>Проверьте «Спам»!</div>';document.getElementById('reset-email-modal').classList.add('active');}).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
 });
 document.getElementById('reset-email-close').addEventListener('click',()=>document.getElementById('reset-email-modal').classList.remove('active'));
 
@@ -2320,13 +2159,12 @@ auth.onAuthStateChanged(user=>{
         nickClose.disabled=false;nickClose.style.opacity='1';nickClose.style.cursor='pointer';
         database.ref('users/'+user.uid).once('value').then(s=>{
             const d=s.val()||{};
-            currentNick=d.nick||'Игрок';
-            currentUID=user.uid;
+            currentNick=d.nick||'Игрок';currentUID=user.uid;
             currentTitle=d.title||null;
             isAdmin=(currentNick==='Admin');
             if(d.coins!==undefined)setCoins(parseInt(d.coins)||0);
             if(isAdmin){
-                playerNameEl.classList.add('rainbow-text');
+                playerNameEl.classList.remove('rainbow-text');
                 currentXColor=ADMIN_RAINBOW;
                 document.getElementById('set-admin-panel').style.display='block';
                 document.getElementById('set-request-maintenance').style.display='none';
@@ -2347,10 +2185,7 @@ auth.onAuthStateChanged(user=>{
                 });
             });
             database.ref('users/'+user.uid+'/coins_update').on('value',s=>{const upd=s.val();if(upd&&upd.at&&Date.now()-upd.at<10000){setCoins(upd.value);showCoinToast(upd.value,null);}});
-            loadMyStats();
-            checkHasNewQuests();
-            checkMyBan();
-            loadInventoryFromDB(user.uid);
+            loadMyStats();checkHasNewQuests();checkMyBan();loadInventoryFromDB(user.uid);
             if(isAdmin)updateAppealCount();
         }).catch(err=>{console.error('Ошибка:',err);playerNameEl.textContent='Игрок';});
     } else {
@@ -2384,23 +2219,8 @@ document.getElementById('difficulty-modal').addEventListener('click',e=>{
         else{survivalActive=false;survivalLevel=1;resetGame();loadMyStats();updateSurvivalUI();}
     }
 });
-document.getElementById('mode-bot').addEventListener('click',()=>{
-    onlineMode=false;vsBot=true;blitzMode=false;snakeMode=false;chaosMode=false;currentCampaignLevel=null;
-    document.getElementById('mode-bot').classList.add('active');
-    document.getElementById('mode-friend').classList.remove('active');
-    document.getElementById('mode-online').classList.remove('active');
-    document.getElementById('mode-modal').classList.remove('active');
-    difficulty='medium';resetGame();
-});
-document.getElementById('mode-friend').addEventListener('click',()=>{
-    if(maintenanceActive&&!isAdmin&&!userTitles.includes('tester')){alert('🚧 Перерыв');return;}
-    onlineMode=false;vsBot=false;blitzMode=false;snakeMode=false;chaosMode=false;currentCampaignLevel=null;
-    document.getElementById('mode-friend').classList.add('active');
-    document.getElementById('mode-bot').classList.remove('active');
-    document.getElementById('mode-online').classList.remove('active');
-    document.getElementById('mode-modal').classList.remove('active');
-    survivalActive=false;survivalBar.style.display='none';resetGame();
-});
+document.getElementById('mode-bot').addEventListener('click',()=>{onlineMode=false;vsBot=true;blitzMode=false;snakeMode=false;chaosMode=false;currentCampaignLevel=null;document.getElementById('mode-bot').classList.add('active');document.getElementById('mode-friend').classList.remove('active');document.getElementById('mode-online').classList.remove('active');document.getElementById('mode-modal').classList.remove('active');difficulty='medium';resetGame();});
+document.getElementById('mode-friend').addEventListener('click',()=>{if(maintenanceActive&&!isAdmin&&!userTitles.includes('tester')){alert('🚧 Перерыв');return;}onlineMode=false;vsBot=false;blitzMode=false;snakeMode=false;chaosMode=false;currentCampaignLevel=null;document.getElementById('mode-friend').classList.add('active');document.getElementById('mode-bot').classList.remove('active');document.getElementById('mode-online').classList.remove('active');document.getElementById('mode-modal').classList.remove('active');survivalActive=false;survivalBar.style.display='none';resetGame();});
 document.getElementById('mode-blitz').addEventListener('click',()=>{document.getElementById('mode-modal').classList.remove('active');showModeGuide('blitz',()=>{onlineMode=false;vsBot=true;blitzMode=true;snakeMode=false;chaosMode=false;currentCampaignLevel=null;difficulty='medium';resetGame();statusEl.textContent='⏱️ Блиц — ваш ход (X)';startBlitzTimer();});});
 document.getElementById('mode-snake').addEventListener('click',()=>{document.getElementById('mode-modal').classList.remove('active');showModeGuide('snake',()=>{onlineMode=false;vsBot=true;blitzMode=false;snakeMode=true;chaosMode=false;currentCampaignLevel=null;difficulty='medium';resetGame();statusEl.textContent='🐍 Змейка — ваш ход (X)';});});
 document.getElementById('mode-chaos').addEventListener('click',()=>{document.getElementById('mode-modal').classList.remove('active');showModeGuide('chaos',()=>{onlineMode=false;vsBot=true;blitzMode=false;snakeMode=false;chaosMode=true;currentCampaignLevel=null;difficulty='medium';resetGame();statusEl.textContent='🎲 Хаос — ваш ход (X)';});});
@@ -2491,11 +2311,8 @@ function handleClick(i){
     if(!bonusTwoMoves)currentPlayer=currentPlayer==="X"?"O":"X";
     else botTaunt('move');
     updateQuestProgress('play');
-    if(vsBot&&currentPlayer==="O"){
-        statusEl.textContent="Ход бота...";updateUI();
-        const botDelay=campaignSlow?3000:300;
-        botTimeoutId=setTimeout(botMove,botDelay);
-    } else {statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}
+    if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();const botDelay=campaignSlow?3000:300;botTimeoutId=setTimeout(botMove,botDelay);}
+    else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}
 }
 function botMove(){
     if(gameOver)return;
@@ -2530,12 +2347,7 @@ function botMove(){
             else{currentStreak=0;updateStreakUI();}
             return;
         }
-        if(isFull()){
-            gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");botTaunt('draw');clearBlitzTimer();
-            if(vsBot){saveStats('draw');saveHistory('draw');}
-            updateQuestProgress('draw');
-            return;
-        }
+        if(isFull()){gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");botTaunt('draw');clearBlitzTimer();if(vsBot){saveStats('draw');saveHistory('draw');}updateQuestProgress('draw');return;}
         currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();
         if(blitzMode)startBlitzTimer();
     }
@@ -2552,12 +2364,7 @@ function mediumMove(){
     if(c.length>0)return c[Math.floor(Math.random()*c.length)];
     return e[Math.floor(Math.random()*e.length)];
 }
-function hardMove(){
-    if(Math.random()<0.2)return randomMove();
-    let bs=-Infinity,bm=null;
-    for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";let s=minimax(false);board[i]="";if(s>bs){bs=s;bm=i;}}}
-    return bm;
-}
+function hardMove(){if(Math.random()<0.2)return randomMove();let bs=-Infinity,bm=null;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";let s=minimax(false);board[i]="";if(s>bs){bs=s;bm=i;}}}return bm;}
 function minimax(mx){
     if(checkWin("O"))return 1;
     if(checkWin("X"))return -1;
@@ -2584,4 +2391,4 @@ document.getElementById('coin-count').textContent=getCoins();
 updateAppealCount();
 </script>
 </body>
-                                                                                                                                                                                                                                                                                                                                                                                                      </html>
+</html>
