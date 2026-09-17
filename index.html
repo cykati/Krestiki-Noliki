@@ -49,6 +49,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 #win-streak.fire{animation:streakPulse 1s ease infinite, fireGlow 1.5s ease infinite alternate;}
 @keyframes streakPulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
 @keyframes fireGlow{from{box-shadow:0 4px 10px rgba(241,196,15,.4);}to{box-shadow:0 4px 20px rgba(231,76,60,.8);}}
+#maintenance-warning{display:none;background:linear-gradient(135deg,#f39c12,#e67e22);color:#fff;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:bold;margin-bottom:10px;text-align:center;box-shadow:0 4px 10px rgba(243,156,18,.4);}
 #survival-bar{display:none;flex-direction:column;align-items:center;gap:6px;background:linear-gradient(135deg,#8e44ad,#c0392b);color:#fff;padding:10px 20px;border-radius:14px;font-size:15px;font-weight:bold;margin-bottom:12px;box-shadow:0 4px 12px rgba(142,68,173,.5);width:100%;max-width:340px;}
 #survival-bar .lvl{font-size:22px;font-weight:900;}
 #survival-bar .diff{font-size:13px;opacity:0.9;}
@@ -127,6 +128,10 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="top-bar">
 <div class="nick-display" id="nick-display"><span id="player-name">Введите ник</span></div>
 <button class="menu-btn" id="menu-btn">☰</button>
+</div>
+
+<div id="maintenance-warning">
+    ⚠️ Идёт обновление игры. Возможны ошибки.
 </div>
 
 <div id="win-streak">🔥 <span id="streak-count">0</span> подряд!</div>
@@ -233,7 +238,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="maintenance-modal" style="background:rgba(0,0,0,.95);"><div class="modal" style="max-width:95vw;min-width:300px;background:linear-gradient(135deg,#8e44ad,#c0392b);">
 <h2 style="font-size:28px;color:#fff;margin-bottom:15px;">🚧 Технический перерыв</h2>
 <div id="maintenance-body" style="text-align:center;font-size:15px;line-height:1.7;color:#fff;margin-bottom:20px;"></div>
-<button id="maintenance-close" style="background:#2ecc71;display:none;">Продолжить</button>
+<button id="maintenance-skip" style="background:#f39c12;margin-right:8px;">▶️ Продолжить (могут быть ошибки)</button>
+<button id="maintenance-close" style="background:#2ecc71;display:none;">Закрыть (Админ/Тестер)</button>
 </div></div>
 
 <div class="modal-overlay" id="profile-modal"><div class="modal">
@@ -1497,6 +1503,8 @@ function resetGame(){
 const maintenanceModal = document.getElementById('maintenance-modal');
 const maintenanceBody = document.getElementById('maintenance-body');
 const maintenanceClose = document.getElementById('maintenance-close');
+const maintenanceSkip = document.getElementById('maintenance-skip');
+const maintenanceWarning = document.getElementById('maintenance-warning');
 const maintControlModal = document.getElementById('maintenance-control-modal');
 const maintControlBody = document.getElementById('maintenance-control-body');
 const maintRequestModal = document.getElementById('maintenance-request-modal');
@@ -1504,32 +1512,60 @@ const maintApproveModal = document.getElementById('maintenance-approve-modal');
 const maintRequestReason = document.getElementById('maint-request-reason');
 const maintRequestStatus = document.getElementById('maint-request-status');
 
+// Проверяем, пропустил ли игрок перерыв
+function hasSkippedMaintenance(){
+    if(currentUID){
+        return localStorage.getItem('skipMaint_' + currentUID) === 'true';
+    }
+    return localStorage.getItem('skipMaint_guest') === 'true';
+}
+function setSkippedMaintenance(val){
+    if(currentUID){
+        localStorage.setItem('skipMaint_' + currentUID, val ? 'true' : 'false');
+    } else {
+        localStorage.setItem('skipMaint_guest', val ? 'true' : 'false');
+    }
+}
+
 database.ref('system/maintenance').on('value', s=>{
     const data = s.val() || {};
     if(data.active){
         const isTester = userTitles.includes('tester') || isAdmin;
+        const skipped = hasSkippedMaintenance();
+
+        maintenanceBody.innerHTML =
+            '<div style="font-size:16px;margin-bottom:15px;">Мы обновляем игру! 🎨</div>' +
+            '<div style="padding:12px;background:rgba(0,0,0,.3);border-radius:10px;margin-bottom:15px;">' +
+                '<b>Сообщение:</b><br>' + (data.message || 'Скоро вернёмся!') +
+            '</div>' +
+            '<div style="font-size:13px;opacity:0.9;">' +
+                (isTester ? 'У вас есть доступ (Админ / TESTER).' : 
+                 'Вы можете зайти, но возможны ошибки.') +
+            '</div>';
+
         if(isTester){
-            maintenanceBody.innerHTML =
-                '<div style="font-size:16px;margin-bottom:10px;">⚠️ Идёт технический перерыв!</div>' +
-                '<div style="padding:12px;background:rgba(0,0,0,.3);border-radius:10px;margin-bottom:15px;">' +
-                    '<b>Причина:</b> ' + (data.message || 'Обновление') +
-                '</div>' +
-                '<div style="font-size:13px;opacity:0.9;">У вас есть доступ (Админ / TESTER).</div>';
             maintenanceClose.style.display = 'inline-block';
+            maintenanceSkip.style.display = 'none';
+            maintenanceModal.classList.add('active');
+        } else if(!skipped){
+            maintenanceClose.style.display = 'none';
+            maintenanceSkip.style.display = 'inline-block';
             maintenanceModal.classList.add('active');
         } else {
-            maintenanceBody.innerHTML =
-                '<div style="font-size:16px;margin-bottom:15px;">Мы обновляем игру! 🎨</div>' +
-                '<div style="padding:12px;background:rgba(0,0,0,.3);border-radius:10px;margin-bottom:15px;">' +
-                    '<b>Сообщение:</b><br>' + (data.message || 'Скоро вернёмся!') +
-                '</div>' +
-                '<div style="font-size:14px;opacity:0.9;">⏰ Попробуйте зайти позже. Спасибо!</div>';
-            maintenanceClose.style.display = 'none';
-            maintenanceModal.classList.add('active');
+            maintenanceModal.classList.remove('active');
+            maintenanceWarning.style.display = 'block';
         }
     } else {
         maintenanceModal.classList.remove('active');
+        maintenanceWarning.style.display = 'none';
+        setSkippedMaintenance(false);
     }
+});
+
+maintenanceSkip.addEventListener('click', ()=>{
+    setSkippedMaintenance(true);
+    maintenanceModal.classList.remove('active');
+    maintenanceWarning.style.display = 'block';
 });
 maintenanceClose.addEventListener('click', ()=>maintenanceModal.classList.remove('active'));
 
@@ -1560,7 +1596,6 @@ document.getElementById('set-request-maintenance').addEventListener('click', ()=
     maintRequestReason.value = '';
     maintRequestStatus.textContent = '';
     
-    // Показываем статус кулдауна
     database.ref('users/'+currentUID+'/lastMaintenanceRequest').once('value').then(snap=>{
         const lastTime = snap.val() || 0;
         const now = Date.now();
@@ -1586,7 +1621,6 @@ document.getElementById('maint-request-send').addEventListener('click', ()=>{
     const reason = maintRequestReason.value.trim();
     if(!reason){maintRequestStatus.style.color='#e74c3c';maintRequestStatus.textContent='Укажите причину';return;}
     
-    // ПРОВЕРКА КУЛДАУНА (10 дней)
     database.ref('users/'+currentUID+'/lastMaintenanceRequest').once('value').then(snap=>{
         const lastTime = snap.val() || 0;
         const now = Date.now();
@@ -1808,7 +1842,6 @@ resetEmailClose.addEventListener('click', ()=>{resetEmailModal.classList.remove(
 auth.onAuthStateChanged(user=>{
     if(user){
         nickClose.disabled=false;nickClose.style.opacity='1';nickClose.style.cursor='pointer';
-        // === БЫСТРЫЙ ПОКАЗ НИКА И КНОПОК ===
         database.ref('users/'+user.uid).once('value').then(s=>{
             const d=s.val()||{};
             currentNick=d.nick||'Игрок';currentUID=user.uid;
@@ -1837,7 +1870,6 @@ auth.onAuthStateChanged(user=>{
             applyXColor(currentXColor);
             applyTitleToNick();
 
-            // Всё остальное — в фоне
             database.ref('users/'+user.uid+'/titles').once('value').then(snap=>{
                 if(!snap.exists()){
                     database.ref('users/'+user.uid+'/titles').set({});
@@ -1906,4 +1938,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-            </html>
+    </html>
