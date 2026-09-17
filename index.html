@@ -139,7 +139,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-leaders">🏆 Лидеры</button><button id="menu-settings">⚙️ Настройки</button></div><button id="menu-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list"><button id="set-profile">👤 Профиль</button><button id="set-inventory">🎨 Инвентарь цветов</button><button id="set-titles">🎖️ Титулы</button><button id="set-history">📜 История матчей</button><button id="set-difficulty">🎚️ Сложность</button><button id="set-mode">🎮 Режим игры</button><button id="set-nick">📝 Сменить ник</button><button id="set-logout">🚪 Выйти</button><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button><button id="set-all-players" style="border-color: #f1c40f; color: #f1c40f; display: none;">👥 Все игроки (Админ)</button><button id="set-admin-stats" style="border-color: #f1c40f; color: #f1c40f; display: none;">🔍 Статистика игрока (Админ)</button><button id="set-admin-titles" style="border-color: #f1c40f; color: #f1c40f; display: none;">🎖️ Выдать титулы (Админ)</button></div><button id="settings-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list"><button id="set-profile">👤 Профиль</button><button id="set-inventory">🎨 Инвентарь цветов</button><button id="set-titles">🎖️ Титулы</button><button id="set-history">📜 История матчей</button><button id="set-difficulty">🎚️ Сложность</button><button id="set-mode">🎮 Режим игры</button><button id="set-nick">📝 Сменить ник</button><button id="set-logout">🚪 Выйти</button><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button><button id="set-all-players" style="border-color: #f1c40f; color: #f1c40f; display: none;">👥 Все игроки (Админ)</button><button id="set-admin-stats" style="border-color: #f1c40f; color: #f1c40f; display: none;">🔍 Статистика игрока (Админ)</button><button id="set-admin-titles" style="border-color: #f1c40f; color: #f1c40f; display: none;">🎖️ Выдать титулы (Админ)</button><button id="set-maintenance" style="border-color: #e74c3c; color: #e74c3c; display: none;">🚧 Тех. перерыв (Админ)</button><button id="set-request-maintenance" style="border-color: #e67e22; color: #e67e22; display: none;">🚧 Запросить перерыв (Тестер)</button></div><button id="settings-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="inventory-modal"><div class="modal">
 <h2>🎨 Инвентарь</h2>
@@ -176,6 +176,54 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="admin-titles-close">Закрыть</button>
 </div></div>
 
+<!-- ОКНО ПОДТВЕРЖДЕНИЯ ВЫДАЧИ ТИТУЛА -->
+<div class="modal-overlay" id="confirm-title-modal"><div class="modal" style="max-width:95vw;min-width:280px;">
+<h2>🎖️ Подтверждение</h2>
+<div id="confirm-title-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div>
+<button id="confirm-title-yes" style="background:#2ecc71;">✅ Выдать</button>
+<button id="confirm-title-no" style="background:#b32e2e;margin-left:8px;">Отмена</button>
+</div></div>
+
+<!-- ОКНО: Админ управляет перерывом -->
+<div class="modal-overlay" id="maintenance-control-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
+<h2>🚧 Управление перерывом</h2>
+<div id="maintenance-control-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div>
+<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+    <button id="maint-toggle-on" style="background:#e74c3c;">Включить</button>
+    <button id="maint-toggle-off" style="background:#2ecc71;">Выключить</button>
+    <button id="maint-control-close" style="background:#555;">Закрыть</button>
+</div>
+</div></div>
+
+<!-- ОКНО: Запрос тестера -->
+<div class="modal-overlay" id="maintenance-request-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
+<h2>🚧 Запрос тех. перерыва</h2>
+<div style="text-align:left;font-size:14px;margin-bottom:15px;">
+    <p style="margin-bottom:10px;">Укажите причину:</p>
+    <textarea id="maint-request-reason" placeholder="Причина перерыва..." maxlength="150" style="width:100%;padding:10px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:14px;resize:vertical;min-height:70px;outline:none;"></textarea>
+</div>
+<div id="maint-request-status" style="font-size:13px;min-height:18px;margin-bottom:10px;"></div>
+<button id="maint-request-send" style="background:#e67e22;">📨 Отправить админу</button>
+<button id="maint-request-close" style="background:#555;margin-left:8px;">Отмена</button>
+</div></div>
+
+<!-- ОКНО: Админ одобряет запрос -->
+<div class="modal-overlay" id="maintenance-approve-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
+<h2>📨 Запрос на перерыв</h2>
+<div id="maint-approve-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div>
+<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+    <button id="maint-approve-yes" style="background:#2ecc71;">✅ Одобрить</button>
+    <button id="maint-approve-no" style="background:#e74c3c;">❌ Отклонить</button>
+</div>
+</div></div>
+
+<!-- ЭКРАН ТЕХНИЧЕСКОГО ПЕРЕРЫВА -->
+<div class="modal-overlay" id="maintenance-modal" style="background:rgba(0,0,0,.95);"><div class="modal" style="max-width:95vw;min-width:300px;background:linear-gradient(135deg,#8e44ad,#c0392b);">
+<h2 style="font-size:28px;color:#fff;margin-bottom:15px;">🚧 Технический перерыв</h2>
+<div id="maintenance-body" style="text-align:center;font-size:15px;line-height:1.7;color:#fff;margin-bottom:20px;"></div>
+<button id="maintenance-close" style="background:#2ecc71;display:none;">Продолжить</button>
+</div></div>
+
 <div class="modal-overlay" id="profile-modal"><div class="modal">
 <h2>👤 Мой профиль</h2>
 <div id="profile-content" style="text-align:left;margin-bottom:15px;font-size:15px;line-height:1.7;"></div>
@@ -196,7 +244,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
         <li>После каждой победы <span class="success">уровень +1</span>.</li>
         <li>Каждый уровень: <span class="highlight">+3%</span> к сложности бота.</li>
         <li><span class="danger">Проигрыш = конец забега!</span></li>
-        <li><span class="success">Ничья = победа.</span></li>
+        <li><span class="highlight">Ничья = остаёшься на том же уровне.</span></li>
     </ul>
     <h3>🏆 Что сохраняется:</h3>
     <ul>
@@ -222,7 +270,10 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="nick-modal"><div class="modal"><h2>Вход / Регистрация</h2>
 <div class="nick-input-row"><input type="text" id="nickname" placeholder="Ваш ник (для регистрации)" maxlength="15"></div>
 <div class="nick-input-row"><input type="email" id="email" placeholder="Email" maxlength="50"></div>
-<div class="nick-input-row"><input type="password" id="password" placeholder="Пароль" maxlength="30"></div>
+<div class="nick-input-row" style="position:relative;">
+    <input type="password" id="password" placeholder="Пароль" maxlength="30" style="padding-right:45px;">
+    <button type="button" id="toggle-password" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#e0e0e0;font-size:20px;cursor:pointer;padding:5px;width:auto;margin:0;line-height:1;" title="Показать/скрыть пароль">👁</button>
+</div>
 <button id="consent-btn" style="width:100%;padding:12px;font-size:14px;border:2px solid #f1c40f;border-radius:8px;background:transparent;color:#f1c40f;cursor:pointer;margin-bottom:10px;">📄 Согласие на обработку данных</button>
 <div id="consent-status" style="font-size:13px;margin-bottom:15px;color:#e74c3c;min-height:18px;"></div>
 <button id="register-btn">Зарегистрироваться</button>
@@ -244,6 +295,12 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 </div>
 <button id="consent-agree" style="background:#2ecc71;">✅ Я согласен</button>
 <button id="consent-cancel" style="background:#b32e2e;">Отмена</button>
+</div></div>
+
+<div class="modal-overlay" id="reset-email-modal"><div class="modal" style="max-width:95vw;min-width:280px;">
+<h2>📧 Письмо отправлено!</h2>
+<div id="reset-email-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div>
+<button id="reset-email-close" style="background:#2ecc71;">Понятно</button>
 </div></div>
 
 <div class="modal-overlay" id="leaders-modal"><div class="modal"><h2>🏆 Таблица лидеров</h2>
@@ -298,6 +355,10 @@ const loginBtn=document.getElementById('login-btn');
 const nickStatusEl=document.getElementById('nick-status');
 const nickClose=document.getElementById('nick-close');
 const forgotBtn=document.getElementById('forgot-password');
+const togglePasswordBtn=document.getElementById('toggle-password');
+const resetEmailModal=document.getElementById('reset-email-modal');
+const resetEmailBody=document.getElementById('reset-email-body');
+const resetEmailClose=document.getElementById('reset-email-close');
 const profileModal=document.getElementById('profile-modal');
 const profileContent=document.getElementById('profile-content');
 const profileClose=document.getElementById('profile-close');
@@ -429,9 +490,6 @@ const COLOR_PRESETS = [
     {id:'grad_ocean', name:'Океан', type:'gradient', value:'linear-gradient(135deg,#1abc9c,#3498db,#9b59b6)', unlock:{level:'hard', wins:100, text:'100 побед на Сложной'}}
 ];
 
-// ========================================
-// ЗАЩИЩЁННЫЕ НИКИ (нельзя зарегистрировать новые)
-// ========================================
 const RESERVED_NICKS = [
     'admin', 'administrator', 'админ', 'администратор',
     'moderator', 'moder', 'модератор',
@@ -478,20 +536,32 @@ function getUnlockProgress(color){
     }
     return {have: userStats[u.level].wins||0, need: u.wins, done: (userStats[u.level].wins||0) >= u.wins};
 }
+
+// ИСПРАВЛЕНО: цвет нолика больше не меняется
 function applyXColor(color){
     currentXColor = color;
     const isRainbow = color.type === 'admin_rainbow';
     document.querySelectorAll('.cell').forEach(c=>{
+        // ВСЕГДА сбрасываем стили у всех клеток
+        c.style.background = '';
+        c.style.webkitBackgroundClip = '';
+        c.style.backgroundClip = '';
+        c.style.webkitTextFillColor = '';
+        c.style.color = '';
+        c.classList.remove('rainbow-cell');
+        
+        // Применяем только к X
         if(c.textContent === 'X'){
-            c.style.background = '';c.style.webkitBackgroundClip = '';c.style.backgroundClip = '';
-            c.style.webkitTextFillColor = '';c.style.color = '';
-            c.classList.remove('rainbow-cell');
             if(isRainbow){c.classList.add('rainbow-cell');}
             else if(color.type === 'gradient'){
                 c.style.background = color.value;c.style.webkitBackgroundClip = 'text';
                 c.style.backgroundClip = 'text';c.style.webkitTextFillColor = 'transparent';
                 c.style.color = 'transparent';
             } else {c.style.color = color.value;}
+        }
+        // У O — принудительно синий
+        if(c.textContent === 'O'){
+            c.style.color = '#3498db';
         }
     });
 }
@@ -639,9 +709,7 @@ function showAwardNotification(titleKey){
 awardClose.addEventListener('click',()=>{
     awardModal.classList.remove('active');
     if(pendingAwardTitle){
-        if(!userTitles.includes(pendingAwardTitle)){
-            userTitles.push(pendingAwardTitle);
-        }
+        if(!userTitles.includes(pendingAwardTitle)){userTitles.push(pendingAwardTitle);}
         pendingAwardTitle = null;
     }
 });
@@ -917,20 +985,48 @@ function renderAdminTitlesList(){
             html += '</div></div>';
         });
         adminTitlesList.innerHTML = html;
+        const confirmTitleModal = document.getElementById('confirm-title-modal');
+        const confirmTitleBody = document.getElementById('confirm-title-body');
+        const confirmTitleYes = document.getElementById('confirm-title-yes');
+        const confirmTitleNo = document.getElementById('confirm-title-no');
+        let pendingChip = null;
+
         adminTitlesList.querySelectorAll('.title-chip').forEach(chip=>{
             chip.addEventListener('click',()=>{
                 const uid = chip.dataset.uid;
+                const nick = chip.dataset.nick;
                 const titleKey = chip.dataset.title;
                 const isOn = chip.classList.contains('on');
-                const ref = database.ref('users/'+uid+'/titles/'+titleKey);
+                const t = TITLES[titleKey];
                 if(isOn){
-                    ref.remove();
+                    database.ref('users/'+uid+'/titles/'+titleKey).remove();
                     chip.classList.remove('on');chip.classList.add('off');
-                } else {
-                    ref.set(true);
-                    chip.classList.remove('off');chip.classList.add('on');
+                    return;
                 }
+                pendingChip = chip;
+                confirmTitleBody.innerHTML =
+                    'Выдать титул <b style="color:#f1c40f;">' + t.name + '</b><br>' +
+                    'Игроку: <b>' + nick + '</b>?<br><br>' +
+                    '<div style="padding:10px;background:rgba(0,0,0,.25);border-radius:8px;font-size:13px;">' +
+                        '<b>За что:</b> ' + (t.reward || t.desc) +
+                    '</div>';
+                confirmTitleModal.classList.add('active');
             });
+        });
+
+        confirmTitleYes.addEventListener('click', ()=>{
+            if(!pendingChip) return;
+            const uid = pendingChip.dataset.uid;
+            const titleKey = pendingChip.dataset.title;
+            database.ref('users/'+uid+'/titles/'+titleKey).set(true);
+            pendingChip.classList.remove('off');
+            pendingChip.classList.add('on');
+            pendingChip = null;
+            confirmTitleModal.classList.remove('active');
+        });
+        confirmTitleNo.addEventListener('click', ()=>{
+            pendingChip = null;
+            confirmTitleModal.classList.remove('active');
         });
     });
 }
@@ -1073,6 +1169,11 @@ function updateOnlineBoard(room){
     cs.forEach((c, i)=>{
         c.textContent = board[i];
         c.classList.remove('x','o','rainbow-cell','win','lose');
+        c.style.background = '';
+        c.style.webkitBackgroundClip = '';
+        c.style.backgroundClip = '';
+        c.style.webkitTextFillColor = '';
+        c.style.color = '';
         if(board[i]==='X') c.classList.add('x');
         if(board[i]==='O') c.classList.add('o');
         c.disabled = (board[i] !== "") || gameOver || (currentPlayer !== myMark);
@@ -1127,7 +1228,22 @@ function generateRoomCode(){
 
 /* ===================== ИГРА ===================== */
 function createBoard(){boardEl.innerHTML="";for(let i=0;i<9;i++){const c=document.createElement('button');c.classList.add('cell');c.dataset.index=i;c.addEventListener('click',()=>handleClick(i));boardEl.appendChild(c);}}
-function updateUI(){const cs=document.querySelectorAll('.cell');cs.forEach((c,i)=>{c.textContent=board[i];c.classList.remove('x','o','rainbow-cell');if(board[i]==='X')c.classList.add('x');if(board[i]==='O')c.classList.add('o');c.disabled=board[i]!==""||gameOver;});applyXColor(currentXColor);}
+function updateUI(){
+    const cs=document.querySelectorAll('.cell');
+    cs.forEach((c,i)=>{
+        c.textContent=board[i];
+        c.classList.remove('x','o','rainbow-cell');
+        c.style.background = '';
+        c.style.webkitBackgroundClip = '';
+        c.style.backgroundClip = '';
+        c.style.webkitTextFillColor = '';
+        c.style.color = '';
+        if(board[i]==='X') c.classList.add('x');
+        if(board[i]==='O') c.classList.add('o');
+        c.disabled = (board[i]!=="") || gameOver;
+    });
+    applyXColor(currentXColor);
+}
 function checkWin(p){return winCombos.some(c=>c.every(i=>board[i]===p));}
 function isFull(){return board.every(c=>c!=="");}
 function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
@@ -1185,7 +1301,12 @@ function handleClick(i){
         gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");
         if(vsBot){saveStats('draw');saveHistory('draw');}
         if(difficulty === 'survival' && survivalActive){
-            setTimeout(()=>{modal.classList.remove('active');survivalLevel++;saveStats('record');alert('🤝 Ничья! Уровень повышен.');resetGame();updateSurvivalUI();},1500);
+            setTimeout(()=>{
+                modal.classList.remove('active');
+                alert('🤝 Ничья! Ты остаёшься на уровне ' + survivalLevel + '. Сложность бота: ' + (10 + (survivalLevel - 1) * 3) + '%');
+                resetGame();
+                updateSurvivalUI();
+            },1500);
         }
         return;
     }
@@ -1219,7 +1340,12 @@ function botMove(){
             gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");
             if(vsBot){saveStats('draw');saveHistory('draw');}
             if(difficulty === 'survival' && survivalActive){
-                setTimeout(()=>{modal.classList.remove('active');survivalLevel++;saveStats('record');alert('🤝 Ничья! Уровень повышен.');resetGame();updateSurvivalUI();},1500);
+                setTimeout(()=>{
+                    modal.classList.remove('active');
+                    alert('🤝 Ничья! Ты остаёшься на уровне ' + survivalLevel + '. Сложность бота: ' + (10 + (survivalLevel - 1) * 3) + '%');
+                    resetGame();
+                    updateSurvivalUI();
+                },1500);
             }
             return;
         }
@@ -1255,9 +1381,139 @@ function resetGame(){
     board=["","","","","","","","",""];currentPlayer="X";gameOver=false;
     statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";
     modal.classList.remove('active');
-    document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose','rainbow-cell'));
+    document.querySelectorAll('.cell').forEach(c=>{
+        c.classList.remove('win','lose','rainbow-cell');
+        c.style.background = '';
+        c.style.webkitBackgroundClip = '';
+        c.style.backgroundClip = '';
+        c.style.webkitTextFillColor = '';
+        c.style.color = '';
+    });
     updateUI();updateSurvivalUI();
 }
+
+/* ===================== ТЕХ. ПЕРЕРЫВ ===================== */
+const maintenanceModal = document.getElementById('maintenance-modal');
+const maintenanceBody = document.getElementById('maintenance-body');
+const maintenanceClose = document.getElementById('maintenance-close');
+const maintControlModal = document.getElementById('maintenance-control-modal');
+const maintControlBody = document.getElementById('maintenance-control-body');
+const maintRequestModal = document.getElementById('maintenance-request-modal');
+const maintApproveModal = document.getElementById('maintenance-approve-modal');
+const maintRequestReason = document.getElementById('maint-request-reason');
+const maintRequestStatus = document.getElementById('maint-request-status');
+
+database.ref('system/maintenance').on('value', s=>{
+    const data = s.val() || {};
+    if(data.active){
+        const isTester = userTitles.includes('tester') || isAdmin;
+        if(isTester){
+            maintenanceBody.innerHTML =
+                '<div style="font-size:16px;margin-bottom:10px;">⚠️ Идёт технический перерыв!</div>' +
+                '<div style="padding:12px;background:rgba(0,0,0,.3);border-radius:10px;margin-bottom:15px;">' +
+                    '<b>Причина:</b> ' + (data.message || 'Обновление') +
+                '</div>' +
+                '<div style="font-size:13px;opacity:0.9;">У вас есть доступ (Админ / TESTER).</div>';
+            maintenanceClose.style.display = 'inline-block';
+            maintenanceModal.classList.add('active');
+        } else {
+            maintenanceBody.innerHTML =
+                '<div style="font-size:16px;margin-bottom:15px;">Мы обновляем игру! 🎨</div>' +
+                '<div style="padding:12px;background:rgba(0,0,0,.3);border-radius:10px;margin-bottom:15px;">' +
+                    '<b>Сообщение:</b><br>' + (data.message || 'Скоро вернёмся!') +
+                '</div>' +
+                '<div style="font-size:14px;opacity:0.9;">⏰ Попробуйте зайти позже. Спасибо!</div>';
+            maintenanceClose.style.display = 'none';
+            maintenanceModal.classList.add('active');
+        }
+    } else {
+        maintenanceModal.classList.remove('active');
+    }
+});
+maintenanceClose.addEventListener('click', ()=>maintenanceModal.classList.remove('active'));
+
+document.getElementById('set-maintenance').addEventListener('click', ()=>{
+    settingsModal.classList.remove('active');
+    database.ref('system/maintenance').once('value').then(s=>{
+        const data = s.val() || {};
+        maintControlBody.innerHTML =
+            '<div style="padding:12px;background:rgba(0,0,0,.25);border-radius:8px;margin-bottom:12px;">' +
+                '<b>Статус:</b> ' + (data.active ? '<span style="color:#e74c3c;">🔴 ВКЛЮЧЕН</span>' : '<span style="color:#2ecc71;">🟢 ВЫКЛЮЧЕН</span>') + '<br>' +
+                '<b>Причина:</b> ' + (data.message || '—') +
+            '</div>';
+        maintControlModal.classList.add('active');
+    });
+});
+document.getElementById('maint-control-close').addEventListener('click', ()=>maintControlModal.classList.remove('active'));
+document.getElementById('maint-toggle-on').addEventListener('click', ()=>{
+    database.ref('system/maintenance').set({
+        active: true, message: 'Администратор включил перерыв', startedAt: Date.now(), startedBy: currentNick
+    }).then(()=>maintControlModal.classList.remove('active'));
+});
+document.getElementById('maint-toggle-off').addEventListener('click', ()=>{
+    database.ref('system/maintenance').update({active: false}).then(()=>maintControlModal.classList.remove('active'));
+});
+
+document.getElementById('set-request-maintenance').addEventListener('click', ()=>{
+    settingsModal.classList.remove('active');
+    maintRequestReason.value = '';
+    maintRequestStatus.textContent = '';
+    maintRequestModal.classList.add('active');
+});
+document.getElementById('maint-request-close').addEventListener('click', ()=>maintRequestModal.classList.remove('active'));
+document.getElementById('maint-request-send').addEventListener('click', ()=>{
+    const reason = maintRequestReason.value.trim();
+    if(!reason){maintRequestStatus.style.color='#e74c3c';maintRequestStatus.textContent='Укажите причину';return;}
+    database.ref('system/maintenanceRequest').once('value').then(s=>{
+        const ex = s.val();
+        if(ex && ex.pending){
+            maintRequestStatus.style.color='#e74c3c';
+            maintRequestStatus.textContent='Уже есть активный запрос от ' + ex.from;
+            return;
+        }
+        database.ref('system/maintenanceRequest').set({
+            pending: true, from: currentNick, reason: reason, createdAt: Date.now()
+        }).then(()=>{
+            maintRequestStatus.style.color='#2ecc71';
+            maintRequestStatus.textContent='✅ Запрос отправлен админу!';
+            setTimeout(()=>maintRequestModal.classList.remove('active'), 1500);
+        });
+    });
+});
+
+database.ref('system/maintenanceRequest').on('value', s=>{
+    const req = s.val();
+    if(!req || !req.pending) return;
+    if(!isAdmin) return;
+    if(req.from === currentNick) return;
+    const maintApproveBody = document.getElementById('maint-approve-body');
+    maintApproveBody.innerHTML =
+        '<div style="padding:12px;background:rgba(0,0,0,.25);border-radius:8px;margin-bottom:12px;">' +
+            '<b>Запрос от:</b> ' + req.from + '<br>' +
+            '<b>Причина:</b> ' + req.reason + '<br>' +
+            '<b>Время:</b> ' + new Date(req.createdAt).toLocaleTimeString('ru-RU') +
+        '</div>' +
+        '<div style="font-size:13px;opacity:0.85;">Одобрить — включится перерыв для всех (кроме админа и тестеров).</div>';
+    maintApproveModal.classList.add('active');
+});
+document.getElementById('maint-approve-yes').addEventListener('click', ()=>{
+    database.ref('system/maintenanceRequest').once('value').then(s=>{
+        const req = s.val() || {};
+        database.ref('system/maintenance').set({
+            active: true,
+            message: req.reason || 'Технический перерыв',
+            startedAt: Date.now(),
+            startedBy: req.from || 'tester',
+            approvedBy: currentNick
+        });
+        database.ref('system/maintenanceRequest').remove();
+        maintApproveModal.classList.remove('active');
+    });
+});
+document.getElementById('maint-approve-no').addEventListener('click', ()=>{
+    database.ref('system/maintenanceRequest').remove();
+    maintApproveModal.classList.remove('active');
+});
 
 /* ===================== UI СОБЫТИЯ ===================== */
 themeToggle.addEventListener('click',()=>{document.body.classList.toggle('light');const l=document.body.classList.contains('light');themeToggle.textContent=l?'☀️ Тема':'🌙 Тема';});
@@ -1288,11 +1544,7 @@ document.getElementById('set-inventory').addEventListener('click',()=>{
 });
 document.getElementById('set-titles').addEventListener('click',()=>{
     settingsModal.classList.remove('active');
-    loadUserTitles(currentUID).then(()=>{
-        renderTitlesGrid();
-        titleStatus.textContent='';
-        titlesModal.classList.add('active');
-    });
+    loadUserTitles(currentUID).then(()=>{renderTitlesGrid();titleStatus.textContent='';titlesModal.classList.add('active');});
 });
 document.getElementById('set-history').addEventListener('click',()=>{settingsModal.classList.remove('active');loadHistory();historyModal.classList.add('active');});
 document.getElementById('set-difficulty').addEventListener('click',()=>{settingsModal.classList.remove('active');difficultyModal.classList.add('active');});
@@ -1316,24 +1568,28 @@ modalClose.addEventListener('click',()=>modal.classList.remove('active'));
 leadersClose.addEventListener('click',()=>leadersModal.classList.remove('active'));
 playerStatsClose.addEventListener('click',()=>playerStatsModal.classList.remove('active'));
 allPlayersClose.addEventListener('click',()=>allPlayersModal.classList.remove('active'));
-survivalRulesClose.addEventListener('click',()=>{
-    survivalRulesModal.classList.remove('active');
-    survivalLevel = 1;
-    survivalActive = true;
-    resetGame();updateSurvivalUI();
-});
+survivalRulesClose.addEventListener('click',()=>{survivalRulesModal.classList.remove('active');survivalLevel = 1;survivalActive = true;resetGame();updateSurvivalUI();});
 nickDisplay.addEventListener('click',()=>{loadProfile();profileModal.classList.add('active');});
 
 document.getElementById('consent-btn').addEventListener('click',()=>{document.getElementById('consent-modal').classList.add('active');});
 document.getElementById('consent-agree').addEventListener('click',()=>{
-    userConsent=true;
-    document.getElementById('consent-modal').classList.remove('active');
+    userConsent=true;document.getElementById('consent-modal').classList.remove('active');
     document.getElementById('consent-btn').style.borderColor='#2ecc71';
     document.getElementById('consent-btn').style.color='#2ecc71';
     document.getElementById('consent-btn').textContent='✅ Согласие получено';
     document.getElementById('consent-status').textContent='';
 });
 document.getElementById('consent-cancel').addEventListener('click',()=>{document.getElementById('consent-modal').classList.remove('active');});
+
+togglePasswordBtn.addEventListener('click', ()=>{
+    if(passwordInput.type === 'password'){
+        passwordInput.type = 'text';
+        togglePasswordBtn.textContent = '🙈';
+    } else {
+        passwordInput.type = 'password';
+        togglePasswordBtn.textContent = '👁';
+    }
+});
 
 registerBtn.addEventListener('click',()=>{
     const n=nicknameInput.value.trim();const e=emailInput.value.trim();const p=passwordInput.value.trim();
@@ -1372,10 +1628,40 @@ loginBtn.addEventListener('click',()=>{
     }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
 });
 forgotBtn.addEventListener('click',()=>{
-    const e=emailInput.value.trim();
+    const e = emailInput.value.trim();
     if(!e){nickStatusEl.textContent='Введите email в поле выше';nickStatusEl.style.color='#e74c3c';return;}
-    auth.sendPasswordResetEmail(e).then(()=>{nickStatusEl.textContent='Письмо отправлено на '+e;nickStatusEl.style.color='#2ecc71';}).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){nickStatusEl.textContent='Введите корректный email';nickStatusEl.style.color='#e74c3c';return;}
+    nickStatusEl.textContent='Отправляем письмо...';nickStatusEl.style.color='#f1c40f';
+    auth.sendPasswordResetEmail(e).then(()=>{
+        nickStatusEl.textContent = '';
+        resetEmailBody.innerHTML =
+            '<div style="padding:14px;background:rgba(46,204,113,.2);border-radius:10px;margin-bottom:15px;">' +
+                '<div style="font-size:16px;margin-bottom:8px;">✅ Инструкция отправлена!</div>' +
+                '<div>На адрес: <b>' + e + '</b></div>' +
+            '</div>' +
+            '<p style="margin-bottom:10px;"><b>Что делать дальше:</b></p>' +
+            '<ol style="padding-left:20px;margin-bottom:15px;line-height:1.9;">' +
+                '<li>Откройте почту <b>' + e + '</b></li>' +
+                '<li>Найдите письмо от <b>Firebase</b> / <b>Крестики-нолики</b></li>' +
+                '<li>Нажмите на ссылку <b>«Сбросить пароль»</b></li>' +
+                '<li>Придумайте новый пароль</li>' +
+                '<li>Вернитесь в игру и войдите с новым паролем</li>' +
+            '</ol>' +
+            '<div style="padding:12px;background:rgba(241,196,15,.2);border-radius:10px;border-left:4px solid #f1c40f;">' +
+                '<b>⚠️ Важно:</b> если письма нет во «Входящих» — ' +
+                '<b>обязательно проверьте папку «Спам»</b> или «Промоакции».' +
+            '</div>';
+        resetEmailModal.classList.add('active');
+    }).catch(err=>{
+        let msg = 'Ошибка: ' + err.message;
+        if(err.code === 'auth/user-not-found'){msg = '❌ Пользователь с таким email не найден';}
+        else if(err.code === 'auth/invalid-email'){msg = '❌ Некорректный email';}
+        else if(err.code === 'auth/too-many-requests'){msg = '❌ Слишком много попыток. Подождите 15–30 минут';}
+        nickStatusEl.textContent = msg;
+        nickStatusEl.style.color = '#e74c3c';
+    });
 });
+resetEmailClose.addEventListener('click', ()=>{resetEmailModal.classList.remove('active');});
 
 auth.onAuthStateChanged(user=>{
     if(user){
@@ -1391,11 +1677,14 @@ auth.onAuthStateChanged(user=>{
                 document.getElementById('set-all-players').style.display = 'block';
                 document.getElementById('set-admin-stats').style.display = 'block';
                 document.getElementById('set-admin-titles').style.display = 'block';
+                document.getElementById('set-maintenance').style.display = 'block';
+                document.getElementById('set-request-maintenance').style.display = 'none';
             } else {
                 playerNameEl.classList.remove('rainbow-text');
                 document.getElementById('set-all-players').style.display = 'none';
                 document.getElementById('set-admin-stats').style.display = 'none';
                 document.getElementById('set-admin-titles').style.display = 'none';
+                document.getElementById('set-maintenance').style.display = 'none';
                 if(d.xColor){currentXColor = d.xColor;}
             }
             applyXColor(currentXColor);
@@ -1403,6 +1692,12 @@ auth.onAuthStateChanged(user=>{
             loadUserTitles(user.uid).then(()=>{
                 listenForNewTitles(user.uid);
                 loadIncomingInvites();
+                // Кнопка запроса для тестера
+                if(userTitles.includes('tester') && !isAdmin){
+                    document.getElementById('set-request-maintenance').style.display = 'block';
+                } else {
+                    document.getElementById('set-request-maintenance').style.display = 'none';
+                }
             });
             loadMyStats();
         });
@@ -1417,8 +1712,11 @@ auth.onAuthStateChanged(user=>{
         document.getElementById('set-all-players').style.display = 'none';
         document.getElementById('set-admin-stats').style.display = 'none';
         document.getElementById('set-admin-titles').style.display = 'none';
+        document.getElementById('set-maintenance').style.display = 'none';
+        document.getElementById('set-request-maintenance').style.display = 'none';
         winStreakEl.style.display='none';survivalBar.style.display='none';
         onlineMode=false;onlineRole=null;onlineRoomRef=null;
+        maintenanceModal.classList.remove('active');
         nickModal.classList.add('active');
     }
 });
@@ -1435,18 +1733,14 @@ difficultyModal.addEventListener('click',e=>{
     }
 });
 modeBotBtn.addEventListener('click',()=>{
-    onlineMode=false;
-    vsBot=true;modeBotBtn.classList.add('active');modeFriendBtn.classList.remove('active');modeOnlineBtn.classList.remove('active');
-    modeModal.classList.remove('active');
-    difficulty='medium';
-    resetGame();
+    onlineMode=false;vsBot=true;
+    modeBotBtn.classList.add('active');modeFriendBtn.classList.remove('active');modeOnlineBtn.classList.remove('active');
+    modeModal.classList.remove('active');difficulty='medium';resetGame();
 });
 modeFriendBtn.addEventListener('click',()=>{
-    onlineMode=false;
-    vsBot=false;modeFriendBtn.classList.add('active');modeBotBtn.classList.remove('active');modeOnlineBtn.classList.remove('active');
-    modeModal.classList.remove('active');
-    survivalActive=false;survivalBar.style.display='none';
-    resetGame();
+    onlineMode=false;vsBot=false;
+    modeFriendBtn.classList.add('active');modeBotBtn.classList.remove('active');modeOnlineBtn.classList.remove('active');
+    modeModal.classList.remove('active');survivalActive=false;survivalBar.style.display='none';resetGame();
 });
 
 resetBtn.addEventListener('click',resetGame);
