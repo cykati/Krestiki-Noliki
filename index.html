@@ -116,11 +116,12 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
     opacity:0.45 !important;
     background:rgba(255,255,255,.1) !important;
 }
-#board.board9x9{grid-template-columns:repeat(9,36px);grid-template-rows:repeat(9,36px);gap:2px;}
-#board.board9x9 .cell{font-size:22px;border-radius:4px;}
-@media(max-width:500px){
-    #board.board9x9{grid-template-columns:repeat(9,32px);grid-template-rows:repeat(9,32px);gap:1px;}
-    #board.board9x9 .cell{font-size:18px;}
+/* Поле 6x6 для командного режима */
+#board.board9x9{grid-template-columns:repeat(6,50px);grid-template-rows:repeat(6,50px);gap:3px;}
+#board.board9x9 .cell{font-size:28px;border-radius:6px;}
+@media(max-width:400px){
+    #board.board9x9{grid-template-columns:repeat(6,44px);grid-template-rows:repeat(6,44px);gap:2px;}
+    #board.board9x9 .cell{font-size:24px;}
 }
 @media(max-width:400px){#board{grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px);}.cell{font-size:48px;}.scoreboard{font-size:14px;gap:8px;}.color-grid{grid-template-columns:repeat(4,1fr);}.title-grid{grid-template-columns:1fr;}}
 </style>
@@ -149,10 +150,13 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
     <div class="bar"><div class="bar-fill" id="survival-bar-fill"></div></div>
 </div>
 
-<div id="online-score" style="display:none;justify-content:center;gap:20px;font-size:18px;font-weight:bold;margin-bottom:12px;padding:10px;background:var(--cell-bg);border-radius:10px;max-width:340px;">
-    <span id="score-label-my">Вы: <span id="online-score-you" style="color:#2ecc71;">0</span></span>
-    <span style="opacity:0.5;">—</span>
-    <span id="score-label-opp">Друг: <span id="online-score-opp" style="color:#e74c3c;">0</span></span>
+<div id="online-score" style="display:none;flex-direction:column;gap:8px;font-size:14px;font-weight:bold;margin-bottom:12px;padding:10px;background:var(--cell-bg);border-radius:10px;max-width:340px;width:100%;">
+    <div id="online-teams" style="display:flex;justify-content:center;gap:15px;font-size:12px;flex-wrap:wrap;"></div>
+    <div style="display:flex;justify-content:center;gap:20px;font-size:18px;">
+        <span id="score-label-my">Вы: <span id="online-score-you" style="color:#2ecc71;">0</span></span>
+        <span style="opacity:0.5;">—</span>
+        <span id="score-label-opp">Друг: <span id="online-score-opp" style="color:#e74c3c;">0</span></span>
+    </div>
 </div>
 
 <div class="scoreboard">
@@ -297,7 +301,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="mode-bot" class="active">🤖 Против бота</button>
 <button id="mode-friend">👥 Против друга (один телефон)</button>
 <button id="mode-online">🌐 Онлайн 1 на 1</button>
-<button id="mode-team">👥👥 Командный 2 на 2 (9×9)</button>
+<button id="mode-team">👥👥 Командный 2 на 2 (6×6)</button>
 </div><button id="mode-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="online-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
@@ -1241,7 +1245,7 @@ function renderOnlineMenu(){
     const isTeam = teamMode;
     onlineContent.innerHTML = `
         <p style="font-size:14px;opacity:0.9;margin-bottom:15px;">
-            ${isTeam ? '👥👥 Командный режим 2 на 2. Поле 9×9, победа — 5 в ряд. Игра до 5 побед.' : 'Играй с другом по сети. Создай комнату и поделись кодом, или присоединись по коду друга.'}
+            ${isTeam ? '👥👥 Командный режим 2 на 2. Поле 6×6, победа — 6 в ряд. Игра до 5 побед.' : 'Играй с другом по сети. Создай комнату и поделись кодом, или присоединись по коду друга.'}
         </p>
         <button id="create-room-btn" style="width:100%;padding:14px;font-size:16px;background:#2ecc71;border-radius:8px;border:none;color:#fff;cursor:pointer;font-weight:bold;margin-bottom:12px;">🏠 Создать комнату</button>
         <div style="font-size:12px;opacity:0.7;margin:10px 0;text-align:center;">— или присоединиться по коду —</div>
@@ -1296,13 +1300,13 @@ function createRoomOnly(){
     const roomRef = database.ref('rooms/'+roomCode);
     const roomData = {
         player1: currentNick, player1uid: currentUID, player2: '',
-        board: teamMode ? new Array(81).fill("") : new Array(9).fill(""),
+        board: teamMode ? new Array(36).fill("") : new Array(9).fill(""),
         turn: 'X', status: 'waiting', winner: '', createdAt: Date.now(),
         teamMode: teamMode, scoreX: 0, scoreO: 0
     };
     if(teamMode){
         roomData.players = { [currentUID]: { nick: currentNick, team: 'X', pos: 1 } };
-        roomData.slot = 2;
+        roomData.slot = 1;
     }
     roomRef.set(roomData).then(()=>{
         statusEl.style.color='#2ecc71';
@@ -1336,18 +1340,20 @@ function joinRoomByCode(){
             const players = room.players || {};
             if(Object.keys(players).length >= 4){statusEl.style.color='#e74c3c';statusEl.textContent='Комната заполнена (4/4)';return;}
             if(players[currentUID]){statusEl.style.color='#e74c3c';statusEl.textContent='Вы уже в этой комнате';return;}
-            const slot = room.slot || 1;
-            const team = (slot <= 2) ? 'X' : 'O';
+            const existingPlayers = Object.values(players);
+            const teamXCount = existingPlayers.filter(p=>p.team==='X').length;
+            const teamOCount = existingPlayers.filter(p=>p.team==='O').length;
+            let team, pos;
+            if(teamXCount < 2){ team = 'X'; pos = teamXCount + 1; }
+            else if(teamOCount < 2){ team = 'O'; pos = teamOCount + 1; }
+            else { statusEl.style.color='#e74c3c';statusEl.textContent='Комната заполнена';return; }
             const updates = {};
-            updates['players/'+currentUID] = { nick: currentNick, team: team, pos: slot };
-            updates['slot'] = slot + 1;
-            if(slot === 1) updates.player1 = currentNick;
-            if(slot === 2) updates.player2 = currentNick;
-            if(slot === 3) updates.player3 = currentNick;
-            if(slot === 4){ updates.player4 = currentNick; updates.status = 'playing'; }
+            updates['players/'+currentUID] = { nick: currentNick, team: team, pos: pos };
+            const totalPlayers = Object.keys(players).length + 1;
+            if(totalPlayers >= 4) updates.status = 'playing';
             database.ref('rooms/'+code).update(updates).then(()=>{
                 onlineModal.classList.remove('active');
-                startOnlineGame(code, slot, team);
+                startOnlineGame(code, pos, team);
             });
         } else {
             if(room.status !== 'waiting'){statusEl.style.color='#e74c3c';statusEl.textContent='Комната уже занята';return;}
@@ -1403,6 +1409,34 @@ function waitForOpponent(roomRef, role){
     });
 }
 
+function updateScoreboardLabels(room){
+    if(!room) return;
+    const isTeam = room.teamMode === true;
+    const players = room.players || {};
+    const teamsDiv = document.getElementById('online-teams');
+    const myLabel = document.getElementById('score-label-my');
+    const oppLabel = document.getElementById('score-label-opp');
+    if(isTeam){
+        const teamX = Object.values(players).filter(p=>p.team==='X').map(p=>p.nick).join(', ');
+        const teamO = Object.values(players).filter(p=>p.team==='O').map(p=>p.nick).join(', ');
+        if(teamsDiv){
+            teamsDiv.innerHTML = 
+                '<div style="color:#e74c3c;">👥 X: ' + (teamX || '...') + '</div>' +
+                '<div style="color:#3498db;">👥 O: ' + (teamO || '...') + '</div>';
+        }
+        if(myLabel) myLabel.innerHTML = 'Своя команда: <span id="online-score-you" style="color:#2ecc71;">0</span>';
+        if(oppLabel) oppLabel.innerHTML = 'Соперники: <span id="online-score-opp" style="color:#e74c3c;">0</span>';
+    } else {
+        if(teamsDiv){
+            teamsDiv.innerHTML = 
+                '<div style="color:#e74c3c;">❌ X: ' + (room.player1 || '...') + '</div>' +
+                '<div style="color:#3498db;">⭕ O: ' + (room.player2 || '...') + '</div>';
+        }
+        if(myLabel) myLabel.innerHTML = 'Вы: <span id="online-score-you" style="color:#2ecc71;">0</span>';
+        if(oppLabel) oppLabel.innerHTML = 'Друг: <span id="online-score-opp" style="color:#e74c3c;">0</span>';
+    }
+}
+
 function startOnlineGame(roomCode, role, team){
     onlineMode = true; onlineRole = role; onlineTeam = team || null;
     onlineRoomRef = database.ref('rooms/'+roomCode);
@@ -1416,11 +1450,11 @@ function startOnlineGame(roomCode, role, team){
         if(room.teamMode){
             boardEl.classList.add('board9x9');
             createBoard();
-            document.getElementById('score-label-my').innerHTML = 'Ваша команда: <span id="online-score-you" style="color:#2ecc71;">0</span>';
-            document.getElementById('score-label-opp').innerHTML = 'Соперники: <span id="online-score-opp" style="color:#e74c3c;">0</span>';
+            updateScoreboardLabels(room);
         } else {
             boardEl.classList.remove('board9x9');
             createBoard();
+            updateScoreboardLabels(room);
         }
     });
     statusEl.textContent = 'Онлайн-игра. Ваш ход...';
@@ -1433,6 +1467,7 @@ function startOnlineGame(roomCode, role, team){
 
 function updateOnlineBoard(room){
     const isTeam = room.teamMode === true;
+    updateScoreboardLabels(room);
     let myMark;
     if(isTeam){ myMark = onlineTeam; } else { myMark = (onlineRole === 'player1') ? 'X' : 'O'; }
     const scoreX = room.scoreX || 0;
@@ -1443,7 +1478,7 @@ function updateOnlineBoard(room){
     const oppEl = document.getElementById('online-score-opp');
     if(youEl) youEl.textContent = myScore;
     if(oppEl) oppEl.textContent = oppScore;
-    board = room.board || (isTeam ? new Array(81).fill("") : new Array(9).fill(""));
+    board = room.board || (isTeam ? new Array(36).fill("") : new Array(9).fill(""));
     currentPlayer = room.turn;
     gameOver = (room.status === 'finished');
     let isMyTurn;
@@ -1452,9 +1487,19 @@ function updateOnlineBoard(room){
         const myPlayer = players[currentUID];
         if(myPlayer && myPlayer.team === currentPlayer){
             const lastMover = room.lastMover;
-            if(lastMover){ isMyTurn = (lastMover !== currentUID); }
-            else { isMyTurn = (myPlayer.pos === 1); }
-        } else { isMyTurn = false; }
+            let expectedPos = 1;
+            if(lastMover){
+                const lastMoverPlayer = players[lastMover];
+                if(lastMoverPlayer && lastMoverPlayer.team === currentPlayer){
+                    expectedPos = lastMoverPlayer.pos === 1 ? 2 : 1;
+                } else {
+                    expectedPos = 1;
+                }
+            }
+            isMyTurn = (myPlayer.pos === expectedPos);
+        } else {
+            isMyTurn = false;
+        }
     } else { isMyTurn = (currentPlayer === myMark); }
     const cs = document.querySelectorAll('.cell');
     cs.forEach((c, i)=>{
@@ -1505,7 +1550,7 @@ document.getElementById('online-rematch').addEventListener('click', ()=>{
     onlineRoomRef.once('value').then(s=>{
         const room = s.val();
         if(!room) return;
-        const emptyBoard = room.teamMode ? new Array(81).fill("") : new Array(9).fill("");
+        const emptyBoard = room.teamMode ? new Array(36).fill("") : new Array(9).fill("");
         onlineRoomRef.update({board: emptyBoard, turn: 'X', status: 'playing', winner: '', lastMover: null});
         document.getElementById('online-end-modal').classList.remove('active');
     });
@@ -1552,7 +1597,7 @@ function generateRoomCode(){
 function createBoard(){
     boardEl.innerHTML="";
     const isTeamBoard = boardEl.classList.contains('board9x9');
-    const total = isTeamBoard ? 81 : 9;
+    const total = isTeamBoard ? 36 : 9;
     for(let i=0;i<total;i++){
         const c=document.createElement('button');
         c.classList.add('cell');
@@ -1579,7 +1624,7 @@ function isFull(){return board.every(c=>c!=="");}
 function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
 function highlightWin(p){const c=getWinCombo(p);if(c)c.forEach(i=>{document.querySelectorAll('.cell')[i].classList.add(p==="O"?"lose":"win");});}
 function checkWin5(b, mark){
-    const N = 9, need = 5;
+    const N = 6, need = 6;
     for(let r=0; r<N; r++){ for(let c=0; c<=N-need; c++){ let ok = true; for(let k=0;k<need;k++){ if(b[r*N+c+k] !== mark){ok=false;break;} } if(ok) return true; } }
     for(let c=0; c<N; c++){ for(let r=0; r<=N-need; r++){ let ok = true; for(let k=0;k<need;k++){ if(b[(r+k)*N+c] !== mark){ok=false;break;} } if(ok) return true; } }
     for(let r=0; r<=N-need; r++){ for(let c=0; c<=N-need; c++){ let ok = true; for(let k=0;k<need;k++){ if(b[(r+k)*N+c+k] !== mark){ok=false;break;} } if(ok) return true; } }
@@ -1601,8 +1646,17 @@ function handleClick(i){
                 const myPlayer = players[currentUID];
                 if(!myPlayer || myPlayer.team !== currentPlayer) return;
                 const lastMover = room.lastMover;
-                if(lastMover){ if(lastMover === currentUID) return; isMyTurn = true; }
-                else { isMyTurn = (myPlayer.pos === 1); }
+                let expectedPos = 1;
+                if(lastMover){
+                    const lastMoverPlayer = players[lastMover];
+                    if(lastMoverPlayer && lastMoverPlayer.team === currentPlayer){
+                        expectedPos = lastMoverPlayer.pos === 1 ? 2 : 1;
+                    } else {
+                        expectedPos = 1;
+                    }
+                }
+                if(myPlayer.pos !== expectedPos) return;
+                isMyTurn = true;
             } else {
                 myMark = (onlineRole === 'player1') ? 'X' : 'O';
                 isMyTurn = (currentPlayer === myMark);
@@ -1737,7 +1791,7 @@ function minimax(mx){
 
 function resetGame(){
     const isTeamBoard = boardEl.classList.contains('board9x9');
-    board = isTeamBoard ? new Array(81).fill("") : ["","","","","","","","",""];
+    board = isTeamBoard ? new Array(36).fill("") : ["","","","","","","","",""];
     currentPlayer="X";gameOver=false;
     statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";
     modal.classList.remove('active');
@@ -2098,4 +2152,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-    </html>
+                                         </html>
