@@ -116,7 +116,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
     opacity:0.45 !important;
     background:rgba(255,255,255,.1) !important;
 }
-/* Поле 9x9 для командного режима */
 #board.board9x9{grid-template-columns:repeat(9,36px);grid-template-rows:repeat(9,36px);gap:2px;}
 #board.board9x9 .cell{font-size:22px;border-radius:4px;}
 @media(max-width:500px){
@@ -1070,55 +1069,35 @@ function renderAdminTitlesList(){
                 const titleKey = chip.dataset.title;
                 const isOn = chip.classList.contains('on');
                 const t = TITLES[titleKey];
-
                 if(isOn){
                     if(!confirm('Снять титул "' + t.name + '" у игрока ' + nick + '?')) return;
                     database.ref('users/'+uid+'/titles/'+titleKey).remove().then(()=>{
-                        database.ref('titleHistory').push({
-                            nick: nick, title: titleKey,
-                            issuedBy: currentNick, issuedAt: Date.now(),
-                            revoked: true, revokedBy: currentNick, revokedAt: Date.now()
-                        });
-                        chip.classList.remove('on');
-                        chip.classList.add('off');
+                        database.ref('titleHistory').push({nick: nick, title: titleKey, issuedBy: currentNick, issuedAt: Date.now(), revoked: true, revokedBy: currentNick, revokedAt: Date.now()});
+                        chip.classList.remove('on');chip.classList.add('off');
                         restyleAdminChips();
-                    }).catch(err=>{
-                        alert('Ошибка при снятии: ' + err.message);
-                    });
+                    }).catch(err=>alert('Ошибка при снятии: ' + err.message));
                     return;
                 }
-
                 pendingChip = chip;
                 confirmTitleBody.innerHTML =
-                    'Выдать титул <b style="color:#f1c40f;">' + t.name + '</b><br>' +
-                    'Игроку: <b>' + nick + '</b>?<br><br>' +
-                    '<div style="padding:10px;background:rgba(0,0,0,.25);border-radius:8px;font-size:13px;">' +
-                        '<b>За что:</b> ' + (t.reward || t.desc) +
-                    '</div>';
+                    'Выдать титул <b style="color:#f1c40f;">' + t.name + '</b><br>Игроку: <b>' + nick + '</b>?<br><br>' +
+                    '<div style="padding:10px;background:rgba(0,0,0,.25);border-radius:8px;font-size:13px;"><b>За что:</b> ' + (t.reward || t.desc) + '</div>';
                 confirmTitleModal.classList.add('active');
             });
         });
-
         confirmTitleYes.addEventListener('click', ()=>{
             if(!pendingChip) return;
             const uid = pendingChip.dataset.uid;
             const nick = pendingChip.dataset.nick;
             const titleKey = pendingChip.dataset.title;
             database.ref('users/'+uid+'/titles/'+titleKey).set(true);
-            database.ref('titleHistory').push({
-                nick: nick, title: titleKey, issuedBy: currentNick,
-                issuedAt: Date.now(), revoked: false
-            });
-            pendingChip.classList.remove('off');
-            pendingChip.classList.add('on');
+            database.ref('titleHistory').push({nick: nick, title: titleKey, issuedBy: currentNick, issuedAt: Date.now(), revoked: false});
+            pendingChip.classList.remove('off');pendingChip.classList.add('on');
             restyleAdminChips();
             pendingChip = null;
             confirmTitleModal.classList.remove('active');
         });
-        confirmTitleNo.addEventListener('click', ()=>{
-            pendingChip = null;
-            confirmTitleModal.classList.remove('active');
-        });
+        confirmTitleNo.addEventListener('click', ()=>{ pendingChip = null; confirmTitleModal.classList.remove('active'); });
     });
 }
 
@@ -1138,9 +1117,7 @@ function listenForNewTitles(uid){
         const added = nowTitles.filter(k => !knownTitles.includes(k));
         added.forEach(k=>{
             if(TITLES[k] && !pendingAwardTitle){
-                setTimeout(()=>{
-                    if(!pendingAwardTitle) showAwardNotification(k);
-                }, 300);
+                setTimeout(()=>{ if(!pendingAwardTitle) showAwardNotification(k); }, 300);
             }
         });
         knownTitles = nowTitles;
@@ -1172,7 +1149,6 @@ document.getElementById('admin-give-titles').addEventListener('click', ()=>{
 });
 document.getElementById('admin-title-history').addEventListener('click', ()=>{
     document.getElementById('admin-panel-modal').classList.remove('active');
-    // Открываем историю
     titleHistoryList.innerHTML = 'Загрузка...';
     database.ref('titleHistory').once('value').then(s=>{
         const data = s.val() || {};
@@ -1193,9 +1169,7 @@ document.getElementById('admin-title-history').addEventListener('click', ()=>{
             html += '<div style="font-size:12px;opacity:0.85;">';
             html += (isRevoked ? '❌ Снят: ' : '✅ Выдан: ') + '<b>' + (item.issuedBy || item.revokedBy || 'Admin') + '</b>';
             html += '<br>📅 ' + date;
-            if(isRevoked && item.revokedAt){
-                html += '<br>🔻 Снят: ' + new Date(item.revokedAt).toLocaleString('ru-RU');
-            }
+            if(isRevoked && item.revokedAt){ html += '<br>🔻 Снят: ' + new Date(item.revokedAt).toLocaleString('ru-RU'); }
             html += '</div></div>';
         });
         titleHistoryList.innerHTML = html;
@@ -1215,11 +1189,7 @@ document.getElementById('admin-init-titles').addEventListener('click', ()=>{
         const uids = Object.keys(users);
         let done = 0, created = 0;
         const progress = document.getElementById('init-progress');
-        if(uids.length === 0){
-            progress.textContent = 'Нет игроков';
-            setTimeout(()=>statusModal.remove(), 1500);
-            return;
-        }
+        if(uids.length === 0){ progress.textContent = 'Нет игроков'; setTimeout(()=>statusModal.remove(), 1500); return; }
         const promises = uids.map(uid=>{
             const u = users[uid] || {};
             if(u.titles){ done++; return Promise.resolve(); }
@@ -1250,72 +1220,16 @@ document.getElementById('admin-maintenance').addEventListener('click', ()=>{
     });
 });
 
-/* ===================== ИНИЦИАЛИЗАЦИЯ ТИТУЛОВ ===================== */
-document.getElementById('set-init-titles').addEventListener('click', ()=>{
-    if(!isAdmin) return;
-    if(!confirm('Создать ветку "titles" для всех игроков, у которых её нет?')) return;
-    const statusModal = document.createElement('div');
-    statusModal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);display:flex;justify-content:center;align-items:center;z-index:9999;color:#fff;font-size:16px;text-align:center;padding:20px;';
-    statusModal.innerHTML = '<div><div style="font-size:32px;margin-bottom:15px;">🔧</div><div>Инициализация...</div><div id="init-progress2" style="margin-top:15px;font-size:14px;opacity:0.8;">Загрузка списка игроков</div></div>';
-    document.body.appendChild(statusModal);
-    database.ref('users').once('value').then(snap=>{
-        const users = snap.val() || {};
-        const uids = Object.keys(users);
-        let done = 0, created = 0;
-        const progress = document.getElementById('init-progress2');
-        if(uids.length === 0){
-            progress.textContent = 'Нет игроков';
-            setTimeout(()=>statusModal.remove(), 1500);
-            return;
-        }
-        const promises = uids.map(uid=>{
-            const u = users[uid] || {};
-            if(u.titles){ done++; return Promise.resolve(); }
-            return database.ref('users/'+uid+'/titles').set({}).then(()=>{
-                created++; done++;
-                progress.textContent = 'Обработано: ' + done + ' / ' + uids.length + ' (создано: ' + created + ')';
-            });
-        });
-        Promise.all(promises).then(()=>{
-            progress.innerHTML = '✅ Готово!<br>Обработано: <b>' + done + '</b><br>Создано новых: <b>' + created + '</b>';
-            setTimeout(()=>statusModal.remove(), 2500);
-        }).catch(err=>{
-            progress.innerHTML = '❌ Ошибка: ' + err.message;
-            setTimeout(()=>statusModal.remove(), 3500);
-        });
-    });
-});
-
-/* ===================== ИСТОРИЯ ТИТУЛОВ (старая кнопка) ===================== */
-document.getElementById('set-title-history').addEventListener('click', ()=>{});
-document.getElementById('set-maintenance').addEventListener('click', ()=>{
-    database.ref('system/maintenance').once('value').then(s=>{
-        const data = s.val() || {};
-        document.getElementById('maintenance-control-body').innerHTML =
-            '<div style="padding:12px;background:rgba(0,0,0,.25);border-radius:8px;margin-bottom:12px;">' +
-                '<b>Статус:</b> ' + (data.active ? '<span style="color:#e74c3c;">🔴 ВКЛЮЧЕН</span>' : '<span style="color:#2ecc71;">🟢 ВЫКЛЮЧЕН</span>') + '<br>' +
-                '<b>Причина:</b> ' + (data.message || '—') +
-            '</div>';
-        document.getElementById('maintenance-control-modal').classList.add('active');
-    });
-});
-
-/* ===================== ОНЛАЙН-ИГРА (1 на 1 и 2 на 2) ===================== */
+/* ===================== ОНЛАЙН-ИГРА ===================== */
 modeOnlineBtn.addEventListener('click', ()=>{
-    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){
-        alert('🚧 Во время технического перерыва онлайн-игра недоступна.');
-        return;
-    }
+    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){ alert('🚧 Во время технического перерыва онлайн-игра недоступна.'); return; }
     teamMode = false;
     modeModal.classList.remove('active');
     renderOnlineMenu();
     onlineModal.classList.add('active');
 });
 modeTeamBtn.addEventListener('click', ()=>{
-    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){
-        alert('🚧 Во время технического перерыва командный режим недоступен.');
-        return;
-    }
+    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){ alert('🚧 Во время технического перерыва командный режим недоступен.'); return; }
     teamMode = true;
     modeModal.classList.remove('active');
     renderOnlineMenu();
@@ -1358,27 +1272,16 @@ function renderOnlineMenu(){
         if(friendInput && suggestions){
             friendInput.addEventListener('input', ()=>{
                 const val = friendInput.value.trim().toLowerCase();
-                if(val.length < 1){
-                    suggestions.style.display = 'none';
-                    return;
-                }
+                if(val.length < 1){ suggestions.style.display = 'none'; return; }
                 database.ref('nicknames').once('value').then(s=>{
                     const allNicks = Object.keys(s.val() || {});
                     const matches = allNicks.filter(n => n.toLowerCase().startsWith(val) && n.toLowerCase() !== currentNick.toLowerCase());
                     matches.sort();
-                    if(matches.length === 0){
-                        suggestions.style.display = 'none';
-                        return;
-                    }
-                    suggestions.innerHTML = matches.slice(0, 20).map(n => 
-                        '<div class="nick-suggestion" data-nick="'+n+'" style="padding:10px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.1);">👤 '+n+'</div>'
-                    ).join('');
+                    if(matches.length === 0){ suggestions.style.display = 'none'; return; }
+                    suggestions.innerHTML = matches.slice(0, 20).map(n => '<div class="nick-suggestion" data-nick="'+n+'" style="padding:10px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.1);">👤 '+n+'</div>').join('');
                     suggestions.style.display = 'block';
                     suggestions.querySelectorAll('.nick-suggestion').forEach(el=>{
-                        el.addEventListener('click', ()=>{
-                            friendInput.value = el.dataset.nick;
-                            suggestions.style.display = 'none';
-                        });
+                        el.addEventListener('click', ()=>{ friendInput.value = el.dataset.nick; suggestions.style.display = 'none'; });
                     });
                 });
             });
@@ -1418,10 +1321,7 @@ function createRoomOnly(){
             });
         }
         waitForOpponent(roomRef, teamMode ? 1 : 'player1');
-    }).catch(err=>{
-        statusEl.style.color='#e74c3c';
-        statusEl.textContent = 'Ошибка: ' + err.message;
-    });
+    }).catch(err=>{ statusEl.style.color='#e74c3c'; statusEl.textContent = 'Ошибка: ' + err.message; });
 }
 
 function joinRoomByCode(){
@@ -1504,9 +1404,7 @@ function waitForOpponent(roomRef, role){
 }
 
 function startOnlineGame(roomCode, role, team){
-    onlineMode = true;
-    onlineRole = role;
-    onlineTeam = team || null;
+    onlineMode = true; onlineRole = role; onlineTeam = team || null;
     onlineRoomRef = database.ref('rooms/'+roomCode);
     vsBot = false; difficulty = 'online';
     survivalActive = false; survivalBar.style.display = 'none';
@@ -1573,11 +1471,8 @@ function updateOnlineBoard(room){
         const winner = room.winner;
         let statusText = '';
         if(winner === 'draw') statusText = '🤝 Ничья';
-        else if(isTeam){
-            statusText = (winner === myMark) ? '🏆 Ваша команда выиграла!' : '😢 Ваша команда проиграла';
-        } else {
-            statusText = (winner === myMark) ? '🏆 Вы выиграли!' : '😢 Вы проиграли';
-        }
+        else if(isTeam){ statusText = (winner === myMark) ? '🏆 Ваша команда выиграла!' : '😢 Ваша команда проиграла'; }
+        else { statusText = (winner === myMark) ? '🏆 Вы выиграли!' : '😢 Вы проиграли'; }
         statusEl.textContent = statusText;
         const endModal = document.getElementById('online-end-modal');
         const endTitle = document.getElementById('online-end-title');
@@ -1631,13 +1526,7 @@ function loadIncomingInvites(){
         const el = document.getElementById('online-invites');
         if(!el) return;
         if(!inv){el.innerHTML='';return;}
-        el.innerHTML = `
-            <div style="padding:12px;background:rgba(46,204,113,.2);border-radius:8px;margin-bottom:10px;">
-                <div style="margin-bottom:8px;">🎮 <b>${inv.from}</b> приглашает вас в игру!</div>
-                <button id="accept-invite" style="background:#2ecc71;padding:8px 16px;font-size:14px;">Принять</button>
-                <button id="decline-invite" style="background:#b32e2e;padding:8px 16px;font-size:14px;margin-left:8px;">Отклонить</button>
-            </div>
-        `;
+        el.innerHTML = `<div style="padding:12px;background:rgba(46,204,113,.2);border-radius:8px;margin-bottom:10px;"><div style="margin-bottom:8px;">🎮 <b>${inv.from}</b> приглашает вас в игру!</div><button id="accept-invite" style="background:#2ecc71;padding:8px 16px;font-size:14px;">Принять</button><button id="decline-invite" style="background:#b32e2e;padding:8px 16px;font-size:14px;margin-left:8px;">Отклонить</button></div>`;
         document.getElementById('accept-invite').addEventListener('click', ()=>{
             onlineModal.classList.remove('active');
             database.ref('rooms/'+inv.room).update({player2: currentNick, player2uid: currentUID, status: 'playing'}).then(()=>{
@@ -2026,10 +1915,7 @@ document.getElementById('set-history').addEventListener('click',()=>{settingsMod
 document.getElementById('set-difficulty').addEventListener('click',()=>{settingsModal.classList.remove('active');difficultyModal.classList.add('active');});
 document.getElementById('set-mode').addEventListener('click',()=>{
     settingsModal.classList.remove('active');
-    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){
-        alert('🚧 Во время технического перерыва доступна только игра с ботом.');
-        return;
-    }
+    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){ alert('🚧 Во время технического перерыва доступна только игра с ботом.'); return; }
     modeModal.classList.add('active');
 });
 document.getElementById('set-nick').addEventListener('click',()=>{settingsModal.classList.remove('active');nickModal.classList.add('active');});
@@ -2159,11 +2045,8 @@ auth.onAuthStateChanged(user=>{
                 loadUserTitles(user.uid).then(()=>{
                     listenForNewTitles(user.uid);
                     loadIncomingInvites();
-                    if(userTitles.includes('tester') && !isAdmin){
-                        document.getElementById('set-request-maintenance').style.display = 'block';
-                    } else {
-                        document.getElementById('set-request-maintenance').style.display = 'none';
-                    }
+                    if(userTitles.includes('tester') && !isAdmin){ document.getElementById('set-request-maintenance').style.display = 'block'; }
+                    else { document.getElementById('set-request-maintenance').style.display = 'none'; }
                     applyTitleToNick();
                 });
             });
@@ -2204,10 +2087,7 @@ modeBotBtn.addEventListener('click',()=>{
     modeModal.classList.remove('active');difficulty='medium';resetGame();
 });
 modeFriendBtn.addEventListener('click',()=>{
-    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){
-        alert('🚧 Во время технического перерыва игра с другом недоступна.');
-        return;
-    }
+    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){ alert('🚧 Во время технического перерыва игра с другом недоступна.'); return; }
     onlineMode=false;vsBot=false;
     modeFriendBtn.classList.add('active');modeBotBtn.classList.remove('active');modeOnlineBtn.classList.remove('active');
     if(modeTeamBtn) modeTeamBtn.classList.remove('active');
