@@ -87,23 +87,9 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .title-year{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;box-shadow:0 0 6px rgba(231,76,60,.6);}
 @keyframes vipGlow{from{box-shadow:0 0 12px rgba(241,196,15,.7),0 0 20px rgba(241,196,15,.4);}to{box-shadow:0 0 20px rgba(241,196,15,1),0 0 35px rgba(241,196,15,.7);}}
 @keyframes creatorGlow{from{box-shadow:0 0 10px rgba(46,204,113,.7),0 0 18px rgba(46,204,113,.4);}to{box-shadow:0 0 18px rgba(46,204,113,1),0 0 30px rgba(46,204,113,.6);}}
-.rainbow-text .title-badge,
-.rainbow-text .title-badge *{
-    -webkit-text-fill-color: #fff !important;
-    color: #fff !important;
-    background-clip: border-box !important;
-    -webkit-background-clip: border-box !important;
-}
-.rainbow-text .title-badge.title-vip{
-    color: #fff !important;
-    background: linear-gradient(135deg,#f1c40f,#f39c12) !important;
-}
-.rainbow-text .title-badge.title-creator,
-.rainbow-text .title-badge.title-moderator,
-.rainbow-text .title-badge.title-helper{
-    color: #fff !important;
-    background: linear-gradient(135deg,#2ecc71,#1abc9c) !important;
-}
+.rainbow-text .title-badge, .rainbow-text .title-badge *{-webkit-text-fill-color: #fff !important;color: #fff !important;background-clip: border-box !important;-webkit-background-clip: border-box !important;}
+.rainbow-text .title-badge.title-vip{color: #fff !important;background: linear-gradient(135deg,#f1c40f,#f39c12) !important;}
+.rainbow-text .title-badge.title-creator, .rainbow-text .title-badge.title-moderator, .rainbow-text .title-badge.title-helper{color: #fff !important;background: linear-gradient(135deg,#2ecc71,#1abc9c) !important;}
 .title-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:15px;max-height:50vh;overflow-y:auto;}
 .title-card{padding:12px;border-radius:10px;border:2px solid rgba(255,255,255,.15);cursor:pointer;transition:.2s;text-align:left;}
 .title-card:hover{transform:scale(1.02);border-color:rgba(255,255,255,.4);}
@@ -398,12 +384,9 @@ let survivalActive = false;
 let currentTitle = null;
 let userTitles = [];
 let pendingAwardTitle = null;
-
-// Онлайн
 let onlineMode = false;
 let onlineRole = null;
 let onlineRoomRef = null;
-let onlineRoomCode = null;
 
 const ADMIN_RAINBOW = {
     id: 'admin_rainbow', name: '👑 Rainbow Admin', type: 'admin_rainbow',
@@ -1043,7 +1026,6 @@ function waitForOpponent(roomRef, role){
 function startOnlineGame(roomCode, role){
     onlineMode = true;
     onlineRole = role;
-    onlineRoomCode = roomCode;
     onlineRoomRef = database.ref('rooms/'+roomCode);
     vsBot = false;
     difficulty = 'online';
@@ -1082,31 +1064,6 @@ function updateOnlineBoard(room){
     }
 }
 
-const originalHandleClick = handleClick;
-handleClick = function(i){
-    if(onlineMode){
-        if(gameOver) return;
-        const myMark = (onlineRole === 'player1') ? 'X' : 'O';
-        if(currentPlayer !== myMark) return;
-        if(board[i] !== "") return;
-        const newBoard = [...board];
-        newBoard[i] = myMark;
-        const nextTurn = myMark === 'X' ? 'O' : 'X';
-        let winner = '';
-        for(const c of winCombos){
-            if(c.every(idx=>newBoard[idx]===myMark)){winner = myMark; break;}
-        }
-        const isDraw = newBoard.every(c=>c!=="");
-        const updates = { board: newBoard, turn: nextTurn };
-        if(winner){updates.status='finished';updates.winner=winner;}
-        else if(isDraw){updates.status='finished';updates.winner='draw';}
-        onlineRoomRef.update(updates);
-        playClick();
-        return;
-    }
-    return originalHandleClick(i);
-};
-
 function loadIncomingInvites(){
     database.ref('invites/'+currentNick.toLowerCase()).on('value', s=>{
         const inv = s.val();
@@ -1143,6 +1100,142 @@ function generateRoomCode(){
     let code = '';
     for(let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
     return code;
+}
+
+/* ===================== ИГРА ===================== */
+function createBoard(){boardEl.innerHTML="";for(let i=0;i<9;i++){const c=document.createElement('button');c.classList.add('cell');c.dataset.index=i;c.addEventListener('click',()=>handleClick(i));boardEl.appendChild(c);}}
+function updateUI(){const cs=document.querySelectorAll('.cell');cs.forEach((c,i)=>{c.textContent=board[i];c.classList.remove('x','o','rainbow-cell');if(board[i]==='X')c.classList.add('x');if(board[i]==='O')c.classList.add('o');c.disabled=board[i]!==""||gameOver;});applyXColor(currentXColor);}
+function checkWin(p){return winCombos.some(c=>c.every(i=>board[i]===p));}
+function isFull(){return board.every(c=>c!=="");}
+function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
+function highlightWin(p){const c=getWinCombo(p);if(c)c.forEach(i=>{document.querySelectorAll('.cell')[i].classList.add(p==="O"?"lose":"win");});}
+
+function handleClick(i){
+    // Онлайн-режим
+    if(onlineMode){
+        if(gameOver) return;
+        const myMark = (onlineRole === 'player1') ? 'X' : 'O';
+        if(currentPlayer !== myMark) return;
+        if(board[i] !== "") return;
+        const newBoard = [...board];
+        newBoard[i] = myMark;
+        const nextTurn = myMark === 'X' ? 'O' : 'X';
+        let winner = '';
+        for(const c of winCombos){
+            if(c.every(idx=>newBoard[idx]===myMark)){winner = myMark; break;}
+        }
+        const isDraw = newBoard.every(c=>c!=="");
+        const updates = { board: newBoard, turn: nextTurn };
+        if(winner){updates.status='finished';updates.winner=winner;}
+        else if(isDraw){updates.status='finished';updates.winner='draw';}
+        onlineRoomRef.update(updates);
+        playClick();
+        return;
+    }
+    // Обычный режим
+    if(board[i]!==""||gameOver)return;
+    playClick();board[i]=currentPlayer;updateUI();
+    if(checkWin(currentPlayer)){
+        gameOver=true;highlightWin(currentPlayer);
+        if(currentPlayer==="X"){
+            scoreX++;updateScore();createConfetti();playWin();
+            if(vsBot){saveStats('win');saveHistory('win');}
+            if(difficulty === 'survival' && survivalActive){
+                showModal("Уровень " + survivalLevel + " пройден! 🎉","🌪️");
+                survivalLevel++;
+                saveStats('record');
+                setTimeout(()=>{modal.classList.remove('active');resetGame();updateSurvivalUI();},1500);
+            } else {
+                showModal("Вы выиграли!","🎉");
+                if(difficulty==='medium'||difficulty==='hard'){currentStreak++;updateStreakUI();}
+                loadAllPlayerStats();
+            }
+        } else {
+            scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();
+            if(vsBot){saveStats('lose');saveHistory('lose');}
+            if(difficulty === 'survival' && survivalActive){
+                survivalActive = false;
+                setTimeout(()=>{modal.classList.remove('active');alert('🌪️ Выживание окончено! Ваш уровень: ' + survivalLevel);survivalLevel = 1;resetGame();updateSurvivalUI();},1500);
+            } else {currentStreak=0;updateStreakUI();}
+        }
+        return;
+    }
+    if(isFull()){
+        gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");
+        if(vsBot){saveStats('draw');saveHistory('draw');}
+        if(difficulty === 'survival' && survivalActive){
+            setTimeout(()=>{modal.classList.remove('active');survivalLevel++;saveStats('record');alert('🤝 Ничья! Уровень повышен.');resetGame();updateSurvivalUI();},1500);
+        }
+        return;
+    }
+    currentPlayer=currentPlayer==="X"?"O":"X";
+    if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();setTimeout(botMove,300);}
+    else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}
+}
+
+function botMove(){
+    if(gameOver)return;
+    let m;
+    if(difficulty==="easy")m=randomMove();
+    else if(difficulty==="medium")m=mediumMove();
+    else if(difficulty==="hard")m=hardMove();
+    else if(difficulty==="survival"){
+        const percent = Math.min(95, 10 + (survivalLevel - 1) * 3);
+        m = (Math.random() < percent/100) ? hardMove() : randomMove();
+    }
+    if(m!==null&&m!==undefined){
+        playClick();board[m]="O";updateUI();
+        if(checkWin("O")){
+            gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();
+            if(vsBot){saveStats('lose');saveHistory('lose');}
+            if(difficulty === 'survival' && survivalActive){
+                survivalActive = false;
+                setTimeout(()=>{modal.classList.remove('active');alert('🌪️ Выживание окончено! Ваш уровень: ' + survivalLevel);survivalLevel = 1;resetGame();updateSurvivalUI();},1500);
+            } else {currentStreak=0;updateStreakUI();}
+            return;
+        }
+        if(isFull()){
+            gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");
+            if(vsBot){saveStats('draw');saveHistory('draw');}
+            if(difficulty === 'survival' && survivalActive){
+                setTimeout(()=>{modal.classList.remove('active');survivalLevel++;saveStats('record');alert('🤝 Ничья! Уровень повышен.');resetGame();updateSurvivalUI();},1500);
+            }
+            return;
+        }
+        currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();
+    }
+}
+function randomMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;return e[Math.floor(Math.random()*e.length)];}
+function mediumMove(){
+    if(Math.random()<0.5){return randomMove();}
+    const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);
+    if(e.length===0)return null;
+    for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}
+    for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}
+    if(e.includes(4))return 4;
+    const c=[0,2,6,8].filter(i=>e.includes(i));
+    if(c.length>0)return c[Math.floor(Math.random()*c.length)];
+    return e[Math.floor(Math.random()*e.length)];
+}
+function hardMove(){
+    if(Math.random()<0.2){return randomMove();}
+    let bs=-Infinity,bm=null;
+    for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";let s=minimax(false);board[i]="";if(s>bs){bs=s;bm=i;}}}
+    return bm;
+}
+function minimax(mx){
+    if(checkWin("O"))return 1;
+    if(checkWin("X"))return -1;
+    if(isFull())return 0;
+    if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}
+    else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";}}return b;}
+}
+function resetGame(){
+    board=["","","","","","","","",""];currentPlayer="X";gameOver=false;
+    statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";
+    modal.classList.remove('active');
+    document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose','rainbow-cell'));
+    updateUI();updateSurvivalUI();
 }
 
 /* ===================== UI СОБЫТИЯ ===================== */
@@ -1330,120 +1423,7 @@ modeFriendBtn.addEventListener('click',()=>{
     resetGame();
 });
 
-function createBoard(){boardEl.innerHTML="";for(let i=0;i<9;i++){const c=document.createElement('button');c.classList.add('cell');c.dataset.index=i;c.addEventListener('click',()=>handleClick(i));boardEl.appendChild(c);}}
-function updateUI(){const cs=document.querySelectorAll('.cell');cs.forEach((c,i)=>{c.textContent=board[i];c.classList.remove('x','o','rainbow-cell');if(board[i]==='X')c.classList.add('x');if(board[i]==='O')c.classList.add('o');c.disabled=board[i]!==""||gameOver;});applyXColor(currentXColor);}
-function checkWin(p){return winCombos.some(c=>c.every(i=>board[i]===p));}
-function isFull(){return board.every(c=>c!=="");}
-function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
-function highlightWin(p){const c=getWinCombo(p);if(c)c.forEach(i=>{document.querySelectorAll('.cell')[i].classList.add(p==="O"?"lose":"win");});}
-
-let handleClick = function(i){
-    if(board[i]!==""||gameOver)return;
-    playClick();board[i]=currentPlayer;updateUI();
-    if(checkWin(currentPlayer)){
-        gameOver=true;highlightWin(currentPlayer);
-        if(currentPlayer==="X"){
-            scoreX++;updateScore();createConfetti();playWin();
-            if(vsBot){saveStats('win');saveHistory('win');}
-            if(difficulty === 'survival' && survivalActive){
-                showModal("Уровень " + survivalLevel + " пройден! 🎉","🌪️");
-                survivalLevel++;
-                saveStats('record');
-                setTimeout(()=>{modal.classList.remove('active');resetGame();updateSurvivalUI();},1500);
-            } else {
-                showModal("Вы выиграли!","🎉");
-                if(difficulty==='medium'||difficulty==='hard'){currentStreak++;updateStreakUI();}
-                loadAllPlayerStats();
-            }
-        } else {
-            scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();
-            if(vsBot){saveStats('lose');saveHistory('lose');}
-            if(difficulty === 'survival' && survivalActive){
-                survivalActive = false;
-                setTimeout(()=>{modal.classList.remove('active');alert('🌪️ Выживание окончено! Ваш уровень: ' + survivalLevel);survivalLevel = 1;resetGame();updateSurvivalUI();},1500);
-            } else {currentStreak=0;updateStreakUI();}
-        }
-        return;
-    }
-    if(isFull()){
-        gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");
-        if(vsBot){saveStats('draw');saveHistory('draw');}
-        if(difficulty === 'survival' && survivalActive){
-            setTimeout(()=>{modal.classList.remove('active');survivalLevel++;saveStats('record');alert('🤝 Ничья! Уровень повышен.');resetGame();updateSurvivalUI();},1500);
-        }
-        return;
-    }
-    currentPlayer=currentPlayer==="X"?"O":"X";
-    if(vsBot&&currentPlayer==="O"){statusEl.textContent="Ход бота...";updateUI();setTimeout(botMove,300);}
-    else{statusEl.textContent=currentPlayer==="X"?"Ваш ход (X)":"Ход игрока O";updateUI();}
-};
-
-function botMove(){
-    if(gameOver)return;
-    let m;
-    if(difficulty==="easy")m=randomMove();
-    else if(difficulty==="medium")m=mediumMove();
-    else if(difficulty==="hard")m=hardMove();
-    else if(difficulty==="survival"){
-        const percent = Math.min(95, 10 + (survivalLevel - 1) * 3);
-        m = (Math.random() < percent/100) ? hardMove() : randomMove();
-    }
-    if(m!==null&&m!==undefined){
-        playClick();board[m]="O";updateUI();
-        if(checkWin("O")){
-            gameOver=true;highlightWin("O");scoreO++;updateScore();createFlash();showModal("Вы проиграли!","😢");playLose();
-            if(vsBot){saveStats('lose');saveHistory('lose');}
-            if(difficulty === 'survival' && survivalActive){
-                survivalActive = false;
-                setTimeout(()=>{modal.classList.remove('active');alert('🌪️ Выживание окончено! Ваш уровень: ' + survivalLevel);survivalLevel = 1;resetGame();updateSurvivalUI();},1500);
-            } else {currentStreak=0;updateStreakUI();}
-            return;
-        }
-        if(isFull()){
-            gameOver=true;scoreDraw++;updateScore();showModal("Ничья!","🤝");
-            if(vsBot){saveStats('draw');saveHistory('draw');}
-            if(difficulty === 'survival' && survivalActive){
-                setTimeout(()=>{modal.classList.remove('active');survivalLevel++;saveStats('record');alert('🤝 Ничья! Уровень повышен.');resetGame();updateSurvivalUI();},1500);
-            }
-            return;
-        }
-        currentPlayer="X";statusEl.textContent="Ваш ход (X)";updateUI();
-    }
-}
-function randomMove(){const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);if(e.length===0)return null;return e[Math.floor(Math.random()*e.length)];}
-function mediumMove(){
-    if(Math.random()<0.5){return randomMove();}
-    const e=[];for(let i=0;i<9;i++)if(board[i]==="")e.push(i);
-    if(e.length===0)return null;
-    for(let i of e){board[i]="O";if(checkWin("O")){board[i]="";return i;}board[i]="";}
-    for(let i of e){board[i]="X";if(checkWin("X")){board[i]="";return i;}board[i]="";}
-    if(e.includes(4))return 4;
-    const c=[0,2,6,8].filter(i=>e.includes(i));
-    if(c.length>0)return c[Math.floor(Math.random()*c.length)];
-    return e[Math.floor(Math.random()*e.length)];
-}
-function hardMove(){
-    if(Math.random()<0.2){return randomMove();}
-    let bs=-Infinity,bm=null;
-    for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";let s=minimax(false);board[i]="";if(s>bs){bs=s;bm=i;}}}
-    return bm;
-}
-function minimax(mx){
-    if(checkWin("O"))return 1;
-    if(checkWin("X"))return -1;
-    if(isFull())return 0;
-    if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}
-    else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";}}return b;}
-}
-function resetGame(){
-    board=["","","","","","","","",""];currentPlayer="X";gameOver=false;
-    statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";
-    modal.classList.remove('active');
-    document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win','lose','rainbow-cell'));
-    updateUI();updateSurvivalUI();
-}
 resetBtn.addEventListener('click',resetGame);
-
 createBoard();updateUI();
 </script>
 </body>
