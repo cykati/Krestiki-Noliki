@@ -10,96 +10,28 @@ body.light{--bg:#f0f0f0;--text:#1a1a1a;--cell-bg:#d0d8e0;--cell-hover:#b0c0d0;--
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;flex-direction:column;padding:20px;transition:.3s;}
 h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
-
-/* ===== ФИКС МЕНЮ ===== */
-.top-bar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    width:100%;
-    max-width:340px;
-    margin-bottom:15px;
-    gap:6px;
-    flex-wrap:wrap;
-    row-gap:6px;
-}
-.nick-display{
-    flex:1 1 100%;
-    order:1;
-    display:flex;
-    align-items:center;
-    background:var(--cell-bg);
-    padding:8px 12px;
-    border-radius:8px;
-    cursor:pointer;
-    min-width:0;
-}
-.nick-display span{
-    font-size:16px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
+.top-bar{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:340px;margin-bottom:15px;gap:6px;flex-wrap:wrap;row-gap:6px;}
+.nick-display{flex:1 1 100%;order:1;display:flex;align-items:center;background:var(--cell-bg);padding:8px 12px;border-radius:8px;cursor:pointer;min-width:0;}
+.nick-display span{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 #coin-display{order:2;}
 .quest-btn{order:2;}
 .menu-btn{order:2;padding:8px 14px;font-size:22px;border:none;border-radius:8px;background:var(--cell-bg);color:#e0e0e0;cursor:pointer;line-height:1;}
-
-@media(max-width:420px){
-    #coin-display{padding:6px 10px;font-size:13px;}
-    .quest-btn{padding:6px 10px;font-size:18px;}
-    .menu-btn{padding:6px 12px;font-size:20px;}
-}
-
+@media(max-width:420px){#coin-display{padding:6px 10px;font-size:13px;}.quest-btn{padding:6px 10px;font-size:18px;}.menu-btn{padding:6px 12px;font-size:20px;}}
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);justify-content:center;align-items:center;z-index:1000;overflow-y:auto;}
 .modal-overlay.active{display:flex;}
 .modal{background:var(--cell-bg);padding:25px 30px;border-radius:16px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:90vw;min-width:260px;margin:20px auto;}
 .modal h2{color:#f1c40f;margin-bottom:20px;font-size:22px;}
 .modal .emoji{font-size:48px;margin-bottom:15px;display:block;}
 .modal button{padding:10px 30px;font-size:16px;border:none;border-radius:8px;background:#b32e2e;color:#e0e0e0;cursor:pointer;margin-top:10px;}
-
-/* ===== МЕНЮ С ПРОКРУТКОЙ ===== */
-.menu-list{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-bottom:15px;
-    max-height:60vh;
-    overflow-y:auto;
-    padding-right:4px;
-}
-.menu-list button{
-    width:100%;
-    padding:14px 20px;
-    font-size:16px;
-    border:2px solid rgba(255,255,255,.2);
-    border-radius:8px;
-    background:transparent;
-    color:var(--text);
-    cursor:pointer;
-    text-align:left;
-    margin-top:0;
-    flex-shrink:0;
-}
+.menu-list{display:flex;flex-direction:column;gap:10px;margin-bottom:15px;max-height:60vh;overflow-y:auto;padding-right:4px;}
+.menu-list button{width:100%;padding:14px 20px;font-size:16px;border:2px solid rgba(255,255,255,.2);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;text-align:left;margin-top:0;flex-shrink:0;}
 .menu-list::-webkit-scrollbar{width:8px;}
 .menu-list::-webkit-scrollbar-track{background:rgba(0,0,0,.2);border-radius:4px;}
 .menu-list::-webkit-scrollbar-thumb{background:var(--cell-hover);border-radius:4px;}
-
-/* Двухколоночные настройки на широких экранах */
 @media(min-width:420px){
-    #settings-modal .menu-list,
-    #admin-panel-modal .menu-list{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:8px;
-        max-height:65vh;
-    }
-    #settings-modal .menu-list button,
-    #admin-panel-modal .menu-list button{
-        padding:12px 14px;
-        font-size:14px;
-    }
+    #settings-modal .menu-list,#admin-panel-modal .menu-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:65vh;}
+    #settings-modal .menu-list button,#admin-panel-modal .menu-list button{padding:12px 14px;font-size:14px;}
 }
-
 .nick-input-row{display:flex;gap:10px;margin-bottom:20px;}
 .nick-input-row input{flex:1;padding:10px 15px;font-size:16px;border:2px solid var(--cell-bg);border-radius:8px;background:var(--bg);color:var(--text);outline:none;min-width:0;}
 .nick-input-row button{padding:10px 20px;font-size:16px;border:none;border-radius:8px;background:var(--cell-bg);color:#e0e0e0;cursor:pointer;margin-top:0;}
@@ -114,20 +46,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .cell.x{color:#e74c3c;}
 .cell.o{color:#3498db;}
 .cell:disabled{cursor:default;}
-
-/* ===== ФИКС ВЫИГРЫШНЫХ КЛЕТОК ===== */
-.cell.win{
-    background: var(--win) !important;
-    color: #fff !important;
-    -webkit-text-fill-color: #fff !important;
-    animation: pulse .6s ease infinite alternate;
-}
-.cell.lose{
-    background: var(--lose) !important;
-    color: #fff !important;
-    -webkit-text-fill-color: #fff !important;
-}
-
+.cell.win{background:var(--win)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;animation:pulse .6s ease infinite alternate;}
+.cell.lose{background:var(--lose)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
 @keyframes pulse{from{transform:scale(1);}to{transform:scale(1.05);}}
 #status{font-size:20px;margin-bottom:20px;color:#f1c40f;}
 #reset{padding:10px 30px;font-size:16px;border:none;border-radius:8px;background:#b32e2e;color:#e0e0e0;cursor:pointer;}
@@ -160,13 +80,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .rainbow-text{background:linear-gradient(90deg,#e74c3c,#e67e22,#f1c40f,#2ecc71,#1abc9c,#3498db,#9b59b6,#e74c3c);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:rainbowMove 4s linear infinite;font-weight:bold;}
 @keyframes rainbowMove{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
 .cell.x.rainbow-cell{background:linear-gradient(90deg,#e74c3c,#e67e22,#f1c40f,#2ecc71,#1abc9c,#3498db,#9b59b6,#e74c3c);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:rainbowMove 4s linear infinite;}
-#survival-rules-content{text-align:left;font-size:14px;line-height:1.6;max-height:60vh;overflow-y:auto;padding:14px;background:rgba(0,0,0,.25);border-radius:10px;margin-bottom:15px;}
-#survival-rules-content h3{color:#f1c40f;font-size:16px;margin-bottom:10px;}
-#survival-rules-content ul{padding-left:20px;margin-bottom:10px;}
-#survival-rules-content li{margin-bottom:6px;}
-#survival-rules-content .highlight{color:#f1c40f;font-weight:bold;}
-#survival-rules-content .danger{color:#e74c3c;font-weight:bold;}
-#survival-rules-content .success{color:#2ecc71;font-weight:bold;}
 .title-badge{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:bold;margin-left:6px;vertical-align:middle;text-shadow:none;letter-spacing:0.3px;transition:.2s;}
 .title-badge:hover{transform:scale(1.08);}
 .title-creator{background:linear-gradient(135deg,#2ecc71,#1abc9c);color:#fff;box-shadow:0 0 12px rgba(46,204,113,.8),0 0 20px rgba(46,204,113,.4);animation:creatorGlow 2s ease infinite alternate;}
@@ -198,7 +111,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 #board.board9x9 .cell{font-size:28px;border-radius:6px;}
 @media(max-width:400px){#board.board9x9{grid-template-columns:repeat(6,44px);grid-template-rows:repeat(6,44px);gap:2px;}#board.board9x9 .cell{font-size:24px;}}
 @media(max-width:400px){#board{grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px);}.cell{font-size:48px;}.scoreboard{font-size:14px;gap:8px;}.color-grid{grid-template-columns:repeat(4,1fr);}.title-grid{grid-template-columns:1fr;}}
-
 .bot-bubble{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#3498db,#2b5b8c);color:#fff;padding:12px 18px;border-radius:16px;font-size:14px;z-index:2000;box-shadow:0 4px 15px rgba(0,0,0,.4);max-width:250px;animation:bubbleIn .3s ease;}
 @keyframes bubbleIn{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 @keyframes explode{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0;}}
@@ -226,7 +138,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .campaign-level.done{border-color:#2ecc71;background:rgba(46,204,113,.15);}
 .campaign-level .lvl-name{font-size:15px;font-weight:bold;margin-bottom:4px;}
 .campaign-level .lvl-desc{font-size:12px;opacity:0.85;}
-
 #coin-display{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;padding:8px 14px;border-radius:20px;font-size:15px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(241,196,15,.4);transition:.2s;position:relative;}
 #coin-display:hover{transform:scale(1.05);}
 .boost-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;font-size:10px;font-weight:bold;margin-left:4px;animation:boostPulse 1.5s ease infinite;}
@@ -279,7 +190,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .shop-item .buy-btn:hover{transform:scale(1.05);}
 .shop-item .buy-btn.owned-btn{background:linear-gradient(135deg,#3498db,#2b5b8c);cursor:default;}
 .shop-balance{text-align:center;padding:10px;margin-bottom:12px;background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;font-size:18px;font-weight:bold;border-radius:12px;box-shadow:0 4px 10px rgba(241,196,15,.4);}
-
 .title-beginner{background:linear-gradient(135deg,#95a5a6,#7f8c8d);color:#fff;}
 .title-gamer{background:linear-gradient(135deg,#3498db,#2980b9);color:#fff;}
 .title-fast{background:linear-gradient(135deg,#f1c40f,#f39c12);color:#fff;box-shadow:0 0 8px rgba(241,196,15,.6);}
@@ -335,8 +245,15 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .title-jester{background:linear-gradient(90deg,#e74c3c,#f1c40f,#2ecc71,#3498db,#9b59b6,#e74c3c);color:#fff;background-size:300% 100%;animation:jesterShift 2s linear infinite;}
 @keyframes jesterShift{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
 .title-admin-god{background:linear-gradient(90deg,#ff006e,#fb5607,#ffbe0b,#2ecc71,#3a86ff,#8338ec,#ff006e);background-size:300% 100%;color:#fff;font-weight:900;letter-spacing:2px;animation:creator2Shift 2.5s linear infinite;}
-
-/* ===== БЛОКИРОВКА ===== */
+.title-rich{position:relative;background:linear-gradient(90deg,#ffd700,#ffed4e,#ffffff,#ffed4e,#ffd700,#b8860b,#ffd700);background-size:400% 100%;color:#fff;font-weight:900;letter-spacing:2px;text-shadow:0 0 5px #ffd700,0 0 10px #ffd700,0 0 20px #ffa500,0 0 30px #ffd700,0 0 40px #ffa500,0 0 50px #ff8c00;box-shadow:0 0 10px rgba(255,215,0,0.9),0 0 20px rgba(255,215,0,0.8),0 0 30px rgba(255,165,0,0.6),0 0 40px rgba(255,140,0,0.4),inset 0 0 10px rgba(255,255,255,0.5);animation:richShine 3s linear infinite, richPulse 1.8s ease-in-out infinite alternate, richGlow 2.5s ease-in-out infinite;border:1px solid rgba(255,215,0,0.7);overflow:hidden;}
+.title-rich::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0) 30%,rgba(255,255,255,0.8) 50%,rgba(255,255,255,0) 70%,transparent);animation:richSweep 2.5s ease-in-out infinite;pointer-events:none;}
+.title-rich::after{content:'💎';position:absolute;right:2px;top:50%;transform:translateY(-50%);font-size:10px;animation:richDiamond 1.2s ease-in-out infinite alternate;text-shadow:0 0 5px #fff,0 0 10px #ffd700;pointer-events:none;}
+@keyframes richShine{0%{background-position:0% 50%;}100%{background-position:400% 50%;}}
+@keyframes richPulse{0%{transform:scale(1);}100%{transform:scale(1.06);}}
+@keyframes richGlow{0%,100%{box-shadow:0 0 10px rgba(255,215,0,0.9),0 0 20px rgba(255,215,0,0.7),0 0 30px rgba(255,165,0,0.5),inset 0 0 10px rgba(255,255,255,0.4);}50%{box-shadow:0 0 20px rgba(255,215,0,1),0 0 40px rgba(255,215,0,0.9),0 0 60px rgba(255,165,0,0.7),0 0 80px rgba(255,140,0,0.5),inset 0 0 15px rgba(255,255,255,0.7);}}
+@keyframes richSweep{0%{left:-100%;}50%,100%{left:200%;}}
+@keyframes richDiamond{0%{transform:translateY(-50%) rotate(0deg) scale(1);}100%{transform:translateY(-50%) rotate(180deg) scale(1.3);}}
+.rich-nickname{background:linear-gradient(90deg,#ffd700,#fff8b0,#ffd700,#b8860b,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:richShine 2.5s linear infinite;font-weight:bold;filter:drop-shadow(0 0 8px rgba(255,215,0,0.9)) drop-shadow(0 0 15px rgba(255,165,0,0.6));}
 #ban-screen{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a1a1a,#2c0a0a);z-index:99999;justify-content:center;align-items:center;padding:20px;text-align:center;flex-direction:column;}
 #ban-screen.active{display:flex;}
 #ban-screen .ban-icon{font-size:80px;margin-bottom:20px;animation:banPulse 1.5s ease infinite;}
@@ -350,7 +267,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 #ban-screen .ban-btn:hover{background:#e74c3c;color:#fff;}
 #ban-screen .ban-btn.appeal-btn{border-color:#f39c12;color:#f39c12;}
 #ban-screen .ban-btn.appeal-btn:hover{background:#f39c12;color:#fff;}
-
 .ban-user-row{padding:12px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;text-align:left;transition:.2s;}
 .ban-user-row.banned{border-left:4px solid #e74c3c;background:rgba(231,76,60,.15);}
 .ban-user-row .ban-nick{font-weight:bold;font-size:14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;}
@@ -368,7 +284,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .ban-modal-options button:hover{border-color:#e74c3c;background:rgba(231,76,60,.15);}
 .ban-modal-options button.active{border-color:#e74c3c;background:rgba(231,76,60,.25);font-weight:bold;}
 #ban-reason-input{width:100%;padding:10px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:14px;resize:vertical;min-height:60px;outline:none;margin-bottom:15px;font-family:inherit;}
-
 .ban-history-item{padding:12px;margin-bottom:10px;border-radius:10px;background:rgba(0,0,0,.25);border-left:4px solid #e74c3c;text-align:left;font-size:13px;line-height:1.6;}
 .ban-history-item.unban{border-left-color:#2ecc71;}
 .ban-history-item .bh-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:10px;font-weight:bold;}
@@ -379,7 +294,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .bh-type-expired{background:#f39c12;color:#fff;}
 .ban-history-item .bh-detail{opacity:0.85;font-size:12px;}
 .ban-history-item .bh-detail b{color:#f1c40f;}
-
 .appeal-item{padding:12px;margin-bottom:10px;border-radius:10px;background:rgba(0,0,0,.25);border-left:4px solid #f39c12;text-align:left;font-size:13px;line-height:1.6;}
 .appeal-item.resolved-ok{border-left-color:#2ecc71;background:rgba(46,204,113,.1);}
 .appeal-item.resolved-no{border-left-color:#e74c3c;background:rgba(231,76,60,.1);}
@@ -393,11 +307,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .appeal-item .ap-btn{padding:6px 12px;font-size:12px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;transition:.2s;}
 .ap-btn-yes{background:#2ecc71;color:#fff;}
 .ap-btn-no{background:#e74c3c;color:#fff;}
-
 #appeal-form textarea{width:100%;padding:12px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:14px;resize:vertical;min-height:100px;outline:none;font-family:inherit;margin-bottom:12px;}
 #appeal-form .appeal-info{padding:12px;background:rgba(243,156,18,.15);border-left:4px solid #f39c12;border-radius:8px;font-size:13px;margin-bottom:12px;text-align:left;}
-
-/* ===== ИНВЕНТАРЬ ===== */
 #inventory-shop-modal .modal{max-width:95vw;min-width:340px;text-align:left;}
 .inv-tabs{display:flex;gap:6px;margin-bottom:15px;background:rgba(0,0,0,.2);padding:5px;border-radius:10px;overflow-x:auto;flex-wrap:wrap;}
 .inv-tabs button{flex:1;min-width:fit-content;padding:8px 12px;font-size:13px;border:none;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;transition:.2s;margin-top:0;white-space:nowrap;}
@@ -432,7 +343,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 </head>
 <body>
 <h1>Крестики-нолики</h1>
-
 <div class="top-bar">
 <div class="nick-display" id="nick-display"><span id="player-name">Введите ник</span></div>
 <div id="coin-display" title="Монеты">🪙 <span id="coin-count">0</span></div>
@@ -441,84 +351,24 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button class="quest-btn" id="quests-btn" title="Квесты">🎯</button>
 <button class="menu-btn" id="menu-btn">☰</button>
 </div>
-
-<div id="ban-screen">
-    <div class="ban-icon">🚫</div>
-    <div class="ban-title" id="ban-title">ВЫ ЗАБЛОКИРОВАНЫ</div>
-    <div class="ban-message" id="ban-message">Доступ к игре ограничен администратором.</div>
-    <div class="ban-info" id="ban-info"></div>
-    <div class="ban-timer" id="ban-timer"></div>
-    <button class="ban-btn appeal-btn" id="ban-appeal" style="margin-bottom:10px;">📩 Оспорить блокировку</button>
-    <button class="ban-btn" id="ban-logout">Выйти из аккаунта</button>
-</div>
-
-<div id="maintenance-warning">🚧 Технический перерыв. Доступна только игра с ботом.</div>
+<div id="ban-screen"><div class="ban-icon">🚫</div><div class="ban-title" id="ban-title">ВЫ ЗАБЛОКИРОВАНЫ</div><div class="ban-message" id="ban-message">Доступ ограничен.</div><div class="ban-info" id="ban-info"></div><div class="ban-timer" id="ban-timer"></div><button class="ban-btn appeal-btn" id="ban-appeal" style="margin-bottom:10px;">📩 Оспорить</button><button class="ban-btn" id="ban-logout">Выйти</button></div>
+<div id="maintenance-warning">🚧 Перерыв.</div>
 <div id="win-streak">🔥 <span id="streak-count">0</span> подряд!</div>
 <div id="chaos-banner">🎲 ХАОС! <span id="chaos-text"></span></div>
-
-<div id="survival-bar">
-    <div>🌪️ РЕЖИМ ВЫЖИВАНИЕ</div>
-    <div class="lvl">Уровень <span id="survival-level">1</span></div>
-    <div class="diff">Сложность бота: <span id="survival-diff">10%</span></div>
-    <div class="bar"><div class="bar-fill" id="survival-bar-fill"></div></div>
-</div>
-
-<div id="online-score" style="display:none;flex-direction:column;gap:8px;font-size:14px;font-weight:bold;margin-bottom:12px;padding:10px;background:var(--cell-bg);border-radius:10px;max-width:340px;width:100%;">
-    <div id="online-teams" style="display:flex;justify-content:center;gap:15px;font-size:12px;flex-wrap:wrap;"></div>
-    <div style="display:flex;justify-content:center;gap:20px;font-size:18px;">
-        <span id="score-label-my">Вы: <span id="online-score-you" style="color:#2ecc71;">0</span></span>
-        <span style="opacity:0.5;">—</span>
-        <span id="score-label-opp">Друг: <span id="online-score-opp" style="color:#e74c3c;">0</span></span>
-    </div>
-</div>
-
-<div class="scoreboard">
-<div><span id="player-name-score">Вы</span>: <span class="x" id="score-x">0</span></div>
-<div>Бот: <span class="o" id="score-o">0</span></div>
-<div>Ничьи: <span class="draw" id="score-draw">0</span></div>
-</div>
-
+<div id="survival-bar"><div>🌪️ ВЫЖИВАНИЕ</div><div class="lvl">Уровень <span id="survival-level">1</span></div><div class="diff">Бот: <span id="survival-diff">10%</span></div><div class="bar"><div class="bar-fill" id="survival-bar-fill"></div></div></div>
+<div id="online-score" style="display:none;flex-direction:column;gap:8px;font-size:14px;font-weight:bold;margin-bottom:12px;padding:10px;background:var(--cell-bg);border-radius:10px;max-width:340px;width:100%;"><div id="online-teams" style="display:flex;justify-content:center;gap:15px;font-size:12px;flex-wrap:wrap;"></div><div style="display:flex;justify-content:center;gap:20px;font-size:18px;"><span id="score-label-my">Вы: <span id="online-score-you" style="color:#2ecc71;">0</span></span><span style="opacity:0.5;">—</span><span id="score-label-opp">Друг: <span id="online-score-opp" style="color:#e74c3c;">0</span></span></div></div>
+<div class="scoreboard"><div><span id="player-name-score">Вы</span>: <span class="x" id="score-x">0</span></div><div>Бот: <span class="o" id="score-o">0</span></div><div>Ничьи: <span class="draw" id="score-draw">0</span></div></div>
 <div id="status">Ваш ход (X)</div>
 <div id="blitz-bar"><div id="blitz-fill"></div></div>
 <div id="board"></div>
-<div id="emoji-bar">
-    <button data-emoji="😂">😂</button>
-    <button data-emoji="😱">😱</button>
-    <button data-emoji="🔥">🔥</button>
-    <button data-emoji="😭">😭</button>
-    <button data-emoji="🤖">🤖</button>
-    <button data-emoji="👑">👑</button>
-</div>
+<div id="emoji-bar"><button data-emoji="😂">😂</button><button data-emoji="😱">😱</button><button data-emoji="🔥">🔥</button><button data-emoji="😭">😭</button><button data-emoji="🤖">🤖</button><button data-emoji="👑">👑</button></div>
 <button id="reset">Новая игра</button>
 
 <div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-leaders">🏆 Лидеры</button><button id="menu-settings">⚙️ Настройки</button></div><button id="menu-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list">
-<button id="set-profile">👤 Профиль</button>
-<button id="set-inventory">🎨 Инвентарь цветов</button>
-<button id="set-titles">🎖️ Титулы</button>
-<button id="set-history">📜 История матчей</button>
-<button id="set-difficulty">🎚️ Сложность</button>
-<button id="set-mode">🎮 Режим игры</button>
-<button id="set-nick">📝 Сменить ник</button>
-<button id="set-logout">🚪 Выйти</button>
-<button id="theme-toggle">🌙 Тема</button>
-<button id="sound-toggle">🔊 Звук</button>
-<button id="set-admin-panel" style="border-color: #f1c40f; color: #f1c40f; display: none; grid-column: 1 / -1;">🛡️ Админ-панель</button>
-<button id="set-request-maintenance" style="border-color: #f39c12; color: #f39c12; display: none; grid-column: 1 / -1;">🚧 Запросить тех. перерыв</button>
-</div><button id="settings-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list"><button id="set-profile">👤 Профиль</button><button id="set-inventory">🎨 Инвентарь цветов</button><button id="set-titles">🎖️ Титулы</button><button id="set-history">📜 История матчей</button><button id="set-difficulty">🎚️ Сложность</button><button id="set-mode">🎮 Режим игры</button><button id="set-nick">📝 Сменить ник</button><button id="set-logout">🚪 Выйти</button><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button><button id="set-admin-panel" style="border-color: #f1c40f; color: #f1c40f; display: none; grid-column: 1 / -1;">🛡️ Админ-панель</button><button id="set-request-maintenance" style="border-color: #f39c12; color: #f39c12; display: none; grid-column: 1 / -1;">🚧 Запросить тех. перерыв</button></div><button id="settings-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="admin-panel-modal"><div class="modal"><h2>🛡️ Админ-панель</h2><div class="menu-list">
-<button id="admin-all-players">👥 Все игроки</button>
-<button id="admin-player-stats">🔍 Статистика игрока</button>
-<button id="admin-give-titles">🎖️ Выдать титулы</button>
-<button id="admin-title-history">📜 История выдач титулов</button>
-<button id="admin-init-titles">🔧 Инициализировать всех</button>
-<button id="admin-maintenance">🚧 Управление тех. перерывом</button>
-<button id="admin-bans" style="border-color: #e74c3c; color: #e74c3c;">🚫 Блокировки</button>
-<button id="admin-ban-history" style="border-color: #9b59b6; color: #c39bd3;">📜 История банов</button>
-<button id="admin-appeals" style="border-color: #f39c12; color: #f39c12; position:relative;">📩 Апелляции<span id="appeal-count" style="display:none;background:#e74c3c;color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;margin-left:6px;">0</span></button>
-</div><button id="admin-panel-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="admin-panel-modal"><div class="modal"><h2>🛡️ Админ-панель</h2><div class="menu-list"><button id="admin-all-players">👥 Все игроки</button><button id="admin-player-stats">🔍 Статистика игрока</button><button id="admin-give-titles">🎖️ Выдать титулы</button><button id="admin-title-history">📜 История выдач</button><button id="admin-init-titles">🔧 Инициализировать</button><button id="admin-maintenance">🚧 Тех. перерыв</button><button id="admin-bans" style="border-color: #e74c3c; color: #e74c3c;">🚫 Блокировки</button><button id="admin-ban-history" style="border-color: #9b59b6; color: #c39bd3;">📜 История банов</button><button id="admin-appeals" style="border-color: #f39c12; color: #f39c12; position:relative;">📩 Апелляции<span id="appeal-count" style="display:none;background:#e74c3c;color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;margin-left:6px;">0</span></button><button id="admin-coins" style="border-color: #f1c40f; color: #f1c40f;">💰 Изменить монеты</button></div><button id="admin-panel-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="inventory-modal"><div class="modal"><h2>🎨 Инвентарь цветов</h2><div class="color-grid" id="color-grid"></div><div id="color-status" style="font-size:13px;color:#2ecc71;margin-bottom:10px;min-height:18px;"></div><button id="inventory-close">Закрыть</button></div></div>
 
@@ -530,15 +380,15 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div class="modal-overlay" id="admin-titles-modal"><div class="modal"><h2>🎖️ Выдать титулы</h2><div id="admin-titles-list" style="text-align:left;margin-bottom:15px;font-size:13px;max-height:60vh;overflow-y:auto;"></div><button id="admin-titles-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="title-history-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>📜 История выдач титулов</h2><div id="title-history-list" style="text-align:left;margin-bottom:15px;font-size:13px;max-height:60vh;overflow-y:auto;"></div><button id="title-history-close" style="background:#555;">Закрыть</button></div></div>
+<div class="modal-overlay" id="title-history-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>📜 История выдач</h2><div id="title-history-list" style="text-align:left;margin-bottom:15px;font-size:13px;max-height:60vh;overflow-y:auto;"></div><button id="title-history-close" style="background:#555;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="maintenance-control-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🚧 Управление перерывом</h2><div id="maintenance-control-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;"><button id="maint-toggle-on" style="background:#e74c3c;">Включить</button><button id="maint-toggle-off" style="background:#2ecc71;">Выключить</button><button id="maint-control-close" style="background:#555;">Закрыть</button></div></div></div>
 
-<div class="modal-overlay" id="maintenance-request-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🚧 Запрос тех. перерыва</h2><div style="text-align:left;font-size:14px;margin-bottom:15px;"><textarea id="maint-request-reason" placeholder="Причина перерыва..." maxlength="150" style="width:100%;padding:10px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:14px;resize:vertical;min-height:70px;outline:none;"></textarea></div><div id="maint-request-status" style="font-size:13px;min-height:18px;margin-bottom:10px;"></div><button id="maint-request-send" style="background:#e67e22;">📨 Отправить админу</button><button id="maint-request-close" style="background:#555;margin-left:8px;">Отмена</button></div></div>
+<div class="modal-overlay" id="maintenance-request-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🚧 Запрос перерыва</h2><div style="text-align:left;font-size:14px;margin-bottom:15px;"><textarea id="maint-request-reason" placeholder="Причина..." maxlength="150" style="width:100%;padding:10px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:14px;resize:vertical;min-height:70px;outline:none;"></textarea></div><div id="maint-request-status" style="font-size:13px;min-height:18px;margin-bottom:10px;"></div><button id="maint-request-send" style="background:#e67e22;">📨 Отправить</button><button id="maint-request-close" style="background:#555;margin-left:8px;">Отмена</button></div></div>
 
-<div class="modal-overlay" id="maintenance-approve-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>📨 Запрос на перерыв</h2><div id="maint-approve-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;"><button id="maint-approve-yes" style="background:#2ecc71;">✅ Одобрить</button><button id="maint-approve-no" style="background:#e74c3c;">❌ Отклонить</button></div></div></div>
+<div class="modal-overlay" id="maintenance-approve-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>📨 Запрос</h2><div id="maint-approve-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;"><button id="maint-approve-yes" style="background:#2ecc71;">✅ Одобрить</button><button id="maint-approve-no" style="background:#e74c3c;">❌ Отклонить</button></div></div></div>
 
-<div class="modal-overlay" id="maintenance-modal" style="background:rgba(0,0,0,.95);"><div class="modal" style="max-width:95vw;min-width:300px;background:linear-gradient(135deg,#8e44ad,#c0392b);"><h2 style="font-size:28px;color:#fff;margin-bottom:15px;">🚧 Технический перерыв</h2><div id="maintenance-body" style="text-align:center;font-size:15px;line-height:1.7;color:#fff;margin-bottom:20px;"></div><button id="maintenance-close" style="background:#2ecc71;display:none;">Закрыть (Админ/Тестер)</button></div></div>
+<div class="modal-overlay" id="maintenance-modal" style="background:rgba(0,0,0,.95);"><div class="modal" style="max-width:95vw;min-width:300px;background:linear-gradient(135deg,#8e44ad,#c0392b);"><h2 style="font-size:28px;color:#fff;margin-bottom:15px;">🚧 Перерыв</h2><div id="maintenance-body" style="text-align:center;font-size:15px;line-height:1.7;color:#fff;margin-bottom:20px;"></div><button id="maintenance-close" style="background:#2ecc71;display:none;">Закрыть (Админ/Тестер)</button></div></div>
 
 <div class="modal-overlay" id="profile-modal"><div class="modal"><h2>👤 Мой профиль</h2><div id="profile-content" style="text-align:left;margin-bottom:15px;font-size:15px;line-height:1.7;"></div><button id="profile-close">Закрыть</button></div></div>
 
@@ -546,35 +396,23 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div class="modal-overlay" id="difficulty-modal"><div class="modal"><h2>Сложность</h2><div class="difficulty-row"><button data-level="easy">Легко</button><button data-level="medium" class="active">Средне</button><button data-level="hard">Сложно</button><button data-level="survival">🌪️ Выживание</button></div><button id="difficulty-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="survival-rules-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🌪️ Режим «Выживание»</h2><div id="survival-rules-content"><h3>📖 Как играть:</h3><ul><li>Против бота.</li><li>Бот начинает со сложности 10%.</li><li>Победа — уровень +1, +3% к боту.</li><li>Проигрыш = конец забега.</li></ul></div><button id="survival-rules-close" style="background:#2ecc71;">✅ Понятно, играть!</button></div></div>
+<div class="modal-overlay" id="survival-rules-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🌪️ Выживание</h2><div id="survival-rules-content"><h3>📖 Правила:</h3><ul><li>Против бота.</li><li>Бот начинает с 10%.</li><li>Победа +1 уровень, +3%.</li><li>Проигрыш = конец.</li></ul></div><button id="survival-rules-close" style="background:#2ecc71;">✅ Играть!</button></div></div>
 
-<div class="modal-overlay" id="mode-modal"><div class="modal"><h2>Режим игры</h2><div class="difficulty-row">
-<button id="mode-bot" class="active">🤖 Против бота</button>
-<button id="mode-friend">👥 Против друга</button>
-<button id="mode-online">🌐 Онлайн 1 на 1</button>
-<button id="mode-team">👥👥 Командный 2 на 2</button>
-<button id="mode-blitz" style="border-color:#f39c12;color:#f39c12;">⏱️ Блиц</button>
-<button id="mode-snake" style="border-color:#2ecc71;color:#2ecc71;">🐍 Змейка</button>
-<button id="mode-chaos" style="border-color:#9b59b6;color:#c39bd3;">🎲 Хаос</button>
-<button id="mode-campaign" style="border-color:#e74c3c;color:#e74c3c;">🗺️ Кампания</button>
-</div><button id="mode-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="mode-modal"><div class="modal"><h2>Режим игры</h2><div class="difficulty-row"><button id="mode-bot" class="active">🤖 Бот</button><button id="mode-friend">👥 Друг</button><button id="mode-online">🌐 Онлайн</button><button id="mode-team">👥👥 2 на 2</button><button id="mode-blitz" style="border-color:#f39c12;color:#f39c12;">⏱️ Блиц</button><button id="mode-snake" style="border-color:#2ecc71;color:#2ecc71;">🐍 Змейка</button><button id="mode-chaos" style="border-color:#9b59b6;color:#c39bd3;">🎲 Хаос</button><button id="mode-campaign" style="border-color:#e74c3c;color:#e74c3c;">🗺️ Кампания</button></div><button id="mode-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="campaign-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🗺️ Кампания</h2><div class="campaign-grid" id="campaign-grid"></div><button id="campaign-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="mode-guide-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2 id="guide-title">📖 Режим</h2><div class="mode-guide" id="guide-body"></div><button id="guide-start" style="background:#2ecc71;">✅ Играть</button><button id="guide-cancel" style="background:#555;margin-left:8px;">Отмена</button></div></div>
 
-<div class="modal-overlay" id="online-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🌐 Онлайн-игра</h2><div id="online-content"></div><button id="online-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="online-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🌐 Онлайн</h2><div id="online-content"></div><button id="online-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="online-end-modal"><div class="modal" style="max-width:95vw;min-width:280px;background:linear-gradient(135deg,#2b5b8c,#1a1a1a);"><h2 id="online-end-title" style="font-size:24px;color:#f1c40f;margin-bottom:15px;">Игра окончена!</h2><div id="online-end-body" style="text-align:center;font-size:15px;line-height:1.7;margin-bottom:20px;color:#fff;"></div><button id="online-rematch" style="background:#2ecc71;font-size:16px;padding:12px 30px;">🔄 Играть ещё</button><button id="online-exit" style="background:#b32e2e;font-size:16px;padding:12px 30px;margin-left:8px;">🚪 Выйти</button></div></div>
+<div class="modal-overlay" id="online-end-modal"><div class="modal" style="max-width:95vw;min-width:280px;background:linear-gradient(135deg,#2b5b8c,#1a1a1a);"><h2 id="online-end-title" style="font-size:24px;color:#f1c40f;margin-bottom:15px;">Игра окончена!</h2><div id="online-end-body" style="text-align:center;font-size:15px;line-height:1.7;margin-bottom:20px;color:#fff;"></div><button id="online-rematch" style="background:#2ecc71;padding:12px 30px;">🔄 Ещё</button><button id="online-exit" style="background:#b32e2e;padding:12px 30px;margin-left:8px;">🚪 Выйти</button></div></div>
 
 <div class="modal-overlay" id="nick-modal"><div class="modal"><h2>Вход / Регистрация</h2>
 <div class="nick-input-row"><input type="text" id="nickname" placeholder="Ваш ник" maxlength="15"></div>
 <div class="nick-input-row"><input type="email" id="email" placeholder="Email" maxlength="50"></div>
-<div class="nick-input-row" style="position:relative;">
-    <input type="password" id="password" placeholder="Пароль" maxlength="30" style="padding-right:45px;">
-    <button type="button" id="toggle-password" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#e0e0e0;font-size:20px;cursor:pointer;padding:5px;width:auto;margin:0;line-height:1;">👁</button>
-</div>
-<button id="consent-btn" style="width:100%;padding:12px;font-size:14px;border:2px solid #f1c40f;border-radius:8px;background:transparent;color:#f1c40f;cursor:pointer;margin-bottom:10px;">📄 Согласие на обработку данных</button>
+<div class="nick-input-row" style="position:relative;"><input type="password" id="password" placeholder="Пароль" maxlength="30" style="padding-right:45px;"><button type="button" id="toggle-password" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#e0e0e0;font-size:20px;cursor:pointer;padding:5px;width:auto;margin:0;">👁</button></div>
+<button id="consent-btn" style="width:100%;padding:12px;font-size:14px;border:2px solid #f1c40f;border-radius:8px;background:transparent;color:#f1c40f;cursor:pointer;margin-bottom:10px;">📄 Согласие</button>
 <div id="consent-status" style="font-size:13px;margin-bottom:15px;color:#e74c3c;min-height:18px;"></div>
 <button id="register-btn">Зарегистрироваться</button>
 <button id="login-btn" style="background:#2b5b8c;">Войти</button>
@@ -583,21 +421,22 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="nick-close" disabled style="opacity:0.5;cursor:not-allowed;">Закрыть</button>
 </div></div>
 
-<div class="modal-overlay" id="consent-modal"><div class="modal"><h2>📄 Согласие на обработку данных</h2><div style="text-align:left;font-size:14px;line-height:1.5;margin-bottom:20px;max-height:50vh;overflow-y:auto;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;"><p style="margin-bottom:10px;">Я даю согласие на:</p><ul style="padding-left:20px;"><li>Хранение email.</li><li>Хранение статистики.</li><li>Отображение ника в лидерах.</li></ul></div><button id="consent-agree" style="background:#2ecc71;">✅ Я согласен</button><button id="consent-cancel" style="background:#b32e2e;">Отмена</button></div></div>
+<div class="modal-overlay" id="consent-modal"><div class="modal"><h2>📄 Согласие</h2><div style="text-align:left;font-size:14px;line-height:1.5;margin-bottom:20px;max-height:50vh;overflow-y:auto;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;"><p style="margin-bottom:10px;">Я согласен на:</p><ul style="padding-left:20px;"><li>Хранение email.</li><li>Хранение статистики.</li><li>Отображение ника в лидерах.</li></ul></div><button id="consent-agree" style="background:#2ecc71;">✅ Согласен</button><button id="consent-cancel" style="background:#b32e2e;">Отмена</button></div></div>
 
 <div class="modal-overlay" id="reset-email-modal"><div class="modal" style="max-width:95vw;min-width:280px;"><h2>📧 Письмо отправлено!</h2><div id="reset-email-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div><button id="reset-email-close" style="background:#2ecc71;">Понятно</button></div></div>
 
-<div class="modal-overlay" id="leaders-modal"><div class="modal"><h2>🏆 Таблица лидеров</h2>
+<div class="modal-overlay" id="leaders-modal"><div class="modal"><h2>🏆 Лидеры</h2>
 <div class="leader-tabs" id="leader-tabs">
 <button data-lvl="easy">Легко</button>
 <button data-lvl="medium" class="active">Средне</button>
 <button data-lvl="hard">Сложно</button>
 <button data-lvl="survival" style="border-color:#8e44ad;color:#c39bd3;">🌪️ Выживание</button>
+<button data-lvl="rich" style="border-color:#f1c40f;color:#f1c40f;">💰 Богачи</button>
 </div>
 <div id="leaders-list" style="text-align:left;margin-bottom:15px;font-size:16px;"></div>
 <button id="leaders-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="player-stats-modal"><div class="modal"><h2>📊 Статистика игрока</h2><div class="nick-input-row"><input type="text" id="stats-nickname" placeholder="Введите ник" maxlength="15"><button id="stats-load">Показать</button></div><div id="player-stats-result" style="text-align:left;margin-bottom:15px;font-size:16px;"></div><button id="player-stats-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="player-stats-modal"><div class="modal"><h2>📊 Статистика</h2><div class="nick-input-row"><input type="text" id="stats-nickname" placeholder="Ник" maxlength="15"><button id="stats-load">Показать</button></div><div id="player-stats-result" style="text-align:left;margin-bottom:15px;font-size:16px;"></div><button id="player-stats-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="all-players-modal"><div class="modal"><h2>👥 Все игроки</h2><div id="all-players-list" style="text-align:left;margin-bottom:15px;font-size:14px;max-height:55vh;overflow-y:auto;"></div><button id="all-players-close">Закрыть</button></div></div>
 
@@ -605,54 +444,25 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div id="coin-toast">🪙 +0</div>
 
-<div class="modal-overlay" id="quests-modal"><div class="modal">
-    <h2 style="text-align:center;">🎯 Квесты</h2>
-    <div class="quest-tabs">
-        <button data-tab="daily" class="active">📅 День</button>
-        <button data-tab="weekly">📆 Неделя</button>
-    </div>
-    <div class="quest-timer" id="quest-timer">Обновление через: —</div>
-    <div class="quest-list" id="quest-list"></div>
-    <button id="quests-close" style="background:#555;margin-top:15px;">Закрыть</button>
-</div></div>
+<div class="modal-overlay" id="quests-modal"><div class="modal"><h2 style="text-align:center;">🎯 Квесты</h2><div class="quest-tabs"><button data-tab="daily" class="active">📅 День</button><button data-tab="weekly">📆 Неделя</button></div><div class="quest-timer" id="quest-timer">—</div><div class="quest-list" id="quest-list"></div><button id="quests-close" style="background:#555;margin-top:15px;">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="shop-modal"><div class="modal">
-    <h2 style="text-align:center;">🛒 Магазин</h2>
-    <div class="shop-balance">🪙 Баланс: <span id="shop-coins">0</span></div>
-    <div class="shop-tabs">
-        <button data-tab="colors" class="active">🎨 Цвета</button>
-        <button data-tab="boosts">⚡ Бусты</button>
-        <button data-tab="titles">🎖️ Титулы</button>
-        <button data-tab="special">✨ Особое</button>
-    </div>
-    <div class="shop-list" id="shop-list"></div>
-    <button id="shop-close" style="background:#555;margin-top:15px;">Закрыть</button>
-</div></div>
+<div class="modal-overlay" id="shop-modal"><div class="modal"><h2 style="text-align:center;">🛒 Магазин</h2><div class="shop-balance">🪙 Баланс: <span id="shop-coins">0</span></div><div class="shop-tabs"><button data-tab="colors" class="active">🎨 Цвета</button><button data-tab="boosts">⚡ Бусты</button><button data-tab="titles">🎖️ Титулы</button><button data-tab="special">✨ Особое</button></div><div class="shop-list" id="shop-list"></div><button id="shop-close" style="background:#555;margin-top:15px;">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="inventory-shop-modal"><div class="modal">
-    <h2 style="text-align:center;">🎒 Инвентарь</h2>
-    <div class="inv-header-balance">🪙 Монет: <span id="inv-coins">0</span></div>
-    <div class="inv-tabs" id="inv-tabs">
-        <button data-inv-tab="all" class="active">📦 Всё</button>
-        <button data-inv-tab="colors">🎨 Цвета <span class="inv-badge" id="inv-badge-colors"></span></button>
-        <button data-inv-tab="titles">🎖️ Титулы <span class="inv-badge" id="inv-badge-titles"></span></button>
-        <button data-inv-tab="boosts">⚡ Бусты <span class="inv-badge" id="inv-badge-boosts"></span></button>
-        <button data-inv-tab="consumables">🛡️ Расходники <span class="inv-badge" id="inv-badge-consumables"></span></button>
-        <button data-inv-tab="special">✨ Особое</button>
-    </div>
-    <div class="inv-list" id="inv-list"></div>
-    <button id="inventory-shop-close" style="background:#555;margin-top:15px;">Закрыть</button>
-</div></div>
+<div class="modal-overlay" id="inventory-shop-modal"><div class="modal"><h2 style="text-align:center;">🎒 Инвентарь</h2><div class="inv-header-balance">🪙 Монет: <span id="inv-coins">0</span></div><div class="inv-tabs" id="inv-tabs"><button data-inv-tab="all" class="active">📦 Всё</button><button data-inv-tab="colors">🎨 Цвета <span class="inv-badge" id="inv-badge-colors"></span></button><button data-inv-tab="titles">🎖️ Титулы <span class="inv-badge" id="inv-badge-titles"></span></button><button data-inv-tab="boosts">⚡ Бусты <span class="inv-badge" id="inv-badge-boosts"></span></button><button data-inv-tab="consumables">🛡️ Расходники <span class="inv-badge" id="inv-badge-consumables"></span></button><button data-inv-tab="special">✨ Особое</button></div><div class="inv-list" id="inv-list"></div><button id="inventory-shop-close" style="background:#555;margin-top:15px;">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="ban-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>🚫 Блокировки</h2><div class="nick-input-row" style="margin-bottom:15px;"><input type="text" id="ban-search" placeholder="Поиск по нику..." maxlength="15"></div><div id="ban-users-list" style="text-align:left;font-size:13px;max-height:55vh;overflow-y:auto;margin-bottom:15px;"></div><button id="ban-modal-close" style="background:#555;">Закрыть</button></div></div>
+<div class="modal-overlay" id="ban-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>🚫 Блокировки</h2><div class="nick-input-row" style="margin-bottom:15px;"><input type="text" id="ban-search" placeholder="Поиск..." maxlength="15"></div><div id="ban-users-list" style="text-align:left;font-size:13px;max-height:55vh;overflow-y:auto;margin-bottom:15px;"></div><button id="ban-modal-close" style="background:#555;">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="ban-action-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2 id="ban-action-title">🚫 Заблокировать</h2><div id="ban-action-body" style="text-align:left;font-size:14px;margin-bottom:15px;"></div><div class="ban-modal-options" id="ban-duration-options"><button data-duration="3600000">⏱️ На 1 час</button><button data-duration="21600000">⏱️ На 6 часов</button><button data-duration="86400000">⏱️ На 1 день</button><button data-duration="604800000">⏱️ На 7 дней</button><button data-duration="2592000000">⏱️ На 30 дней</button></div><textarea id="ban-reason-input" placeholder="Причина..." maxlength="200"></textarea><button id="ban-confirm-btn" style="background:#e74c3c;">🚫 Заблокировать</button><button id="ban-action-cancel" style="background:#555;margin-left:8px;">Отмена</button></div></div>
+<div class="modal-overlay" id="ban-action-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2 id="ban-action-title">🚫 Заблокировать</h2><div id="ban-action-body" style="text-align:left;font-size:14px;margin-bottom:15px;"></div><div class="ban-modal-options" id="ban-duration-options"><button data-duration="3600000">⏱️ 1 час</button><button data-duration="21600000">⏱️ 6 часов</button><button data-duration="86400000">⏱️ 1 день</button><button data-duration="604800000">⏱️ 7 дней</button><button data-duration="2592000000">⏱️ 30 дней</button></div><textarea id="ban-reason-input" placeholder="Причина..." maxlength="200"></textarea><button id="ban-confirm-btn" style="background:#e74c3c;">🚫 Заблокировать</button><button id="ban-action-cancel" style="background:#555;margin-left:8px;">Отмена</button></div></div>
 
 <div class="modal-overlay" id="ban-history-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>📜 История банов</h2><div style="margin-bottom:12px;"><input type="text" id="ban-history-search" placeholder="🔍 Поиск..." maxlength="15" style="width:100%;padding:10px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:14px;outline:none;"></div><div id="ban-history-list" style="text-align:left;font-size:13px;max-height:55vh;overflow-y:auto;margin-bottom:15px;"></div><button id="ban-history-close" style="background:#555;">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="appeal-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>📩 Оспорить блокировку</h2><div id="appeal-form"><div class="appeal-info"><b>⚠️ Важно:</b> Опиши ситуацию честно.</div><textarea id="appeal-reason" placeholder="Почему несправедлива?..." maxlength="500"></textarea><div id="appeal-status" style="font-size:13px;min-height:18px;margin-bottom:10px;color:#e74c3c;"></div></div><button id="appeal-send" style="background:#f39c12;">📨 Отправить</button><button id="appeal-close" style="background:#555;margin-left:8px;">Закрыть</button></div></div>
+<div class="modal-overlay" id="appeal-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>📩 Оспорить</h2><div id="appeal-form"><div class="appeal-info"><b>⚠️ Важно:</b> Опиши ситуацию честно.</div><textarea id="appeal-reason" placeholder="Почему несправедлива?..." maxlength="500"></textarea><div id="appeal-status" style="font-size:13px;min-height:18px;margin-bottom:10px;color:#e74c3c;"></div></div><button id="appeal-send" style="background:#f39c12;">📨 Отправить</button><button id="appeal-close" style="background:#555;margin-left:8px;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="appeals-modal"><div class="modal" style="max-width:95vw;min-width:340px;"><h2>📩 Апелляции</h2><div class="shop-tabs" style="margin-bottom:12px;"><button data-appeal-tab="pending" class="active">⏳ Ожидают</button><button data-appeal-tab="resolved">✅ Обработанные</button></div><div id="appeals-list" style="text-align:left;font-size:13px;max-height:55vh;overflow-y:auto;margin-bottom:15px;"></div><button id="appeals-close" style="background:#555;">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="admin-coins-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>💰 Изменить монеты</h2><div style="margin-bottom:12px;"><input type="text" id="admin-coins-search" placeholder="🔍 Поиск по нику..." maxlength="15" style="width:100%;padding:10px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:14px;outline:none;"></div><div id="admin-coins-list" style="text-align:left;font-size:13px;max-height:55vh;overflow-y:auto;margin-bottom:15px;"></div><button id="admin-coins-close" style="background:#555;">Закрыть</button></div></div>
+
+<div class="modal-overlay" id="admin-coins-edit-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2 id="admin-coins-edit-title">💰 Изменить</h2><div id="admin-coins-edit-body" style="text-align:left;font-size:14px;margin-bottom:15px;"></div><input type="number" id="admin-coins-input" placeholder="Число" style="width:100%;padding:10px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:16px;outline:none;margin-bottom:12px;"><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;"><button data-coins-op="set" style="background:#3498db;">Установить</button><button data-coins-op="add" style="background:#2ecc71;">+ Добавить</button><button data-coins-op="remove" style="background:#e74c3c;">− Отнять</button></div><button id="admin-coins-edit-cancel" style="background:#555;">Отмена</button></div></div>
 
 <div style="text-align: center; margin-top: 40px; margin-bottom: 30px; width: 100%; max-width: 340px;">
     <p style="color: var(--text); font-size: 15px; margin-bottom: 15px; opacity: 0.9;">Нашли ошибку? Напишите нам!</p>
@@ -723,29 +533,30 @@ const leadersList=document.getElementById('leaders-list');
 
 /* ===== СОСТОЯНИЕ ===== */
 let board=["","","","","","","","",""];
-let currentPlayer="X", gameOver=false, vsBot=true;
-let difficulty="medium", soundOn=true;
+let currentPlayer="X",gameOver=false,vsBot=true;
+let difficulty="medium",soundOn=true;
 let scoreX=0,scoreO=0,scoreDraw=0;
 let currentLeaderLevel="medium";
-let currentNick="", currentUID="", isAdmin=false, userConsent=false;
+let currentNick="",currentUID="",isAdmin=false,userConsent=false;
 let currentStreak=0;
 let currentXColor={id:'red',type:'solid',value:'#e74c3c',name:'Красный'};
 let userStats={easy:{wins:0},medium:{wins:0},hard:{wins:0},survival:{best:0}};
-let survivalLevel=1, survivalActive=false;
-let currentTitle=null, userTitles=[], knownTitles=[];
+let survivalLevel=1,survivalActive=false;
+let currentTitle=null,userTitles=[],knownTitles=[];
 let pendingAwardTitle=null;
-let onlineMode=false, onlineRole=null, onlineTeam=null, onlineRoomRef=null;
-let pendingChip=null, maintenanceActive=false, teamMode=false;
-let blitzMode=false, blitzTimer=null, blitzInterval=null;
+let onlineMode=false,onlineRole=null,onlineTeam=null,onlineRoomRef=null;
+let pendingChip=null,maintenanceActive=false,teamMode=false;
+let blitzMode=false,blitzTimer=null,blitzInterval=null;
 let bonusCell=-1;
-let snakeMode=false, chaosMode=false, moveCounter=0, frozenCell=-1;
+let snakeMode=false,chaosMode=false,moveCounter=0,frozenCell=-1;
 let campaignProgress=JSON.parse(localStorage.getItem('campaign')||'{"unlocked":1,"done":[]}');
 let currentCampaignLevel=null;
 let campaignSpecialUsed={removeOnce:false};
-let campaignSlow=false, botTimeoutId=null;
-let currentQuestTab='daily', currentShopTab='colors', currentInvTab='all';
-let banCheckInterval=null, currentBanTarget=null;
-let currentAppealTab='pending', myCurrentBanData=null;
+let campaignSlow=false,botTimeoutId=null;
+let currentQuestTab='daily',currentShopTab='colors',currentInvTab='all';
+let banCheckInterval=null,currentBanTarget=null;
+let currentAppealTab='pending',myCurrentBanData=null;
+let currentCoinsTarget=null;
 
 /* ===== КОНСТАНТЫ ===== */
 const ADMIN_RAINBOW={id:'admin_rainbow',name:'👑 Rainbow Admin',type:'admin_rainbow',value:'linear-gradient(90deg,#e74c3c,#e67e22,#f1c40f,#2ecc71,#1abc9c,#3498db,#9b59b6,#e74c3c)',unlock:{level:null,wins:0}};
@@ -793,7 +604,8 @@ const SHOP_TITLES={
     shop_archmage:{id:'shop_archmage',name:'🔮 Архимаг',cssClass:'title-archmage',desc:'Мастер магии',price:5000,rarity:'legendary'},
     shop_zeus:{id:'shop_zeus',name:'⚡ Зевс',cssClass:'title-zeus',desc:'Повелитель молний',price:6000,rarity:'legendary'},
     shop_god:{id:'shop_god',name:'👑 Божество',cssClass:'title-god',desc:'Выше смертных',price:8000,rarity:'legendary'},
-    shop_creator2:{id:'shop_creator2',name:'🌟 Творец',cssClass:'title-creator2',desc:'Создаёшь реальность',price:10000,rarity:'legendary'}
+    shop_creator2:{id:'shop_creator2',name:'🌟 Творец',cssClass:'title-creator2',desc:'Создаёшь реальность',price:10000,rarity:'legendary'},
+    shop_rich:{id:'shop_rich',name:'💎 RICH',cssClass:'title-rich',desc:'Владелец несметных богатств',price:50000,rarity:'legendary',unique:true}
 };
 Object.keys(SHOP_TITLES).forEach(k=>{
     TITLES[k]=SHOP_TITLES[k];
@@ -817,7 +629,7 @@ Object.keys(CHEST_TITLES).forEach(k=>{
     TITLES[k].issuedBy='Сундук удачи';
 });
 
-const ADMIN_FREE_TITLES=['shop_fire','shop_crystal','shop_aristocrat','shop_star','shop_predator','shop_dragon','shop_wave','shop_king','shop_galaxy','shop_skull','shop_gladiator','shop_master','shop_champion','shop_legend','shop_dragonlord','shop_supernova','shop_allseer','shop_lionking','shop_emperor','shop_archmage','shop_zeus','shop_god','shop_creator2','chest_lucky','chest_jackpot','chest_alien','chest_robot','chest_unicorn','chest_jester','admin_all'];
+const ADMIN_FREE_TITLES=['shop_fire','shop_crystal','shop_aristocrat','shop_star','shop_predator','shop_dragon','shop_wave','shop_king','shop_galaxy','shop_skull','shop_gladiator','shop_master','shop_champion','shop_legend','shop_dragonlord','shop_supernova','shop_allseer','shop_lionking','shop_emperor','shop_archmage','shop_zeus','shop_god','shop_creator2','chest_lucky','chest_jackpot','chest_alien','chest_robot','chest_unicorn','chest_jester','admin_all','shop_rich'];
 
 const winCombos=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 const COLOR_PRESETS=[
@@ -855,6 +667,25 @@ function playWin(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[52
 function playLose(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[392,330,262].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.15+.25);o.stop(ctx.currentTime+i*.15+.25);});}
 function playStreak(n){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;const base=440+Math.min(n,10)*60;[base,base*1.25,base*1.5].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='triangle';g.gain.value=.08;o.start(ctx.currentTime+i*.08);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.08+.15);o.stop(ctx.currentTime+i*.08+.15);});}
 function playBonusSound(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[880,1100,1320].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.value=.1;o.start(ctx.currentTime+i*.06);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.06+.2);o.stop(ctx.currentTime+i*.06+.2);});}
+function playRichFanfare(){
+    if(!soundOn)return;
+    const ctx=getAudioCtx();if(!ctx)return;
+    const notes=[523,659,784,1047,1319,1568,2093,2637];
+    notes.forEach((f,i)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.connect(g);g.connect(ctx.destination);
+        o.frequency.value=f;o.type='triangle';g.gain.value=.12;
+        o.start(ctx.currentTime+i*.1);
+        g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.1+.3);
+        o.stop(ctx.currentTime+i*.1+.3);
+    });
+    const bass=ctx.createOscillator(),bassGain=ctx.createGain();
+    bass.connect(bassGain);bassGain.connect(ctx.destination);
+    bass.frequency.value=130;bass.type='sine';bassGain.gain.value=.15;
+    bass.start(ctx.currentTime);
+    bassGain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+1.5);
+    bass.stop(ctx.currentTime+1.5);
+}
 function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6'];for(let i=0;i<50;i++){const cf=document.createElement('div');cf.classList.add('confetti');cf.style.left=Math.random()*100+'vw';cf.style.background=colors[Math.floor(Math.random()*colors.length)];cf.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(cf);setTimeout(()=>cf.remove(),2500);}}
 function createFlash(){const f=document.createElement('div');f.classList.add('flash');document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
 function explodeScreen(){for(let i=0;i<40;i++){const p=document.createElement('div'),angle=Math.random()*Math.PI*2,dist=100+Math.random()*300;p.style.cssText=`position:fixed;top:50%;left:50%;width:8px;height:8px;background:#e74c3c;border-radius:50%;pointer-events:none;z-index:9999;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;animation:explode .8s ease-out forwards;`;document.body.appendChild(p);setTimeout(()=>p.remove(),800);}}
@@ -1084,24 +915,16 @@ Object.values(SHOP_TITLES).forEach(t=>{
 SHOP_ITEMS.titles.sort((a,b)=>a.price-b.price);
 
 const RARITY_LABELS={common:'Обычный',rare:'Редкий',epic:'Эпический',legendary:'Легендарный'};
-
-/* ===== ИНВЕНТАРЬ ===== */
+    /* ===== ИНВЕНТАРЬ ===== */
 function getOwnedItems(){return JSON.parse(localStorage.getItem('owned_items')||'[]');}
 function setOwnedItems(arr){localStorage.setItem('owned_items',JSON.stringify(arr));}
 function addOwnedItem(id){const arr=getOwnedItems();if(!arr.includes(id)){arr.push(id);setOwnedItems(arr);}}
 function getInventory(){return JSON.parse(localStorage.getItem('inventory')||'{}');}
 function setInventory(inv){localStorage.setItem('inventory',JSON.stringify(inv));}
-
 function addToInventory(item){
     const inv=getInventory();
     const existing=inv[item.id];
-    inv[item.id]=existing||{
-        id:item.id,icon:item.icon,name:item.name,desc:item.desc,
-        type:item.type,rarity:item.rarity,price:item.price,
-        purchasedAt:Date.now(),
-        count:(item.type==='consumable')?1:0,
-        used:false
-    };
+    inv[item.id]=existing||{id:item.id,icon:item.icon,name:item.name,desc:item.desc,type:item.type,rarity:item.rarity,price:item.price,purchasedAt:Date.now(),count:(item.type==='consumable')?1:0,used:false};
     if(existing&&item.type==='consumable'){
         inv[item.id].count=(inv[item.id].count||0)+1;
         inv[item.id].used=false;
@@ -1219,9 +1042,7 @@ function renderInventory(){
             statusHtml='<span class="inv-status inv-status-ready">🔓 Доступно</span>';
             btnHtml='<button class="inv-btn inv-btn-equipped">—</button>';
         }
-        el.innerHTML=`<div class="inv-icon">${item.icon}</div>
-            <div class="inv-info"><div class="inv-name">${item.name} ${statusHtml}</div><div class="inv-desc">${item.desc||''}</div></div>
-            ${btnHtml}`;
+        el.innerHTML=`<div class="inv-icon">${item.icon}</div><div class="inv-info"><div class="inv-name">${item.name} ${statusHtml}</div><div class="inv-desc">${item.desc||''}</div></div>${btnHtml}`;
         list.appendChild(el);
     });
     list.querySelectorAll('button[data-action]').forEach(btn=>{
@@ -1274,7 +1095,6 @@ function useConsumableFromInventory(item){
     const inv=getInventory();
     if(!inv[item.id]){alert('Ошибка инвентаря');return;}
     const action=orig.action;
-
     if(action==='reroll_daily'){
         localStorage.removeItem(getTodayKey());
         loadQuestSet('daily');
@@ -1403,6 +1223,14 @@ function buyItem(item){
         addToInventory(item);
         if(!userTitles.includes(item.titleId))userTitles.push(item.titleId);
         if(currentUID)database.ref('users/'+currentUID+'/titles/'+item.titleId).set(true);
+        if(item.titleId === 'shop_rich'){
+            showRichUnlockEffect();
+            setTimeout(()=>{
+                currentTitle = item.titleId;
+                if(currentUID) database.ref('users/'+currentUID+'/title').set(item.titleId);
+                applyTitleToNick();
+            }, 1500);
+        }
         showAwardNotification(item.titleId);
     } else if(item.type==='consumable'){
         addToInventory(item);
@@ -1592,7 +1420,7 @@ function showModeGuide(modeKey,onStart){
     newCancel.addEventListener('click',()=>m.classList.remove('active'));
 }
 
-/* ===== ЦВЕТА И ТИТУЛЫ UI ===== */
+/* ===== ЦВЕТА ===== */
 function isColorUnlocked(color){
     const u=color.unlock;
     if(!u||u.wins===0)return true;
@@ -1611,8 +1439,6 @@ function getUnlockProgress(color){
     }
     return{have:userStats[u.level].wins||0,need:u.wins,done:(userStats[u.level].wins||0)>=u.wins};
 }
-
-/* ===== ФИКС ГРАДИЕНТОВ ===== */
 function applyXColor(color){
     currentXColor=color;
     const isRainbow=color.type==='admin_rainbow';
@@ -1623,7 +1449,6 @@ function applyXColor(color){
         c.style.webkitTextFillColor='';
         c.style.color='';
         c.classList.remove('rainbow-cell');
-
         if(c.textContent==='X'&&!c.classList.contains('win')&&!c.classList.contains('lose')){
             if(isRainbow){
                 c.classList.add('rainbow-cell');
@@ -1644,10 +1469,7 @@ function applyXColor(color){
 function renderColorGrid(){
     colorGrid.innerHTML='';
     const owned=getOwnedItems();
-    const shopColors=SHOP_ITEMS.colors.filter(c=>owned.includes(c.id)).map(c=>({
-        id:c.id,name:c.name,type:c.type==='gradient'?'gradient':'solid',
-        value:c.value,unlock:{level:null,wins:0}
-    }));
+    const shopColors=SHOP_ITEMS.colors.filter(c=>owned.includes(c.id)).map(c=>({id:c.id,name:c.name,type:c.type==='gradient'?'gradient':'solid',value:c.value,unlock:{level:null,wins:0}}));
     const presets=isAdmin?[ADMIN_RAINBOW,...COLOR_PRESETS,...shopColors]:[...COLOR_PRESETS,...shopColors];
     presets.forEach(c=>{
         const swatch=document.createElement('div');
@@ -1681,6 +1503,8 @@ function renderColorGrid(){
     info.innerHTML='🏆 Побед: E '+(userStats.easy.wins||0)+' | M '+(userStats.medium.wins||0)+' | H '+(userStats.hard.wins||0);
     colorGrid.appendChild(info);
 }
+
+/* ===== ТИТУЛЫ ===== */
 function renderTitlesGrid(){
     titlesGrid.innerHTML='';
     let hasAny=false;
@@ -1706,14 +1530,25 @@ function renderTitlesGrid(){
 function renderTitleBadge(titleKey){
     if(!titleKey)return'';
     const t=TITLES[titleKey];if(!t)return'';
-    return'<span class="title-badge '+t.cssClass+'" data-title="'+titleKey+'" style="cursor:pointer;">'+t.name+'</span>';
+    if(titleKey==='shop_rich'){
+        return '<span class="title-badge title-rich" data-title="'+titleKey+'" style="cursor:pointer;padding:3px 10px;font-size:10px;">💎 RICH</span>';
+    }
+    if(titleKey==='admin_all'){
+        return '<span class="title-badge title-admin-god" data-title="'+titleKey+'" style="cursor:pointer;padding:3px 10px;font-size:10px;">👑 ADMIN</span>';
+    }
+    return '<span class="title-badge '+t.cssClass+'" data-title="'+titleKey+'" style="cursor:pointer;">'+t.name+'</span>';
 }
 function applyTitleToNick(){
     const badge=renderTitleBadge(currentTitle);
     const premium=localStorage.getItem('premium_badge')==='1'?' 👑':'';
-    if(isAdmin)playerNameEl.innerHTML='👑 '+currentNick+premium+badge;
-    else playerNameEl.innerHTML=currentNick+premium+badge;
-    playerNameScoreEl.innerHTML=currentNick+badge;
+    const hasRich=currentTitle==='shop_rich';
+    const nickClass=hasRich?'rich-nickname':'';
+    if(isAdmin){
+        playerNameEl.innerHTML='👑 <span class="'+nickClass+'">'+currentNick+'</span>'+premium+badge;
+    } else {
+        playerNameEl.innerHTML='<span class="'+nickClass+'">'+currentNick+'</span>'+premium+badge;
+    }
+    playerNameScoreEl.innerHTML='<span class="'+nickClass+'">'+currentNick+'</span>'+badge;
 }
 document.addEventListener('click',(e)=>{
     const badge=e.target.closest('.title-badge');
@@ -1759,18 +1594,47 @@ function grantAllTitlesToAdmin(uid){
     if(changed)setOwnedItems(owned);
 }
 
-/* ===== СТАТИСТИКА ===== */
+/* ===== RICH-ЭФФЕКТ ===== */
+function showRichUnlockEffect(){
+    const overlay=document.createElement('div');
+    overlay.className='rich-unlock-effect';
+    overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,rgba(255,215,0,0.4) 0%,transparent 70%);z-index:9998;pointer-events:none;animation:richUnlockFade 2.5s ease-out forwards;';
+    document.body.appendChild(overlay);
+    const bigText=document.createElement('div');
+    bigText.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-size:60px;font-weight:900;color:#fff;text-shadow:0 0 20px #ffd700,0 0 40px #ffd700,0 0 60px #ffa500,0 0 80px #ff8c00,0 0 100px #ffd700;z-index:9999;pointer-events:none;letter-spacing:8px;background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700,#b8860b,#ffd700);background-size:400% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 1.5s linear infinite, richTextPop 2s ease-out forwards;';
+    bigText.textContent='💎 RICH 💎';
+    document.body.appendChild(bigText);
+    if(!document.getElementById('rich-pop-style')){
+        const style=document.createElement('style');
+        style.id='rich-pop-style';
+        style.textContent='@keyframes richTextPop{0%{transform:translate(-50%,-50%) scale(0) rotate(-180deg);opacity:0;}30%{transform:translate(-50%,-50%) scale(1.3) rotate(0deg);opacity:1;}60%{transform:translate(-50%,-50%) scale(1) rotate(0deg);opacity:1;}100%{transform:translate(-50%,-50%) scale(1.5) rotate(0deg);opacity:0;}}@keyframes richUnlockFade{0%{opacity:0;}20%{opacity:1;}100%{opacity:0;}}';
+        document.head.appendChild(style);
+    }
+    for(let i=0;i<200;i++){
+        setTimeout(()=>{
+            const c=document.createElement('div');
+            c.style.cssText='position:fixed;left:'+(Math.random()*100)+'vw;top:-20px;width:'+(6+Math.random()*8)+'px;height:'+(6+Math.random()*8)+'px;background:'+['#ffd700','#ffed4e','#ffffff','#ffa500','#ff8c00'][Math.floor(Math.random()*5)]+';border-radius:'+(Math.random()<0.5?'50%':'2px')+';box-shadow:0 0 8px #ffd700,0 0 15px #ffa500;z-index:9998;pointer-events:none;animation:fall '+(2+Math.random()*2)+'s linear forwards;';
+            document.body.appendChild(c);
+            setTimeout(()=>c.remove(),4000);
+        },i*15);
+    }
+    playRichFanfare();
+    setTimeout(()=>bigText.remove(),2500);
+    setTimeout(()=>overlay.remove(),3000);
+}
+
+/* ===== СТАТИСТИКА (с parseInt — фикс пропажи) ===== */
 function loadAllPlayerStats(){
     if(!currentNick)return Promise.resolve();
     const n=currentNick.toLowerCase();
     return database.ref('stats').once('value').then(s=>{
         const all=s.val()||{};
         ['easy','medium','hard'].forEach(lvl=>{
-            const d=(all[lvl]&&all[lvl][n])?all[lvl][n]:{wins:0};
-            userStats[lvl]={wins:d.wins||0};
+            const d=(all[lvl]&&all[lvl][n])?all[lvl][n]:{};
+            userStats[lvl]={wins:parseInt(d.wins)||0};
         });
-        const surv=(all.survival&&all.survival[n])?all.survival[n]:{best:0};
-        userStats.survival={best:surv.best||0};
+        const surv=(all.survival&&all.survival[n])?all.survival[n]:{};
+        userStats.survival={best:parseInt(surv.best)||0};
     });
 }
 function updateSurvivalUI(){
@@ -1803,23 +1667,29 @@ function saveStats(result){
             const ref=database.ref('stats/survival/'+n);
             ref.once('value',s=>{
                 let d=s.val()||{best:0};
-                if(survivalLevel>(d.best||0)){d.best=survivalLevel;ref.set(d);}
+                d.best=parseInt(d.best)||0;
+                if(survivalLevel>d.best){d.best=survivalLevel;ref.set(d);}
             });
         }
         return;
     }
     const ref=database.ref('stats/'+difficulty+'/'+n);
     ref.once('value',s=>{
-        let d=s.val()||{wins:0,losses:0,draws:0,streak:0,bestStreak:0};
-        if(result==='win'){d.wins=(d.wins||0)+1;d.streak=(d.streak||0)+1;if(d.streak>(d.bestStreak||0))d.bestStreak=d.streak;}
-        if(result==='lose'){d.losses=(d.losses||0)+1;d.streak=0;}
-        if(result==='draw'){d.draws=(d.draws||0)+1;}
+        let d=s.val()||{};
+        d.wins=parseInt(d.wins)||0;
+        d.losses=parseInt(d.losses)||0;
+        d.draws=parseInt(d.draws)||0;
+        d.streak=parseInt(d.streak)||0;
+        d.bestStreak=parseInt(d.bestStreak)||0;
+        if(result==='win'){d.wins++;d.streak++;if(d.streak>d.bestStreak)d.bestStreak=d.streak;}
+        if(result==='lose'){d.losses++;d.streak=0;}
+        if(result==='draw'){d.draws++;}
         ref.set(d);
     });
     if(result==='win'){
         ['stats_period/'+month,'stats_period/'+year].forEach(base=>{
             const pr=database.ref(base+'/'+difficulty+'/'+n);
-            pr.once('value',ps=>{let pd=ps.val()||{wins:0};pd.wins=(pd.wins||0)+1;pr.set(pd);});
+            pr.once('value',ps=>{let pd=ps.val()||{};pd.wins=(parseInt(pd.wins)||0)+1;pr.set(pd);});
         });
     }
 }
@@ -1839,9 +1709,11 @@ function saveHistory(result){
 function loadMyStats(){
     if(!currentNick)return;
     database.ref('stats/'+difficulty+'/'+currentNick.toLowerCase()).once('value',s=>{
-        const d=s.val()||{wins:0,losses:0,draws:0,streak:0,bestStreak:0};
-        scoreX=d.wins||0;scoreO=d.losses||0;scoreDraw=d.draws||0;
-        currentStreak=d.streak||0;
+        const d=s.val()||{};
+        scoreX=parseInt(d.wins)||0;
+        scoreO=parseInt(d.losses)||0;
+        scoreDraw=parseInt(d.draws)||0;
+        currentStreak=parseInt(d.streak)||0;
         updateScore();
         updateStreakUI();
     });
@@ -1850,7 +1722,7 @@ function loadMyStats(){
 function updateScore(){scoreXEl.textContent=scoreX;scoreOEl.textContent=scoreO;scoreDrawEl.textContent=scoreDraw;}
 function showModal(t,e){modalText.textContent=t;modalEmoji.textContent=e;modal.classList.add('active');}
 
-/* ===== БАН + ИСТОРИЯ + АПЕЛЛЯЦИЯ ===== */
+/* ===== БАН ===== */
 function logBanHistory(entry){return database.ref('banHistory').push({...entry,timestamp:Date.now()});}
 function checkMyBan(){
     if(!currentNick)return;
@@ -1858,14 +1730,25 @@ function checkMyBan(){
     const n=currentNick.toLowerCase();
     database.ref('bans/'+n).once('value').then(s=>{
         const ban=s.val();
-        if(!ban){hideBanScreen();myCurrentBanData=null;return;}
+        if(!ban){
+            const wasBanned=myCurrentBanData!==null;
+            hideBanScreen();
+            myCurrentBanData=null;
+            if(wasBanned)setTimeout(()=>loadMyStats(),500);
+            return;
+        }
         if(ban.permanent){myCurrentBanData=ban;showBanScreen({permanent:true,reason:ban.reason||'Нарушение',bannedBy:ban.bannedBy||'Admin',bannedAt:ban.bannedAt||Date.now()});return;}
         const now=Date.now();
-        if(ban.expiresAt&&ban.expiresAt>now){myCurrentBanData=ban;showBanScreen({permanent:false,expiresAt:ban.expiresAt,reason:ban.reason||'Нарушение',bannedBy:ban.bannedBy||'Admin',bannedAt:ban.bannedAt||Date.now()});}
-        else{
+        if(ban.expiresAt&&ban.expiresAt>now){
+            myCurrentBanData=ban;
+            showBanScreen({permanent:false,expiresAt:ban.expiresAt,reason:ban.reason||'Нарушение',bannedBy:ban.bannedBy||'Admin',bannedAt:ban.bannedAt||Date.now()});
+        } else {
             database.ref('bans/'+n).remove().catch(()=>{});
             logBanHistory({nick:currentNick,type:'expired',reason:'Срок истёк',by:'System'});
-            hideBanScreen();myCurrentBanData=null;
+            const wasBanned=myCurrentBanData!==null;
+            hideBanScreen();
+            myCurrentBanData=null;
+            if(wasBanned)setTimeout(()=>loadMyStats(),500);
         }
     });
 }
@@ -1875,7 +1758,7 @@ function showBanScreen(ban){
     const message=document.getElementById('ban-message');
     const info=document.getElementById('ban-info');
     const timer=document.getElementById('ban-timer');
-    if(ban.permanent){title.textContent='🚫 ЗАБЛОКИРОВАНЫ НАВСЕГДА';message.textContent='Доступ к игре закрыт.';timer.textContent='';}
+    if(ban.permanent){title.textContent='🚫 ЗАБЛОКИРОВАНЫ НАВСЕГДА';message.textContent='Доступ закрыт.';timer.textContent='';}
     else{title.textContent='⏱️ ВРЕМЕННАЯ БЛОКИРОВКА';message.textContent='Доступ временно ограничен.';}
     const bannedDate=new Date(ban.bannedAt).toLocaleString('ru-RU');
     info.innerHTML='<div style="margin-bottom:8px;"><b>Ник:</b> '+currentNick+'</div><div style="margin-bottom:8px;"><b>Причина:</b> '+(ban.reason||'Не указана')+'</div><div style="margin-bottom:8px;"><b>Заблокировал:</b> '+ban.bannedBy+'</div><div><b>Дата:</b> '+bannedDate+'</div>';
@@ -1885,9 +1768,12 @@ function showBanScreen(ban){
         const updateTimer=()=>{
             const diff=ban.expiresAt-Date.now();
             if(diff<=0){
-                clearInterval(banCheckInterval);hideBanScreen();
+                clearInterval(banCheckInterval);
+                hideBanScreen();
                 database.ref('bans/'+currentNick.toLowerCase()).remove().catch(()=>{});
                 logBanHistory({nick:currentNick,type:'expired',reason:'Срок истёк',by:'System'});
+                myCurrentBanData=null;
+                setTimeout(()=>loadMyStats(),500);
                 return;
             }
             const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
@@ -2059,7 +1945,7 @@ function renderBanHistory(filter){
                 const dur=e.permanent?'Навсегда':(e.duration?Math.round(e.duration/3600000)+'ч':'Временно');
                 detail='<div class="bh-detail">Срок: <b>'+dur+'</b></div><div class="bh-detail">Причина: <b>'+(e.reason||'—')+'</b></div><div class="bh-detail">Выдал: <b>'+(e.by||'—')+'</b></div>';
             } else if(e.type==='unban'){detail='<div class="bh-detail">Причина: <b>'+(e.reason||'—')+'</b></div><div class="bh-detail">Снял: <b>'+(e.by||'—')+'</b></div>';}
-            else detail='<div class="bh-detail">Срок бана истёк</div>';
+            else detail='<div class="bh-detail">Срок истёк</div>';
             html+='<div class="ban-history-item '+typeClass+'"><div class="bh-header"><span class="bh-nick">👤 '+e.nick+'</span><span class="bh-type bh-type-'+typeClass+'">'+typeText+'</span></div><div class="bh-detail">📅 '+date+'</div>'+detail+'</div>';
         });
         list.innerHTML=html;
@@ -2124,7 +2010,6 @@ const maintenanceWarning=document.getElementById('maintenance-warning');
 const maintControlModal=document.getElementById('maintenance-control-modal');
 const maintRequestModal=document.getElementById('maintenance-request-modal');
 const maintApproveModal=document.getElementById('maintenance-approve-modal');
-
 database.ref('system/maintenance').on('value',s=>{
     const data=s.val()||{};
     maintenanceActive=data.active===true;
@@ -2232,7 +2117,6 @@ document.getElementById('campaign-close').addEventListener('click',()=>document.
 document.getElementById('ban-modal-close').addEventListener('click',()=>document.getElementById('ban-modal').classList.remove('active'));
 document.getElementById('ban-history-close').addEventListener('click',()=>document.getElementById('ban-history-modal').classList.remove('active'));
 document.getElementById('appeals-close').addEventListener('click',()=>document.getElementById('appeals-modal').classList.remove('active'));
-
 document.getElementById('quests-btn').addEventListener('click',()=>{document.getElementById('quests-modal').classList.add('active');renderQuestList();updateQuestTimer();});
 document.getElementById('quests-close').addEventListener('click',()=>{document.getElementById('quests-modal').classList.remove('active');checkHasNewQuests();});
 document.querySelectorAll('.quest-tabs button').forEach(btn=>{
@@ -2342,7 +2226,84 @@ document.querySelectorAll('#appeals-modal .shop-tabs button').forEach(btn=>{
     });
 });
 
-/* ===== ПРОЧИЕ ===== */
+/* ===== АДМИН: ИЗМЕНЕНИЕ МОНЕТ ===== */
+function renderAdminCoinsList(filter){
+    const list=document.getElementById('admin-coins-list');if(!list)return;
+    list.innerHTML='Загрузка...';
+    database.ref('users').once('value').then(snap=>{
+        const users=snap.val()||{};
+        let entries=[];
+        Object.keys(users).forEach(uid=>{
+            const u=users[uid]||{};
+            if(u.nick)entries.push({uid:uid,nick:u.nick,coins:parseInt(u.coins)||0});
+        });
+        entries.sort((a,b)=>a.nick.toLowerCase().localeCompare(b.nick.toLowerCase()));
+        if(filter){const f=filter.toLowerCase();entries=entries.filter(e=>e.nick.toLowerCase().includes(f));}
+        if(entries.length===0){list.innerHTML='<div style="text-align:center;padding:20px;opacity:0.7;">Не найдено</div>';return;}
+        let html='';
+        entries.forEach(e=>{
+            const isAdminRow=e.nick==='Admin';
+            html+='<div class="ban-user-row"><div class="ban-nick"><span>👤 '+e.nick+(isAdminRow?' 👑':'')+'</span><span style="color:#f1c40f;font-weight:bold;">🪙 '+e.coins+'</span></div>';
+            html+='<div class="ban-actions">';
+            html+='<button class="ban-btn-sm" style="background:#3498db;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="edit">✏️ Изменить</button>';
+            html+='<button class="ban-btn-sm" style="background:#2ecc71;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="add100">+100</button>';
+            html+='<button class="ban-btn-sm" style="background:#f39c12;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="add1000">+1000</button>';
+            html+='<button class="ban-btn-sm" style="background:#e74c3c;" data-uid="'+e.uid+'" data-nick="'+e.nick+'" data-coins="'+e.coins+'" data-action="reset">Сброс</button>';
+            html+='</div></div>';
+        });
+        list.innerHTML=html;
+        list.querySelectorAll('button[data-action]').forEach(btn=>{
+            btn.addEventListener('click',()=>{
+                const uid=btn.dataset.uid,nick=btn.dataset.nick,coins=parseInt(btn.dataset.coins)||0,action=btn.dataset.action;
+                if(action==='edit')openCoinsEdit(uid,nick,coins);
+                else if(action==='add100')setPlayerCoins(uid,coins+100,nick,'+100 🪙');
+                else if(action==='add1000')setPlayerCoins(uid,coins+1000,nick,'+1000 🪙');
+                else if(action==='reset'){if(confirm('Сбросить монеты у '+nick+'?'))setPlayerCoins(uid,0,nick,'Сброс');}
+            });
+        });
+    });
+}
+function openCoinsEdit(uid,nick,coins){
+    currentCoinsTarget={uid,nick,coins:parseInt(coins)||0};
+    document.getElementById('admin-coins-edit-title').textContent='💰 '+nick;
+    document.getElementById('admin-coins-edit-body').innerHTML='<div style="padding:12px;background:rgba(0,0,0,.25);border-radius:8px;margin-bottom:12px;"><b>Текущий баланс:</b> <span style="color:#f1c40f;font-weight:bold;">🪙 '+coins+'</span></div>';
+    document.getElementById('admin-coins-input').value='';
+    document.getElementById('admin-coins-edit-modal').classList.add('active');
+}
+function setPlayerCoins(uid,newAmount,nick,actionLabel){
+    newAmount=Math.max(0,Math.round(newAmount));
+    database.ref('users/'+uid+'/coins').set(newAmount).then(()=>{
+        database.ref('users/'+uid+'/coins_update').set({value:newAmount,by:currentNick,at:Date.now(),action:actionLabel});
+        alert('✅ '+nick+' → 🪙 '+newAmount+' ('+actionLabel+')');
+        renderAdminCoinsList(document.getElementById('admin-coins-search').value);
+    }).catch(err=>alert('Ошибка: '+err.message));
+}
+document.getElementById('admin-coins').addEventListener('click',()=>{
+    document.getElementById('admin-panel-modal').classList.remove('active');
+    document.getElementById('admin-coins-search').value='';
+    renderAdminCoinsList('');
+    document.getElementById('admin-coins-modal').classList.add('active');
+});
+document.getElementById('admin-coins-close').addEventListener('click',()=>document.getElementById('admin-coins-modal').classList.remove('active'));
+document.getElementById('admin-coins-search').addEventListener('input',e=>renderAdminCoinsList(e.target.value));
+document.getElementById('admin-coins-edit-cancel').addEventListener('click',()=>{document.getElementById('admin-coins-edit-modal').classList.remove('active');currentCoinsTarget=null;});
+document.querySelectorAll('#admin-coins-edit-modal button[data-coins-op]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        if(!currentCoinsTarget)return;
+        const val=parseInt(document.getElementById('admin-coins-input').value);
+        if(isNaN(val)||val<0){alert('Введи корректное число');return;}
+        const op=btn.dataset.coinsOp;
+        let newAmount=currentCoinsTarget.coins;
+        if(op==='set')newAmount=val;
+        else if(op==='add')newAmount+=val;
+        else if(op==='remove')newAmount-=val;
+        setPlayerCoins(currentCoinsTarget.uid,newAmount,currentCoinsTarget.nick,op==='set'?'Установлено '+val:op==='add'?'+'+val:'−'+val);
+        document.getElementById('admin-coins-edit-modal').classList.remove('active');
+        currentCoinsTarget=null;
+    });
+});
+
+/* ===== ПРОЧИЕ ФУНКЦИИ ===== */
 function loadProfile(){
     const content=document.getElementById('profile-content');
     if(!currentNick){content.innerHTML='Войдите';return;}
@@ -2353,18 +2314,21 @@ function loadProfile(){
         database.ref('stats').once('value',s=>{
             const all=s.val()||{};
             let html='<div style="padding:12px;background:rgba(0,0,0,.2);border-radius:8px;margin-bottom:12px;">';
-            html+='<div style="font-size:18px;margin-bottom:6px;">👤 <b>'+currentNick+'</b></div>';
+            const profileBadge=renderTitleBadge(currentTitle);
+            const isRichNick=currentTitle==='shop_rich';
+            const nickStyle=isRichNick?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;':'';
+            html+='<div style="font-size:18px;margin-bottom:6px;">👤 <b style="'+nickStyle+'">'+currentNick+'</b>'+profileBadge+'</div>';
             html+='<div style="font-size:14px;opacity:0.9;">📧 '+email+'</div>';
             html+='<div style="font-size:14px;opacity:0.9;margin-top:4px;">🪙 Монет: <b>'+getCoins()+'</b></div></div>';
             ['easy','medium','hard'].forEach(lvl=>{
-                const d=(all[lvl]&&all[lvl][currentNick.toLowerCase()])?all[lvl][currentNick.toLowerCase()]:{wins:0,losses:0,draws:0,bestStreak:0};
+                const d=(all[lvl]&&all[lvl][currentNick.toLowerCase()])?all[lvl][currentNick.toLowerCase()]:{};
                 const name=lvl==='easy'?'🟢 Легко':lvl==='medium'?'🟡 Средне':'🔴 Сложно';
-                html+='<div style="margin-bottom:12px;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;"><b>'+name+'</b><br>🏆 Победы: '+(d.wins||0);
-                if(lvl!=='easy')html+=' | 🔥 Рекорд: '+(d.bestStreak||0);
-                html+='<br>💀 Проигрыши: '+(d.losses||0)+' | 🤝 Ничьи: '+(d.draws||0)+'</div>';
+                html+='<div style="margin-bottom:12px;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;"><b>'+name+'</b><br>🏆 Победы: '+(parseInt(d.wins)||0);
+                if(lvl!=='easy')html+=' | 🔥 Рекорд: '+(parseInt(d.bestStreak)||0);
+                html+='<br>💀 Проигрыши: '+(parseInt(d.losses)||0)+' | 🤝 Ничьи: '+(parseInt(d.draws)||0)+'</div>';
             });
-            const surv=(all.survival&&all.survival[currentNick.toLowerCase()])?all.survival[currentNick.toLowerCase()]:{best:0};
-            html+='<div style="margin-bottom:12px;padding:10px;background:linear-gradient(135deg,#8e44ad,#c0392b);border-radius:8px;color:#fff;"><b>🌪️ Выживание</b><br>🏆 Лучший уровень: <b>'+(surv.best||0)+'</b></div>';
+            const surv=(all.survival&&all.survival[currentNick.toLowerCase()])?all.survival[currentNick.toLowerCase()]:{};
+            html+='<div style="margin-bottom:12px;padding:10px;background:linear-gradient(135deg,#8e44ad,#c0392b);border-radius:8px;color:#fff;"><b>🌪️ Выживание</b><br>🏆 Лучший уровень: <b>'+(parseInt(surv.best)||0)+'</b></div>';
             content.innerHTML=html;
         });
     });
@@ -2388,45 +2352,140 @@ function loadHistory(){
     });
 }
 function loadLeaders(level){
-    database.ref('stats/'+level).once('value',s=>{
+    if(level==='rich'){
+        database.ref('users').once('value').then(s=>{
+            const users=s.val()||{};
+            const entries=[];
+            Object.keys(users).forEach(uid=>{
+                const u=users[uid]||{};
+                if(u.nick)entries.push({nick:u.nick,coins:parseInt(u.coins)||0,title:u.title||null});
+            });
+            entries.sort((a,b)=>b.coins-a.coins);
+            entries.splice(30);
+            let html='<div style="padding:14px;margin-bottom:15px;background:linear-gradient(135deg,#f1c40f,#e67e22);border-radius:12px;color:#fff;font-weight:bold;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">💰 ТОП БОГАЧЕЙ 💰</div><div style="font-size:12px;opacity:0.9;">Самые богатые игроки проекта</div></div>';
+            if(entries.length===0){html+='<div style="text-align:center;opacity:0.7;">Пока никто не заработал</div>';leadersList.innerHTML=html;return;}
+            html+='<ol style="padding-left:0;list-style:none;margin:0;">';
+            entries.forEach((p,idx)=>{
+                const medal=idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'#'+(idx+1);
+                const badge=renderTitleBadge(p.title);
+                const isRich=p.title==='shop_rich';
+                const rowBg=idx===0?'linear-gradient(135deg,rgba(255,215,0,.25),rgba(255,165,0,.1))':idx===1?'rgba(192,192,192,.2)':idx===2?'rgba(205,127,50,.2)':'rgba(0,0,0,.2)';
+                html+='<li style="margin-bottom:8px;padding:10px 14px;background:'+rowBg+';border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.1);">';
+                html+='<div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">';
+                html+='<span style="font-size:18px;min-width:32px;text-align:center;font-weight:bold;">'+medal+'</span>';
+                html+='<span style="font-weight:bold;overflow:hidden;text-overflow:ellipsis;'+(isRich?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;':'')+'">'+p.nick+'</span>';
+                html+=badge+'</div>';
+                html+='<span style="color:#f1c40f;font-weight:bold;white-space:nowrap;font-size:14px;">🪙 '+p.coins.toLocaleString('ru-RU')+'</span>';
+                html+='</li>';
+            });
+            html+='</ol>';
+            leadersList.innerHTML=html;
+        }).catch(err=>{leadersList.innerHTML='Ошибка: '+err.message;});
+        return;
+    }
+    database.ref('stats/'+level).once('value').then(s=>{
         const data=s.val()||{};
         if(level==='survival'){
             const arr=Object.keys(data).map(k=>({nick:k,...data[k]}));
-            arr.sort((a,b)=>(b.best||0)-(a.best||0));
+            arr.sort((a,b)=>(parseInt(b.best)||0)-(parseInt(a.best)||0));
             arr.splice(30);
-            let html='<div style="padding:12px;margin-bottom:15px;background:linear-gradient(135deg,#8e44ad,#c0392b);border-radius:10px;color:#fff;font-weight:bold;">🌪️ SURVIVAL</div>';
-            if(arr.length===0)html+='<div style="text-align:center;opacity:0.7;">Пока никто не играл</div>';
-            else{html+='<ol style="padding-left:25px;">';arr.forEach(p=>{html+='<li style="margin-bottom:8px;"><b>'+p.nick+'</b> — Lvl. '+(p.best||0)+'</li>';});html+='</ol>';}
-            leadersList.innerHTML=html;
+            database.ref('users').once('value').then(us=>{
+                const users=us.val()||{};
+                const titleMap={};
+                Object.keys(users).forEach(uid=>{
+                    const u=users[uid]||{};
+                    if(u.nick)titleMap[u.nick.toLowerCase()]=u.title||null;
+                });
+                let html='<div style="padding:12px;margin-bottom:15px;background:linear-gradient(135deg,#8e44ad,#c0392b);border-radius:10px;color:#fff;font-weight:bold;text-align:center;">🌪️ SURVIVAL MODE</div>';
+                if(arr.length===0){html+='<div style="text-align:center;opacity:0.7;">Пока никто не играл</div>';}
+                else{
+                    html+='<ol style="padding-left:0;list-style:none;">';
+                    arr.forEach((p,idx)=>{
+                        const medal=idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'#'+(idx+1);
+                        const badge=renderTitleBadge(titleMap[p.nick.toLowerCase()]);
+                        const isRich=titleMap[p.nick.toLowerCase()]==='shop_rich';
+                        html+='<li style="margin-bottom:8px;padding:10px 14px;background:rgba(0,0,0,.2);border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;">';
+                        html+='<div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">';
+                        html+='<span style="font-size:18px;min-width:32px;text-align:center;font-weight:bold;">'+medal+'</span>';
+                        html+='<span style="font-weight:bold;'+(isRich?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;':'')+'">'+p.nick+'</span>';
+                        html+=badge+'</div>';
+                        html+='<span style="color:#c39bd3;font-weight:bold;white-space:nowrap;font-size:14px;">🌪️ Lvl. '+(parseInt(p.best)||0)+'</span>';
+                        html+='</li>';
+                    });
+                    html+='</ol>';
+                }
+                leadersList.innerHTML=html;
+            });
             return;
         }
         const arr=Object.keys(data).map(k=>({nick:k,...data[k]}));
-        arr.sort((a,b)=>(b.wins||0)-(a.wins||0));
+        arr.sort((a,b)=>(parseInt(b.wins)||0)-(parseInt(a.wins)||0));
         arr.splice(20);
-        let html='';
-        if(arr.length===0)html='<div style="text-align:center;opacity:0.7;">Пока никто не играл</div>';
-        else{html='<ol style="padding-left:25px;">';arr.forEach(p=>{html+='<li style="margin-bottom:8px;"><b>'+p.nick+'</b> — 🏆 '+(p.wins||0)+'</li>';});html+='</ol>';}
-        leadersList.innerHTML=html;
+        database.ref('users').once('value').then(us=>{
+            const users=us.val()||{};
+            const titleMap={};
+            Object.keys(users).forEach(uid=>{
+                const u=users[uid]||{};
+                if(u.nick)titleMap[u.nick.toLowerCase()]=u.title||null;
+            });
+            let html='';
+            if(arr.length===0){html='<div style="text-align:center;opacity:0.7;">Пока никто не играл</div>';}
+            else{
+                html='<ol style="padding-left:0;list-style:none;">';
+                arr.forEach((p,idx)=>{
+                    const medal=idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'#'+(idx+1);
+                    const badge=renderTitleBadge(titleMap[p.nick.toLowerCase()]);
+                    const isRich=titleMap[p.nick.toLowerCase()]==='shop_rich';
+                    const rowBg=idx===0?'linear-gradient(135deg,rgba(255,215,0,.25),rgba(255,165,0,.1))':idx===1?'rgba(192,192,192,.2)':idx===2?'rgba(205,127,50,.2)':'rgba(0,0,0,.2)';
+                    html+='<li style="margin-bottom:8px;padding:10px 14px;background:'+rowBg+';border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;">';
+                    html+='<div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">';
+                    html+='<span style="font-size:18px;min-width:32px;text-align:center;font-weight:bold;">'+medal+'</span>';
+                    html+='<span style="font-weight:bold;'+(isRich?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;':'')+'">'+p.nick+'</span>';
+                    html+=badge+'</div>';
+                    html+='<span style="color:#2ecc71;font-weight:bold;white-space:nowrap;font-size:14px;">🏆 '+(parseInt(p.wins)||0)+'</span>';
+                    html+='</li>';
+                });
+                html+='</ol>';
+            }
+            leadersList.innerHTML=html;
+        });
     }).catch(err=>{leadersList.innerHTML='Ошибка: '+err.message;});
 }
 function loadAllPlayers(){
     const list=document.getElementById('all-players-list');
     if(!isAdmin){list.innerHTML='Доступ запрещён';return;}
     list.innerHTML='Загрузка...';
-    database.ref('stats').once('value',s=>{
+    database.ref('stats').once('value').then(s=>{
         const all=s.val()||{};
         const nicksSet=new Set();
         ['easy','medium','hard','survival'].forEach(lvl=>{if(all[lvl])Object.keys(all[lvl]).forEach(n=>nicksSet.add(n));});
         if(nicksSet.size===0){list.innerHTML='Пока нет игроков';return;}
         const arr=Array.from(nicksSet).sort();
-        let html='<div style="margin-bottom:10px;">Всего: <b>'+arr.length+'</b></div>';
-        arr.forEach(n=>{
-            const dE=(all.easy&&all.easy[n])?all.easy[n]:{wins:0};
-            const dM=(all.medium&&all.medium[n])?all.medium[n]:{wins:0};
-            const dH=(all.hard&&all.hard[n])?all.hard[n]:{wins:0};
-            html+='<div style="padding:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;"><b>'+n+'</b><br>🟢 '+(dE.wins||0)+' / 🟡 '+(dM.wins||0)+' / 🔴 '+(dH.wins||0)+'</div>';
+        database.ref('users').once('value').then(us=>{
+            const users=us.val()||{};
+            const titleMap={},coinsMap={};
+            Object.keys(users).forEach(uid=>{
+                const u=users[uid]||{};
+                if(u.nick){titleMap[u.nick.toLowerCase()]=u.title||null;coinsMap[u.nick.toLowerCase()]=parseInt(u.coins)||0;}
+            });
+            let html='<div style="margin-bottom:10px;">Всего: <b>'+arr.length+'</b></div>';
+            arr.forEach(n=>{
+                const dE=(all.easy&&all.easy[n])?all.easy[n]:{};
+                const dM=(all.medium&&all.medium[n])?all.medium[n]:{};
+                const dH=(all.hard&&all.hard[n])?all.hard[n]:{};
+                const badge=renderTitleBadge(titleMap[n]);
+                const isRich=titleMap[n]==='shop_rich';
+                const nickStyle=isRich?'background:linear-gradient(90deg,#ffd700,#ffffff,#ffd700);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:richShine 3s linear infinite;font-weight:bold;':'font-weight:bold;';
+                html+='<div style="padding:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;">';
+                html+='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">';
+                html+='<span><span style="'+nickStyle+'">'+n+'</span>'+badge+'</span>';
+                html+='<span style="color:#f1c40f;font-weight:bold;">🪙 '+(coinsMap[n]||0).toLocaleString('ru-RU')+'</span>';
+                html+='</div>';
+                html+='🟢 '+(parseInt(dE.wins)||0)+' / 🟡 '+(parseInt(dM.wins)||0)+' / 🔴 '+(parseInt(dH.wins)||0);
+                html+='</div>';
+            });
+            list.innerHTML=html;
         });
-        list.innerHTML=html;
     });
 }
 function renderAdminTitlesList(){
@@ -2438,7 +2497,7 @@ function renderAdminTitlesList(){
         const nickToUid={};
         Object.keys(users).forEach(uid=>{
             const u=users[uid]||{};
-            if(u.nick)nickToUid[u.nick.toLowerCase()]={uid,nick:u.nick,titles:u.titles||{}};
+            if(u.nick)nickToUid[u.nick.toLowerCase()]={uid,nick:u.nick,titles:u.titles||{},currentTitle:u.title||null};
         });
         const nicks=Object.keys(nickToUid).sort();
         if(nicks.length===0){list.innerHTML='Нет игроков';return;}
@@ -2446,7 +2505,8 @@ function renderAdminTitlesList(){
         const keys=Object.keys(TITLES).filter(k=>TITLES[k].adminOnly);
         nicks.forEach(n=>{
             const info=nickToUid[n];
-            html+='<div class="admin-user-row"><div class="nick">👤 '+info.nick+'</div><div class="titles">';
+            const equippedBadge=renderTitleBadge(info.currentTitle);
+            html+='<div class="admin-user-row"><div class="nick">👤 '+info.nick+equippedBadge+'</div><div class="titles">';
             keys.forEach(k=>{
                 const on=info.titles[k]?true:false;
                 html+='<span class="title-chip '+(on?'on':'off')+'" data-uid="'+info.uid+'" data-nick="'+info.nick+'" data-title="'+k+'">'+TITLES[k].name+'</span>';
@@ -2519,8 +2579,7 @@ registerBtn.addEventListener('click',()=>{
             database.ref('nicknames/'+n.toLowerCase()).set(cred.user.uid);
             database.ref('users/'+cred.user.uid).set({nick:n,titles:{},coins:100,inventory:{},ownedItems:[]});
             database.ref('emails/'+n.toLowerCase()).set({email:e,uid:cred.user.uid,consentGiven:true,consentDate:new Date().toISOString()});
-            currentNick=n;
-            currentUID=cred.user.uid;
+            currentNick=n;currentUID=cred.user.uid;
             nickClose.disabled=false;
             nickClose.style.opacity='1';
             nickClose.style.cursor='pointer';
@@ -2569,7 +2628,7 @@ auth.onAuthStateChanged(user=>{
             currentUID=user.uid;
             currentTitle=d.title||null;
             isAdmin=(currentNick==='Admin');
-            if(d.coins!==undefined)setCoins(d.coins);
+            if(d.coins!==undefined)setCoins(parseInt(d.coins)||0);
             if(isAdmin){
                 playerNameEl.classList.add('rainbow-text');
                 currentXColor=ADMIN_RAINBOW;
@@ -2587,7 +2646,6 @@ auth.onAuthStateChanged(user=>{
                 if(!snap.exists())database.ref('users/'+user.uid+'/titles').set({});
                 loadUserTitles(user.uid).then(()=>{
                     listenForNewTitles(user.uid);
-                    // Фикс отображения кнопки тестера
                     setTimeout(()=>{
                         const isTester=userTitles.includes('tester');
                         if(isTester&&!isAdmin)document.getElementById('set-request-maintenance').style.display='block';
@@ -2595,6 +2653,13 @@ auth.onAuthStateChanged(user=>{
                     },500);
                     applyTitleToNick();
                 });
+            });
+            database.ref('users/'+user.uid+'/coins_update').on('value',s=>{
+                const upd=s.val();
+                if(upd&&upd.at&&Date.now()-upd.at<10000){
+                    setCoins(upd.value);
+                    showCoinToast(upd.value,null);
+                }
             });
             loadMyStats();
             checkHasNewQuests();
@@ -2606,14 +2671,8 @@ auth.onAuthStateChanged(user=>{
         nickClose.disabled=true;
         nickClose.style.opacity='0.5';
         nickClose.style.cursor='not-allowed';
-        currentNick='';
-        currentUID='';
-        isAdmin=false;
-        userConsent=false;
-        currentStreak=0;
-        currentTitle=null;
-        userTitles=[];
-        knownTitles=[];
+        currentNick='';currentUID='';isAdmin=false;userConsent=false;currentStreak=0;
+        currentTitle=null;userTitles=[];knownTitles=[];
         currentXColor={id:'red',type:'solid',value:'#e74c3c',name:'Красный'};
         userStats={easy:{wins:0},medium:{wins:0},hard:{wins:0},survival:{best:0}};
         playerNameEl.textContent='Введите ник';
@@ -2624,10 +2683,7 @@ auth.onAuthStateChanged(user=>{
         document.getElementById('set-request-maintenance').style.display='none';
         winStreakEl.style.display='none';
         survivalBar.style.display='none';
-        onlineMode=false;
-        onlineRole=null;
-        onlineRoomRef=null;
-        onlineTeam=null;
+        onlineMode=false;onlineRole=null;onlineRoomRef=null;onlineTeam=null;
         maintenanceModal.classList.remove('active');
         hideBanScreen();
         setCoins(0);
@@ -2644,21 +2700,14 @@ document.getElementById('difficulty-modal').addEventListener('click',e=>{
         e.target.classList.add('active');
         document.getElementById('difficulty-modal').classList.remove('active');
         onlineMode=false;
-        blitzMode=false;
-        snakeMode=false;
-        chaosMode=false;
-        currentCampaignLevel=null;
+        blitzMode=false;snakeMode=false;chaosMode=false;currentCampaignLevel=null;
         if(difficulty==='survival')document.getElementById('survival-rules-modal').classList.add('active');
         else{survivalActive=false;survivalLevel=1;resetGame();loadMyStats();updateSurvivalUI();}
     }
 });
 document.getElementById('mode-bot').addEventListener('click',()=>{
-    onlineMode=false;
-    vsBot=true;
-    blitzMode=false;
-    snakeMode=false;
-    chaosMode=false;
-    currentCampaignLevel=null;
+    onlineMode=false;vsBot=true;
+    blitzMode=false;snakeMode=false;chaosMode=false;currentCampaignLevel=null;
     document.getElementById('mode-bot').classList.add('active');
     document.getElementById('mode-friend').classList.remove('active');
     document.getElementById('mode-online').classList.remove('active');
@@ -2669,32 +2718,22 @@ document.getElementById('mode-bot').addEventListener('click',()=>{
 });
 document.getElementById('mode-friend').addEventListener('click',()=>{
     if(maintenanceActive&&!isAdmin&&!userTitles.includes('tester')){alert('🚧 Перерыв');return;}
-    onlineMode=false;
-    vsBot=false;
-    blitzMode=false;
-    snakeMode=false;
-    chaosMode=false;
-    currentCampaignLevel=null;
+    onlineMode=false;vsBot=false;
+    blitzMode=false;snakeMode=false;chaosMode=false;currentCampaignLevel=null;
     document.getElementById('mode-friend').classList.add('active');
     document.getElementById('mode-bot').classList.remove('active');
     document.getElementById('mode-online').classList.remove('active');
     document.getElementById('mode-team').classList.remove('active');
     document.getElementById('mode-modal').classList.remove('active');
-    survivalActive=false;
-    survivalBar.style.display='none';
+    survivalActive=false;survivalBar.style.display='none';
     resetGame();
 });
 document.getElementById('mode-blitz').addEventListener('click',()=>{
     document.getElementById('mode-modal').classList.remove('active');
     showModeGuide('blitz',()=>{
-        onlineMode=false;
-        vsBot=true;
-        blitzMode=true;
-        snakeMode=false;
-        chaosMode=false;
-        currentCampaignLevel=null;
-        difficulty='medium';
-        resetGame();
+        onlineMode=false;vsBot=true;
+        blitzMode=true;snakeMode=false;chaosMode=false;currentCampaignLevel=null;
+        difficulty='medium';resetGame();
         statusEl.textContent='⏱️ Блиц — ваш ход (X)';
         startBlitzTimer();
     });
@@ -2702,28 +2741,18 @@ document.getElementById('mode-blitz').addEventListener('click',()=>{
 document.getElementById('mode-snake').addEventListener('click',()=>{
     document.getElementById('mode-modal').classList.remove('active');
     showModeGuide('snake',()=>{
-        onlineMode=false;
-        vsBot=true;
-        blitzMode=false;
-        snakeMode=true;
-        chaosMode=false;
-        currentCampaignLevel=null;
-        difficulty='medium';
-        resetGame();
+        onlineMode=false;vsBot=true;
+        blitzMode=false;snakeMode=true;chaosMode=false;currentCampaignLevel=null;
+        difficulty='medium';resetGame();
         statusEl.textContent='🐍 Змейка — ваш ход (X)';
     });
 });
 document.getElementById('mode-chaos').addEventListener('click',()=>{
     document.getElementById('mode-modal').classList.remove('active');
     showModeGuide('chaos',()=>{
-        onlineMode=false;
-        vsBot=true;
-        blitzMode=false;
-        snakeMode=false;
-        chaosMode=true;
-        currentCampaignLevel=null;
-        difficulty='medium';
-        resetGame();
+        onlineMode=false;vsBot=true;
+        blitzMode=false;snakeMode=false;chaosMode=true;currentCampaignLevel=null;
+        difficulty='medium';resetGame();
         statusEl.textContent='🎲 Хаос — ваш ход (X)';
     });
 });
@@ -3204,4 +3233,4 @@ if(coinEl)coinEl.textContent=getCoins();
 updateAppealCount();
 </script>
 </body>
-    </html>
+</html>
