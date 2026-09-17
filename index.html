@@ -1559,25 +1559,69 @@ document.getElementById('set-request-maintenance').addEventListener('click', ()=
     settingsModal.classList.remove('active');
     maintRequestReason.value = '';
     maintRequestStatus.textContent = '';
+    
+    // Показываем статус кулдауна
+    database.ref('users/'+currentUID+'/lastMaintenanceRequest').once('value').then(snap=>{
+        const lastTime = snap.val() || 0;
+        const now = Date.now();
+        const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+        const timePassed = now - lastTime;
+        
+        if(lastTime && timePassed < TEN_DAYS_MS){
+            const remainingMs = TEN_DAYS_MS - timePassed;
+            const remainingDays = Math.ceil(remainingMs / (24 * 60 * 60 * 1000));
+            maintRequestStatus.style.color='#f1c40f';
+            maintRequestStatus.textContent = '⏳ Следующий запрос возможен через ' + remainingDays + ' дн.';
+        } else {
+            maintRequestStatus.style.color='#2ecc71';
+            maintRequestStatus.textContent = '✅ Вы можете отправить запрос';
+        }
+    });
+    
     maintRequestModal.classList.add('active');
 });
 document.getElementById('maint-request-close').addEventListener('click', ()=>maintRequestModal.classList.remove('active'));
+
 document.getElementById('maint-request-send').addEventListener('click', ()=>{
     const reason = maintRequestReason.value.trim();
     if(!reason){maintRequestStatus.style.color='#e74c3c';maintRequestStatus.textContent='Укажите причину';return;}
-    database.ref('system/maintenanceRequest').once('value').then(s=>{
-        const ex = s.val();
-        if(ex && ex.pending){
+    
+    // ПРОВЕРКА КУЛДАУНА (10 дней)
+    database.ref('users/'+currentUID+'/lastMaintenanceRequest').once('value').then(snap=>{
+        const lastTime = snap.val() || 0;
+        const now = Date.now();
+        const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+        const timePassed = now - lastTime;
+        
+        if(timePassed < TEN_DAYS_MS){
+            const remainingMs = TEN_DAYS_MS - timePassed;
+            const remainingDays = Math.ceil(remainingMs / (24 * 60 * 60 * 1000));
             maintRequestStatus.style.color='#e74c3c';
-            maintRequestStatus.textContent='Уже есть активный запрос от ' + ex.from;
+            maintRequestStatus.textContent = '⏳ Вы уже отправляли запрос. Следующий возможен через ' + remainingDays + ' дн.';
             return;
         }
-        database.ref('system/maintenanceRequest').set({
-            pending: true, from: currentNick, reason: reason, createdAt: Date.now()
-        }).then(()=>{
-            maintRequestStatus.style.color='#2ecc71';
-            maintRequestStatus.textContent='✅ Запрос отправлен админу!';
-            setTimeout(()=>maintRequestModal.classList.remove('active'), 1500);
+        
+        database.ref('system/maintenanceRequest').once('value').then(s=>{
+            const ex = s.val();
+            if(ex && ex.pending){
+                maintRequestStatus.style.color='#e74c3c';
+                maintRequestStatus.textContent='Уже есть активный запрос от ' + ex.from;
+                return;
+            }
+            
+            Promise.all([
+                database.ref('system/maintenanceRequest').set({
+                    pending: true, from: currentNick, reason: reason, createdAt: Date.now()
+                }),
+                database.ref('users/'+currentUID+'/lastMaintenanceRequest').set(now)
+            ]).then(()=>{
+                maintRequestStatus.style.color='#2ecc71';
+                maintRequestStatus.textContent='✅ Запрос отправлен админу!';
+                setTimeout(()=>maintRequestModal.classList.remove('active'), 1500);
+            }).catch(err=>{
+                maintRequestStatus.style.color='#e74c3c';
+                maintRequestStatus.textContent='Ошибка: ' + err.message;
+            });
         });
     });
 });
@@ -1764,7 +1808,8 @@ resetEmailClose.addEventListener('click', ()=>{resetEmailModal.classList.remove(
 auth.onAuthStateChanged(user=>{
     if(user){
         nickClose.disabled=false;nickClose.style.opacity='1';nickClose.style.cursor='pointer';
-        database.ref('users/'+user.uid).once('value',s=>{
+        // === БЫСТРЫЙ ПОКАЗ НИКА И КНОПОК ===
+        database.ref('users/'+user.uid).once('value').then(s=>{
             const d=s.val()||{};
             currentNick=d.nick||'Игрок';currentUID=user.uid;
             currentTitle = d.title || null;
@@ -1792,12 +1837,10 @@ auth.onAuthStateChanged(user=>{
             applyXColor(currentXColor);
             applyTitleToNick();
 
-            // Автосоздание titles при входе
+            // Всё остальное — в фоне
             database.ref('users/'+user.uid+'/titles').once('value').then(snap=>{
                 if(!snap.exists()){
-                    database.ref('users/'+user.uid+'/titles').set({}).then(()=>{
-                        console.log('Создана ветка titles для', currentNick);
-                    });
+                    database.ref('users/'+user.uid+'/titles').set({});
                 }
                 loadUserTitles(user.uid).then(()=>{
                     listenForNewTitles(user.uid);
@@ -1807,9 +1850,13 @@ auth.onAuthStateChanged(user=>{
                     } else {
                         document.getElementById('set-request-maintenance').style.display = 'none';
                     }
+                    applyTitleToNick();
                 });
             });
             loadMyStats();
+        }).catch(err=>{
+            console.error('Ошибка загрузки профиля:', err);
+            playerNameEl.textContent = 'Игрок';
         });
     } else {
         nickClose.disabled=true;nickClose.style.opacity='0.5';nickClose.style.cursor='not-allowed';
@@ -1859,4 +1906,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-    </html>
+            </html>
