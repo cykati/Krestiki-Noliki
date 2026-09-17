@@ -116,6 +116,13 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
     opacity:0.45 !important;
     background:rgba(255,255,255,.1) !important;
 }
+/* Поле 9x9 для командного режима */
+#board.board9x9{grid-template-columns:repeat(9,36px);grid-template-rows:repeat(9,36px);gap:2px;}
+#board.board9x9 .cell{font-size:22px;border-radius:4px;}
+@media(max-width:500px){
+    #board.board9x9{grid-template-columns:repeat(9,32px);grid-template-rows:repeat(9,32px);gap:1px;}
+    #board.board9x9 .cell{font-size:18px;}
+}
 @media(max-width:400px){#board{grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px);}.cell{font-size:48px;}.scoreboard{font-size:14px;gap:8px;}.color-grid{grid-template-columns:repeat(4,1fr);}.title-grid{grid-template-columns:1fr;}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -141,6 +148,12 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
     <div class="lvl">Уровень <span id="survival-level">1</span></div>
     <div class="diff">Сложность бота: <span id="survival-diff">10%</span></div>
     <div class="bar"><div class="bar-fill" id="survival-bar-fill"></div></div>
+</div>
+
+<div id="online-score" style="display:none;justify-content:center;gap:20px;font-size:18px;font-weight:bold;margin-bottom:12px;padding:10px;background:var(--cell-bg);border-radius:10px;max-width:340px;">
+    <span id="score-label-my">Вы: <span id="online-score-you" style="color:#2ecc71;">0</span></span>
+    <span style="opacity:0.5;">—</span>
+    <span id="score-label-opp">Друг: <span id="online-score-opp" style="color:#e74c3c;">0</span></span>
 </div>
 
 <div class="scoreboard">
@@ -275,13 +288,21 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="mode-modal"><div class="modal"><h2>Режим игры</h2><div class="difficulty-row">
 <button id="mode-bot" class="active">🤖 Против бота</button>
 <button id="mode-friend">👥 Против друга (один телефон)</button>
-<button id="mode-online">🌐 Онлайн с другом</button>
+<button id="mode-online">🌐 Онлайн 1 на 1</button>
+<button id="mode-team">👥👥 Командный 2 на 2 (9×9)</button>
 </div><button id="mode-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="online-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
 <h2>🌐 Онлайн-игра</h2>
 <div id="online-content"></div>
 <button id="online-close">Закрыть</button>
+</div></div>
+
+<div class="modal-overlay" id="online-end-modal"><div class="modal" style="max-width:95vw;min-width:280px;background:linear-gradient(135deg,#2b5b8c,#1a1a1a);">
+<h2 id="online-end-title" style="font-size:24px;color:#f1c40f;margin-bottom:15px;">Игра окончена!</h2>
+<div id="online-end-body" style="text-align:center;font-size:15px;line-height:1.7;margin-bottom:20px;color:#fff;"></div>
+<button id="online-rematch" style="background:#2ecc71;font-size:16px;padding:12px 30px;">🔄 Играть ещё</button>
+<button id="online-exit" style="background:#b32e2e;font-size:16px;padding:12px 30px;margin-left:8px;">🚪 Выйти</button>
 </div></div>
 
 <div class="modal-overlay" id="nick-modal"><div class="modal"><h2>Вход / Регистрация</h2>
@@ -392,6 +413,7 @@ const modeModal=document.getElementById('mode-modal');
 const modeBotBtn=document.getElementById('mode-bot');
 const modeFriendBtn=document.getElementById('mode-friend');
 const modeOnlineBtn=document.getElementById('mode-online');
+const modeTeamBtn=document.getElementById('mode-team');
 const modeClose=document.getElementById('mode-close');
 const onlineModal=document.getElementById('online-modal');
 const onlineContent=document.getElementById('online-content');
@@ -468,9 +490,11 @@ let knownTitles = [];
 let pendingAwardTitle = null;
 let onlineMode = false;
 let onlineRole = null;
+let onlineTeam = null;
 let onlineRoomRef = null;
 let pendingChip = null;
 let maintenanceActive = false;
+let teamMode = false;
 
 const ADMIN_RAINBOW = {
     id: 'admin_rainbow', name: '👑 Rainbow Admin', type: 'admin_rainbow',
@@ -1188,36 +1212,169 @@ document.getElementById('set-title-history').addEventListener('click', ()=>{
 });
 titleHistoryClose.addEventListener('click', ()=>titleHistoryModal.classList.remove('active'));
 
-/* ===================== ОНЛАЙН-ИГРА ===================== */
+/* ===================== ОНЛАЙН-ИГРА (1 на 1 и 2 на 2) ===================== */
 modeOnlineBtn.addEventListener('click', ()=>{
     if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){
         alert('🚧 Во время технического перерыва онлайн-игра недоступна.');
         return;
     }
+    teamMode = false;
     modeModal.classList.remove('active');
     renderOnlineMenu();
     onlineModal.classList.add('active');
 });
+
+modeTeamBtn.addEventListener('click', ()=>{
+    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){
+        alert('🚧 Во время технического перерыва командный режим недоступен.');
+        return;
+    }
+    teamMode = true;
+    modeModal.classList.remove('active');
+    renderOnlineMenu();
+    onlineModal.classList.add('active');
+});
+
 onlineClose.addEventListener('click', ()=>{onlineModal.classList.remove('active');});
 
 function renderOnlineMenu(){
+    const isTeam = teamMode;
     onlineContent.innerHTML = `
-        <p style="font-size:14px;opacity:0.9;margin-bottom:15px;">Играй с другом по сети. Введи ник друга или создай комнату.</p>
+        <p style="font-size:14px;opacity:0.9;margin-bottom:15px;">
+            ${isTeam ? '👥👥 Командный режим 2 на 2. Поле 9×9, победа — 5 в ряд. Игра до 5 побед.' : 'Играй с другом по сети. Создай комнату и поделись кодом, или присоединись по коду друга.'}
+        </p>
+
+        <button id="create-room-btn" style="width:100%;padding:14px;font-size:16px;background:#2ecc71;border-radius:8px;border:none;color:#fff;cursor:pointer;font-weight:bold;margin-bottom:12px;">🏠 Создать комнату</button>
+
+        <div style="font-size:12px;opacity:0.7;margin:10px 0;text-align:center;">— или присоединиться по коду —</div>
+
         <div class="nick-input-row">
-            <input type="text" id="friend-nick" placeholder="Ник друга" maxlength="15">
-            <button id="invite-btn" style="background:#2ecc71;">Пригласить</button>
-        </div>
-        <div style="font-size:12px;opacity:0.7;margin:10px 0;">— или —</div>
-        <div class="nick-input-row">
-            <input type="text" id="room-code-input" placeholder="Код комнаты" maxlength="6">
+            <input type="text" id="room-code-input" placeholder="Код комнаты" maxlength="6" style="text-transform:uppercase;">
             <button id="join-btn" style="background:#3498db;">Войти</button>
         </div>
+
+        ${isTeam ? '' : `
+        <div style="font-size:12px;opacity:0.7;margin:15px 0 10px;text-align:center;">— или пригласить по нику —</div>
+        <div class="nick-input-row">
+            <input type="text" id="friend-nick" placeholder="Ник друга" maxlength="15">
+            <button id="invite-btn" style="background:#9b59b6;">Пригласить</button>
+        </div>
+        `}
+
         <div id="online-status" style="font-size:13px;min-height:20px;margin-top:10px;"></div>
         <div id="online-invites" style="margin-top:15px;text-align:left;font-size:13px;"></div>
     `;
-    document.getElementById('invite-btn').addEventListener('click', createInvite);
+    document.getElementById('create-room-btn').addEventListener('click', createRoomOnly);
     document.getElementById('join-btn').addEventListener('click', joinRoomByCode);
+    if(!isTeam){
+        const inviteBtn = document.getElementById('invite-btn');
+        if(inviteBtn) inviteBtn.addEventListener('click', createInvite);
+    }
     loadIncomingInvites();
+}
+
+function createRoomOnly(){
+    const statusEl = document.getElementById('online-status');
+    const roomCode = generateRoomCode();
+    const roomRef = database.ref('rooms/'+roomCode);
+    
+    const roomData = {
+        player1: currentNick, player1uid: currentUID, player2: '',
+        board: teamMode ? new Array(81).fill("") : new Array(9).fill(""),
+        turn: 'X',
+        status: 'waiting',
+        winner: '',
+        createdAt: Date.now(),
+        teamMode: teamMode,
+        scoreX: 0,
+        scoreO: 0
+    };
+    if(teamMode){
+        roomData.players = {
+            [currentUID]: { nick: currentNick, team: 'X', pos: 1 }
+        };
+        roomData.slot = 2;
+    }
+    
+    roomRef.set(roomData).then(()=>{
+        statusEl.style.color='#2ecc71';
+        if(teamMode){
+            statusEl.innerHTML = 
+                '✅ Комната создана! (2×2)<br>' +
+                'Код: <b style="font-size:20px;color:#f1c40f;letter-spacing:3px;">' + roomCode + '</b><br>' +
+                '<span style="font-size:12px;opacity:0.8;">Вы — команда <b style="color:#e74c3c;">X</b>.<br>Передайте код 3 друзьям.</span><br><br>' +
+                '<button id="copy-code-btn" style="background:#3498db;padding:8px 16px;font-size:13px;">📋 Скопировать код</button>';
+        } else {
+            statusEl.innerHTML = 
+                '✅ Комната создана!<br>' +
+                'Код комнаты: <b style="font-size:20px;color:#f1c40f;letter-spacing:3px;">' + roomCode + '</b><br>' +
+                '<span style="font-size:12px;opacity:0.8;">Поделитесь этим кодом с другом.<br>Он должен ввести его в поле «Код комнаты».</span><br><br>' +
+                '<button id="copy-code-btn" style="background:#3498db;padding:8px 16px;font-size:13px;">📋 Скопировать код</button>';
+        }
+        
+        const cpBtn = document.getElementById('copy-code-btn');
+        if(cpBtn){
+            cpBtn.addEventListener('click', ()=>{
+                navigator.clipboard.writeText(roomCode).then(()=>{
+                    cpBtn.textContent = '✅ Скопировано!';
+                    setTimeout(()=>{ if(cpBtn) cpBtn.textContent = '📋 Скопировать код'; }, 1500);
+                }).catch(()=>alert('Код: ' + roomCode));
+            });
+        }
+        
+        waitForOpponent(roomRef, teamMode ? 1 : 'player1');
+    }).catch(err=>{
+        statusEl.style.color='#e74c3c';
+        statusEl.textContent = 'Ошибка: ' + err.message;
+    });
+}
+
+function joinRoomByCode(){
+    const code = document.getElementById('room-code-input').value.trim().toUpperCase();
+    const statusEl = document.getElementById('online-status');
+    if(!code){statusEl.style.color='#e74c3c';statusEl.textContent='Введите код комнаты';return;}
+    database.ref('rooms/'+code).once('value').then(s=>{
+        if(!s.exists()){statusEl.style.color='#e74c3c';statusEl.textContent='Комната не найдена';return;}
+        const room = s.val();
+        
+        const isTeamRoom = room.teamMode === true;
+        
+        if(isTeamRoom){
+            const players = room.players || {};
+            if(Object.keys(players).length >= 4){
+                statusEl.style.color='#e74c3c';
+                statusEl.textContent='Комната заполнена (4/4)';
+                return;
+            }
+            if(players[currentUID]){
+                statusEl.style.color='#e74c3c';
+                statusEl.textContent='Вы уже в этой комнате';
+                return;
+            }
+            const slot = room.slot || 1;
+            const team = (slot <= 2) ? 'X' : 'O';
+            const pos = slot;
+            const updates = {};
+            updates['players/'+currentUID] = { nick: currentNick, team: team, pos: pos };
+            updates['slot'] = slot + 1;
+            if(slot === 1) updates.player1 = currentNick;
+            if(slot === 2) updates.player2 = currentNick;
+            if(slot === 3) updates.player3 = currentNick;
+            if(slot === 4){ updates.player4 = currentNick; updates.status = 'playing'; }
+            
+            database.ref('rooms/'+code).update(updates).then(()=>{
+                onlineModal.classList.remove('active');
+                startOnlineGame(code, slot, team);
+            });
+        } else {
+            if(room.status !== 'waiting'){statusEl.style.color='#e74c3c';statusEl.textContent='Комната уже занята';return;}
+            if(room.player1.toLowerCase() === currentNick.toLowerCase()){statusEl.style.color='#e74c3c';statusEl.textContent='Вы уже в этой комнате';return;}
+            database.ref('rooms/'+code).update({player2: currentNick, player2uid: currentUID, status: 'playing'}).then(()=>{
+                onlineModal.classList.remove('active');
+                startOnlineGame(code, 'player2');
+            });
+        }
+    });
 }
 
 function createInvite(){
@@ -1232,7 +1389,8 @@ function createInvite(){
         roomRef.set({
             player1: currentNick, player1uid: currentUID, player2: '',
             board: ["","","","","","","","",""], turn: 'X',
-            status: 'waiting', winner: '', createdAt: Date.now()
+            status: 'waiting', winner: '', createdAt: Date.now(),
+            teamMode: false, scoreX: 0, scoreO: 0
         }).then(()=>{
             database.ref('invites/'+friendNick).set({from: currentNick, room: roomCode, createdAt: Date.now()});
             statusEl.style.color='#2ecc71';
@@ -1242,40 +1400,53 @@ function createInvite(){
     });
 }
 
-function joinRoomByCode(){
-    const code = document.getElementById('room-code-input').value.trim().toUpperCase();
-    const statusEl = document.getElementById('online-status');
-    if(!code){statusEl.style.color='#e74c3c';statusEl.textContent='Введите код комнаты';return;}
-    database.ref('rooms/'+code).once('value').then(s=>{
-        if(!s.exists()){statusEl.style.color='#e74c3c';statusEl.textContent='Комната не найдена';return;}
-        const room = s.val();
-        if(room.status !== 'waiting'){statusEl.style.color='#e74c3c';statusEl.textContent='Комната уже занята';return;}
-        if(room.player1.toLowerCase() === currentNick.toLowerCase()){statusEl.style.color='#e74c3c';statusEl.textContent='Вы уже в этой комнате';return;}
-        database.ref('rooms/'+code).update({player2: currentNick, player2uid: currentUID, status: 'playing'}).then(()=>{
-            onlineModal.classList.remove('active');
-            startOnlineGame(code, 'player2');
-        });
-    });
-}
-
 function waitForOpponent(roomRef, role){
     roomRef.on('value', s=>{
         const room = s.val();
         if(!room) return;
-        if(room.status === 'playing' && room.player2){
-            onlineModal.classList.remove('active');
-            startOnlineGame(roomRef.key, role);
+        if(room.teamMode){
+            if(room.status === 'playing'){
+                onlineModal.classList.remove('active');
+                const players = room.players || {};
+                const me = players[currentUID];
+                if(me) startOnlineGame(roomRef.key, me.pos, me.team);
+            }
+        } else {
+            if(room.status === 'playing' && room.player2){
+                onlineModal.classList.remove('active');
+                startOnlineGame(roomRef.key, 'player1');
+            }
         }
     });
 }
 
-function startOnlineGame(roomCode, role){
-    onlineMode = true; onlineRole = role;
+function startOnlineGame(roomCode, role, team){
+    onlineMode = true;
+    onlineRole = role;
+    onlineTeam = team || null;
     onlineRoomRef = database.ref('rooms/'+roomCode);
     vsBot = false; difficulty = 'online';
     survivalActive = false; survivalBar.style.display = 'none';
     winStreakEl.style.display = 'none';
+    
+    const scoreDiv = document.getElementById('online-score');
+    if(scoreDiv) scoreDiv.style.display = 'flex';
+    
+    onlineRoomRef.once('value').then(s=>{
+        const room = s.val() || {};
+        if(room.teamMode){
+            boardEl.classList.add('board9x9');
+            createBoard(); // Пересоздаём поле
+            document.getElementById('score-label-my').innerHTML = 'Ваша команда: <span id="online-score-you" style="color:#2ecc71;">0</span>';
+            document.getElementById('score-label-opp').innerHTML = 'Соперники: <span id="online-score-opp" style="color:#e74c3c;">0</span>';
+        } else {
+            boardEl.classList.remove('board9x9');
+            createBoard();
+        }
+    });
+    
     statusEl.textContent = 'Онлайн-игра. Ваш ход...';
+
     onlineRoomRef.on('value', snapshot=>{
         const room = snapshot.val();
         if(!room) return;
@@ -1284,11 +1455,50 @@ function startOnlineGame(roomCode, role){
 }
 
 function updateOnlineBoard(room){
-    const myMark = (onlineRole === 'player1') ? 'X' : 'O';
-    const oppMark = (onlineRole === 'player1') ? 'O' : 'X';
-    board = room.board || ["","","","","","","","",""];
+    const isTeam = room.teamMode === true;
+    
+    let myMark;
+    if(isTeam){
+        myMark = onlineTeam;
+    } else {
+        myMark = (onlineRole === 'player1') ? 'X' : 'O';
+    }
+    
+    const scoreX = room.scoreX || 0;
+    const scoreO = room.scoreO || 0;
+    const myScore = (myMark === 'X') ? scoreX : scoreO;
+    const oppScore = (myMark === 'X') ? scoreO : scoreX;
+    const youEl = document.getElementById('online-score-you');
+    const oppEl = document.getElementById('online-score-opp');
+    if(youEl) youEl.textContent = myScore;
+    if(oppEl) oppEl.textContent = oppScore;
+
+    board = room.board || (isTeam ? new Array(81).fill("") : new Array(9).fill(""));
     currentPlayer = room.turn;
     gameOver = (room.status === 'finished');
+    
+    let isMyTurn;
+    if(isTeam){
+        const players = room.players || {};
+        const myPlayer = players[currentUID];
+        if(myPlayer && myPlayer.team === currentPlayer){
+            const lastMover = room.lastMover;
+            if(lastMover){
+                if(lastMover === currentUID){
+                    isMyTurn = false;
+                } else {
+                    isMyTurn = true;
+                }
+            } else {
+                isMyTurn = (myPlayer.pos === 1);
+            }
+        } else {
+            isMyTurn = false;
+        }
+    } else {
+        isMyTurn = (currentPlayer === myMark);
+    }
+
     const cs = document.querySelectorAll('.cell');
     cs.forEach((c, i)=>{
         c.textContent = board[i];
@@ -1297,17 +1507,89 @@ function updateOnlineBoard(room){
         c.style.backgroundClip = ''; c.style.webkitTextFillColor = ''; c.style.color = '';
         if(board[i]==='X') c.classList.add('x');
         if(board[i]==='O') c.classList.add('o');
-        c.disabled = (board[i] !== "") || gameOver || (currentPlayer !== myMark);
+        c.disabled = (board[i] !== "") || gameOver || !isMyTurn;
     });
     applyXColor(currentXColor);
+    
     if(room.status === 'finished'){
-        statusEl.textContent = room.winner === myMark ? '🏆 Вы выиграли!' : (room.winner === oppMark ? '😢 Вы проиграли' : '🤝 Ничья');
-    } else if(currentPlayer === myMark){
+        const winner = room.winner;
+        let statusText = '';
+        if(winner === 'draw') statusText = '🤝 Ничья';
+        else if(isTeam){
+            const myTeamWon = (winner === myMark);
+            statusText = myTeamWon ? '🏆 Ваша команда выиграла!' : '😢 Ваша команда проиграла';
+        } else {
+            statusText = (winner === myMark) ? '🏆 Вы выиграли!' : '😢 Вы проиграли';
+        }
+        statusEl.textContent = statusText;
+        
+        const endModal = document.getElementById('online-end-modal');
+        const endTitle = document.getElementById('online-end-title');
+        const endBody = document.getElementById('online-end-body');
+        if(endModal && !endModal.classList.contains('active')){
+            endTitle.textContent = statusText;
+            let scoreLabel;
+            if(isTeam){
+                scoreLabel = 'Счёт по командам: <b style="color:#e74c3c;">X — ' + scoreX + '</b> | <b style="color:#3498db;">O — ' + scoreO + '</b>';
+            } else {
+                scoreLabel = 'Счёт: <b style="color:#2ecc71;">' + myScore + '</b> — <b style="color:#e74c3c;">' + oppScore + '</b>';
+            }
+            const winnerTeam = scoreX >= 5 ? 'X' : (scoreO >= 5 ? 'O' : null);
+            let finalText = '';
+            if(winnerTeam){
+                finalText = '<div style="font-size:16px;color:#f1c40f;margin-bottom:10px;">🏆 Команда ' + winnerTeam + ' победила в матче (5 побед)!</div>';
+            }
+            endBody.innerHTML = 
+                '<div style="font-size:15px;margin-bottom:10px;">' + scoreLabel + '</div>' +
+                finalText +
+                '<div style="font-size:13px;opacity:0.85;">Сыграем ещё?</div>';
+            endModal.classList.add('active');
+        }
+    } else if(isMyTurn){
         statusEl.textContent = 'Ваш ход ('+myMark+')';
+        const endModal = document.getElementById('online-end-modal');
+        if(endModal) endModal.classList.remove('active');
     } else {
-        statusEl.textContent = 'Ход противника ('+oppMark+')...';
+        const oppMark = (myMark === 'X') ? 'O' : 'X';
+        statusEl.textContent = 'Ход соперника ('+oppMark+')...';
+        const endModal = document.getElementById('online-end-modal');
+        if(endModal) endModal.classList.remove('active');
     }
 }
+
+// Реванш
+document.getElementById('online-rematch').addEventListener('click', ()=>{
+    if(!onlineRoomRef) return;
+    onlineRoomRef.once('value').then(s=>{
+        const room = s.val();
+        if(!room) return;
+        const emptyBoard = room.teamMode ? new Array(81).fill("") : new Array(9).fill("");
+        onlineRoomRef.update({
+            board: emptyBoard,
+            turn: 'X',
+            status: 'playing',
+            winner: '',
+            lastMover: null
+        });
+        document.getElementById('online-end-modal').classList.remove('active');
+    });
+});
+
+// Выход
+document.getElementById('online-exit').addEventListener('click', ()=>{
+    if(onlineRoomRef){
+        onlineRoomRef.remove().catch(()=>{});
+    }
+    onlineMode = false;
+    onlineRoomRef = null;
+    onlineRole = null;
+    onlineTeam = null;
+    boardEl.classList.remove('board9x9');
+    document.getElementById('online-end-modal').classList.remove('active');
+    document.getElementById('online-score').style.display = 'none';
+    resetGame();
+    statusEl.textContent = 'Ваш ход (X)';
+});
 
 function loadIncomingInvites(){
     database.ref('invites/'+currentNick.toLowerCase()).on('value', s=>{
@@ -1346,7 +1628,19 @@ function generateRoomCode(){
 }
 
 /* ===================== ИГРА ===================== */
-function createBoard(){boardEl.innerHTML="";for(let i=0;i<9;i++){const c=document.createElement('button');c.classList.add('cell');c.dataset.index=i;c.addEventListener('click',()=>handleClick(i));boardEl.appendChild(c);}}
+function createBoard(){
+    boardEl.innerHTML="";
+    const isTeamBoard = boardEl.classList.contains('board9x9');
+    const total = isTeamBoard ? 81 : 9;
+    for(let i=0;i<total;i++){
+        const c=document.createElement('button');
+        c.classList.add('cell');
+        c.dataset.index=i;
+        c.addEventListener('click',()=>handleClick(i));
+        boardEl.appendChild(c);
+    }
+}
+
 function updateUI(){
     const cs=document.querySelectorAll('.cell');
     cs.forEach((c,i)=>{
@@ -1360,30 +1654,102 @@ function updateUI(){
     });
     applyXColor(currentXColor);
 }
+
 function checkWin(p){return winCombos.some(c=>c.every(i=>board[i]===p));}
 function isFull(){return board.every(c=>c!=="");}
 function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
 function highlightWin(p){const c=getWinCombo(p);if(c)c.forEach(i=>{document.querySelectorAll('.cell')[i].classList.add(p==="O"?"lose":"win");});}
 
+function checkWin5(b, mark){
+    const N = 9;
+    const need = 5;
+    for(let r=0; r<N; r++){
+        for(let c=0; c<=N-need; c++){
+            let ok = true;
+            for(let k=0; k<need; k++){ if(b[r*N+c+k] !== mark){ok=false;break;} }
+            if(ok) return true;
+        }
+    }
+    for(let c=0; c<N; c++){
+        for(let r=0; r<=N-need; r++){
+            let ok = true;
+            for(let k=0; k<need; k++){ if(b[(r+k)*N+c] !== mark){ok=false;break;} }
+            if(ok) return true;
+        }
+    }
+    for(let r=0; r<=N-need; r++){
+        for(let c=0; c<=N-need; c++){
+            let ok = true;
+            for(let k=0; k<need; k++){ if(b[(r+k)*N+c+k] !== mark){ok=false;break;} }
+            if(ok) return true;
+        }
+    }
+    for(let r=0; r<=N-need; r++){
+        for(let c=need-1; c<N; c++){
+            let ok = true;
+            for(let k=0; k<need; k++){ if(b[(r+k)*N+c-k] !== mark){ok=false;break;} }
+            if(ok) return true;
+        }
+    }
+    return false;
+}
+
 function handleClick(i){
     if(onlineMode){
         if(gameOver) return;
-        const myMark = (onlineRole === 'player1') ? 'X' : 'O';
-        if(currentPlayer !== myMark) return;
         if(board[i] !== "") return;
-        const newBoard = [...board];
-        newBoard[i] = myMark;
-        const nextTurn = myMark === 'X' ? 'O' : 'X';
-        let winner = '';
-        for(const c of winCombos){
-            if(c.every(idx=>newBoard[idx]===myMark)){winner = myMark; break;}
-        }
-        const isDraw = newBoard.every(c=>c!=="");
-        const updates = { board: newBoard, turn: nextTurn };
-        if(winner){updates.status='finished';updates.winner=winner;}
-        else if(isDraw){updates.status='finished';updates.winner='draw';}
-        onlineRoomRef.update(updates);
-        playClick();
+        
+        onlineRoomRef.once('value').then(s=>{
+            const room = s.val() || {};
+            const isTeam = room.teamMode === true;
+            
+            let myMark, isMyTurn;
+            if(isTeam){
+                myMark = onlineTeam;
+                const players = room.players || {};
+                const myPlayer = players[currentUID];
+                if(!myPlayer || myPlayer.team !== currentPlayer) return;
+                
+                const lastMover = room.lastMover;
+                if(lastMover){
+                    if(lastMover === currentUID) return;
+                    isMyTurn = true;
+                } else {
+                    isMyTurn = (myPlayer.pos === 1);
+                }
+            } else {
+                myMark = (onlineRole === 'player1') ? 'X' : 'O';
+                isMyTurn = (currentPlayer === myMark);
+            }
+            if(!isMyTurn) return;
+            
+            const newBoard = [...room.board];
+            newBoard[i] = myMark;
+            const nextTurn = myMark === 'X' ? 'O' : 'X';
+            
+            let winner = '';
+            if(isTeam){
+                winner = checkWin5(newBoard, myMark) ? myMark : '';
+            } else {
+                const wc=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+                for(const c of wc){ if(c.every(idx=>newBoard[idx]===myMark)){winner=myMark;break;} }
+            }
+            
+            const isDraw = newBoard.every(c=>c!=="");
+            const updates = { board: newBoard, turn: nextTurn, lastMover: currentUID };
+            
+            if(winner){
+                updates.status = 'finished';
+                updates.winner = winner;
+                if(winner === 'X') updates.scoreX = (room.scoreX || 0) + 1;
+                else updates.scoreO = (room.scoreO || 0) + 1;
+            } else if(isDraw){
+                updates.status = 'finished';
+                updates.winner = 'draw';
+            }
+            onlineRoomRef.update(updates);
+            playClick();
+        });
         return;
     }
     if(board[i]!==""||gameOver)return;
@@ -1491,8 +1857,11 @@ function minimax(mx){
     if(mx){let b=-Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="O";b=Math.max(b,minimax(false));board[i]="";}}return b;}
     else{let b=Infinity;for(let i=0;i<9;i++){if(board[i]===""){board[i]="X";b=Math.min(b,minimax(true));board[i]="";}}return b;}
 }
+
 function resetGame(){
-    board=["","","","","","","","",""];currentPlayer="X";gameOver=false;
+    const isTeamBoard = boardEl.classList.contains('board9x9');
+    board = isTeamBoard ? new Array(81).fill("") : ["","","","","","","","",""];
+    currentPlayer="X";gameOver=false;
     statusEl.textContent=vsBot?"Ваш ход (X)":"Ход игрока X";
     modal.classList.remove('active');
     document.querySelectorAll('.cell').forEach(c=>{
@@ -1500,6 +1869,7 @@ function resetGame(){
         c.style.background = ''; c.style.webkitBackgroundClip = '';
         c.style.backgroundClip = ''; c.style.webkitTextFillColor = ''; c.style.color = '';
     });
+    createBoard();
     updateUI();updateSurvivalUI();
 }
 
@@ -1539,12 +1909,12 @@ database.ref('system/maintenance').on('value', s=>{
             maintenanceClose.style.display = 'none';
             maintenanceModal.classList.remove('active');
             maintenanceWarning.style.display = 'block';
-            // Форсируем режим «Против бота»
             vsBot = true; onlineMode = false;
             if(typeof modeBotBtn !== 'undefined' && modeBotBtn){
                 modeBotBtn.classList.add('active');
                 modeFriendBtn.classList.remove('active');
                 modeOnlineBtn.classList.remove('active');
+                if(modeTeamBtn) modeTeamBtn.classList.remove('active');
             }
         }
     } else {
@@ -1899,7 +2269,7 @@ auth.onAuthStateChanged(user=>{
         document.getElementById('set-maintenance').style.display = 'none';
         document.getElementById('set-request-maintenance').style.display = 'none';
         winStreakEl.style.display='none';survivalBar.style.display='none';
-        onlineMode=false;onlineRole=null;onlineRoomRef=null;
+        onlineMode=false;onlineRole=null;onlineRoomRef=null;onlineTeam=null;
         maintenanceModal.classList.remove('active');
         nickModal.classList.add('active');
     }
@@ -1919,6 +2289,7 @@ difficultyModal.addEventListener('click',e=>{
 modeBotBtn.addEventListener('click',()=>{
     onlineMode=false;vsBot=true;
     modeBotBtn.classList.add('active');modeFriendBtn.classList.remove('active');modeOnlineBtn.classList.remove('active');
+    if(modeTeamBtn) modeTeamBtn.classList.remove('active');
     modeModal.classList.remove('active');difficulty='medium';resetGame();
 });
 modeFriendBtn.addEventListener('click',()=>{
@@ -1928,6 +2299,7 @@ modeFriendBtn.addEventListener('click',()=>{
     }
     onlineMode=false;vsBot=false;
     modeFriendBtn.classList.add('active');modeBotBtn.classList.remove('active');modeOnlineBtn.classList.remove('active');
+    if(modeTeamBtn) modeTeamBtn.classList.remove('active');
     modeModal.classList.remove('active');survivalActive=false;survivalBar.style.display='none';resetGame();
 });
 
