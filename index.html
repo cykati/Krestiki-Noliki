@@ -139,7 +139,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-leaders">🏆 Лидеры</button><button id="menu-settings">⚙️ Настройки</button></div><button id="menu-close">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list"><button id="set-profile">👤 Профиль</button><button id="set-inventory">🎨 Инвентарь цветов</button><button id="set-titles">🎖️ Титулы</button><button id="set-history">📜 История матчей</button><button id="set-difficulty">🎚️ Сложность</button><button id="set-mode">🎮 Режим игры</button><button id="set-nick">📝 Сменить ник</button><button id="set-logout">🚪 Выйти</button><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button><button id="set-all-players" style="border-color: #f1c40f; color: #f1c40f; display: none;">👥 Все игроки (Админ)</button><button id="set-admin-stats" style="border-color: #f1c40f; color: #f1c40f; display: none;">🔍 Статистика игрока (Админ)</button><button id="set-admin-titles" style="border-color: #f1c40f; color: #f1c40f; display: none;">🎖️ Выдать титулы (Админ)</button><button id="set-maintenance" style="border-color: #e74c3c; color: #e74c3c; display: none;">🚧 Тех. перерыв (Админ)</button><button id="set-request-maintenance" style="border-color: #e67e22; color: #e67e22; display: none;">🚧 Запросить перерыв (Тестер)</button></div><button id="settings-close">Закрыть</button></div></div>
+<div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list"><button id="set-profile">👤 Профиль</button><button id="set-inventory">🎨 Инвентарь цветов</button><button id="set-titles">🎖️ Титулы</button><button id="set-history">📜 История матчей</button><button id="set-difficulty">🎚️ Сложность</button><button id="set-mode">🎮 Режим игры</button><button id="set-nick">📝 Сменить ник</button><button id="set-logout">🚪 Выйти</button><button id="theme-toggle">🌙 Тема</button><button id="sound-toggle">🔊 Звук</button><button id="set-all-players" style="border-color: #f1c40f; color: #f1c40f; display: none;">👥 Все игроки (Админ)</button><button id="set-admin-stats" style="border-color: #f1c40f; color: #f1c40f; display: none;">🔍 Статистика игрока (Админ)</button><button id="set-admin-titles" style="border-color: #f1c40f; color: #f1c40f; display: none;">🎖️ Выдать титулы (Админ)</button><button id="set-title-history" style="border-color: #f1c40f; color: #f1c40f; display: none;">📜 История выдач титулов (Админ)</button><button id="set-maintenance" style="border-color: #e74c3c; color: #e74c3c; display: none;">🚧 Тех. перерыв (Админ)</button><button id="set-request-maintenance" style="border-color: #e67e22; color: #e67e22; display: none;">🚧 Запросить перерыв (Тестер)</button></div><button id="settings-close">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="inventory-modal"><div class="modal">
 <h2>🎨 Инвентарь</h2>
@@ -176,7 +176,12 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="admin-titles-close">Закрыть</button>
 </div></div>
 
-<!-- ОКНО ПОДТВЕРЖДЕНИЯ ВЫДАЧИ ТИТУЛА -->
+<div class="modal-overlay" id="title-history-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
+<h2>📜 История выдач титулов</h2>
+<div id="title-history-list" style="text-align:left;margin-bottom:15px;font-size:13px;max-height:60vh;overflow-y:auto;"></div>
+<button id="title-history-close" style="background:#555;">Закрыть</button>
+</div></div>
+
 <div class="modal-overlay" id="confirm-title-modal"><div class="modal" style="max-width:95vw;min-width:280px;">
 <h2>🎖️ Подтверждение</h2>
 <div id="confirm-title-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div>
@@ -184,7 +189,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="confirm-title-no" style="background:#b32e2e;margin-left:8px;">Отмена</button>
 </div></div>
 
-<!-- ОКНО: Админ управляет перерывом -->
 <div class="modal-overlay" id="maintenance-control-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
 <h2>🚧 Управление перерывом</h2>
 <div id="maintenance-control-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div>
@@ -195,7 +199,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 </div>
 </div></div>
 
-<!-- ОКНО: Запрос тестера -->
 <div class="modal-overlay" id="maintenance-request-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
 <h2>🚧 Запрос тех. перерыва</h2>
 <div style="text-align:left;font-size:14px;margin-bottom:15px;">
@@ -207,7 +210,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="maint-request-close" style="background:#555;margin-left:8px;">Отмена</button>
 </div></div>
 
-<!-- ОКНО: Админ одобряет запрос -->
 <div class="modal-overlay" id="maintenance-approve-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
 <h2>📨 Запрос на перерыв</h2>
 <div id="maint-approve-body" style="text-align:left;font-size:14px;line-height:1.7;margin-bottom:20px;"></div>
@@ -217,7 +219,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 </div>
 </div></div>
 
-<!-- ЭКРАН ТЕХНИЧЕСКОГО ПЕРЕРЫВА -->
 <div class="modal-overlay" id="maintenance-modal" style="background:rgba(0,0,0,.95);"><div class="modal" style="max-width:95vw;min-width:300px;background:linear-gradient(135deg,#8e44ad,#c0392b);">
 <h2 style="font-size:28px;color:#fff;margin-bottom:15px;">🚧 Технический перерыв</h2>
 <div id="maintenance-body" style="text-align:center;font-size:15px;line-height:1.7;color:#fff;margin-bottom:20px;"></div>
@@ -424,6 +425,9 @@ const titleInfoModal=document.getElementById('title-info-modal');
 const titleInfoName=document.getElementById('title-info-name');
 const titleInfoBody=document.getElementById('title-info-body');
 const titleInfoClose=document.getElementById('title-info-close');
+const titleHistoryModal=document.getElementById('title-history-modal');
+const titleHistoryList=document.getElementById('title-history-list');
+const titleHistoryClose=document.getElementById('title-history-close');
 
 let board=["","","","","","","","",""];
 let currentPlayer="X";
@@ -444,6 +448,7 @@ let survivalLevel = 1;
 let survivalActive = false;
 let currentTitle = null;
 let userTitles = [];
+let knownTitles = [];
 let pendingAwardTitle = null;
 let onlineMode = false;
 let onlineRole = null;
@@ -537,20 +542,16 @@ function getUnlockProgress(color){
     return {have: userStats[u.level].wins||0, need: u.wins, done: (userStats[u.level].wins||0) >= u.wins};
 }
 
-// ИСПРАВЛЕНО: цвет нолика больше не меняется
 function applyXColor(color){
     currentXColor = color;
     const isRainbow = color.type === 'admin_rainbow';
     document.querySelectorAll('.cell').forEach(c=>{
-        // ВСЕГДА сбрасываем стили у всех клеток
         c.style.background = '';
         c.style.webkitBackgroundClip = '';
         c.style.backgroundClip = '';
         c.style.webkitTextFillColor = '';
         c.style.color = '';
         c.classList.remove('rainbow-cell');
-        
-        // Применяем только к X
         if(c.textContent === 'X'){
             if(isRainbow){c.classList.add('rainbow-cell');}
             else if(color.type === 'gradient'){
@@ -559,7 +560,6 @@ function applyXColor(color){
                 c.style.color = 'transparent';
             } else {c.style.color = color.value;}
         }
-        // У O — принудительно синий
         if(c.textContent === 'O'){
             c.style.color = '#3498db';
         }
@@ -1000,6 +1000,11 @@ function renderAdminTitlesList(){
                 const t = TITLES[titleKey];
                 if(isOn){
                     database.ref('users/'+uid+'/titles/'+titleKey).remove();
+                    database.ref('titleHistory').push({
+                        nick: nick, title: titleKey, issuedBy: currentNick,
+                        issuedAt: Date.now(), revoked: true,
+                        revokedBy: currentNick, revokedAt: Date.now()
+                    });
                     chip.classList.remove('on');chip.classList.add('off');
                     return;
                 }
@@ -1017,8 +1022,13 @@ function renderAdminTitlesList(){
         confirmTitleYes.addEventListener('click', ()=>{
             if(!pendingChip) return;
             const uid = pendingChip.dataset.uid;
+            const nick = pendingChip.dataset.nick;
             const titleKey = pendingChip.dataset.title;
             database.ref('users/'+uid+'/titles/'+titleKey).set(true);
+            database.ref('titleHistory').push({
+                nick: nick, title: titleKey, issuedBy: currentNick,
+                issuedAt: Date.now(), revoked: false
+            });
             pendingChip.classList.remove('off');
             pendingChip.classList.add('on');
             pendingChip = null;
@@ -1035,6 +1045,7 @@ function loadUserTitles(uid){
     return database.ref('users/'+uid+'/titles').once('value').then(s=>{
         const obj = s.val() || {};
         userTitles = Object.keys(obj).filter(k=>obj[k] === true);
+        knownTitles = [...userTitles];
         return userTitles;
     });
 }
@@ -1043,14 +1054,52 @@ function listenForNewTitles(uid){
     ref.on('value', s=>{
         const obj = s.val() || {};
         const nowTitles = Object.keys(obj).filter(k=>obj[k] === true);
-        nowTitles.forEach(k=>{
-            if(!userTitles.includes(k) && !pendingAwardTitle){
-                if(TITLES[k]){showAwardNotification(k);}
+        const added = nowTitles.filter(k => !knownTitles.includes(k));
+        added.forEach(k=>{
+            if(TITLES[k] && !pendingAwardTitle){
+                setTimeout(()=>{
+                    if(!pendingAwardTitle) showAwardNotification(k);
+                }, 300);
             }
         });
+        knownTitles = nowTitles;
         userTitles = nowTitles;
     });
 }
+
+/* ===================== ИСТОРИЯ ТИТУЛОВ ===================== */
+document.getElementById('set-title-history').addEventListener('click', ()=>{
+    settingsModal.classList.remove('active');
+    titleHistoryList.innerHTML = 'Загрузка...';
+    database.ref('titleHistory').once('value').then(s=>{
+        const data = s.val() || {};
+        const arr = Object.entries(data).map(([key, val])=>({key, ...val}));
+        if(arr.length === 0){
+            titleHistoryList.innerHTML = '<div style="text-align:center;opacity:0.7;">Пока нет выдач</div>';
+            titleHistoryModal.classList.add('active');
+            return;
+        }
+        arr.sort((a,b)=>(b.issuedAt||0)-(a.issuedAt||0));
+        let html = '';
+        arr.forEach(item=>{
+            const t = TITLES[item.title] || {name: item.title, cssClass: ''};
+            const date = new Date(item.issuedAt).toLocaleString('ru-RU');
+            const isRevoked = item.revoked;
+            html += '<div style="padding:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border-radius:8px;border-left:4px solid ' + (isRevoked ? '#e74c3c' : '#2ecc71') + ';">';
+            html += '<div style="font-size:14px;margin-bottom:5px;"><b>' + item.nick + '</b> — <span class="title-badge ' + t.cssClass + '">' + t.name + '</span></div>';
+            html += '<div style="font-size:12px;opacity:0.85;">';
+            html += (isRevoked ? '❌ Снят: ' : '✅ Выдан: ') + '<b>' + (item.issuedBy || item.revokedBy || 'Admin') + '</b>';
+            html += '<br>📅 ' + date;
+            if(isRevoked && item.revokedAt){
+                html += '<br>🔻 Снят: ' + new Date(item.revokedAt).toLocaleString('ru-RU');
+            }
+            html += '</div></div>';
+        });
+        titleHistoryList.innerHTML = html;
+        titleHistoryModal.classList.add('active');
+    });
+});
+titleHistoryClose.addEventListener('click', ()=>titleHistoryModal.classList.remove('active'));
 
 /* ===================== ОНЛАЙН-ИГРА ===================== */
 modeOnlineBtn.addEventListener('click', ()=>{
@@ -1090,20 +1139,11 @@ function createInvite(){
         const roomCode = generateRoomCode();
         const roomRef = database.ref('rooms/'+roomCode);
         roomRef.set({
-            player1: currentNick,
-            player1uid: currentUID,
-            player2: '',
-            board: ["","","","","","","","",""],
-            turn: 'X',
-            status: 'waiting',
-            winner: '',
-            createdAt: Date.now()
+            player1: currentNick, player1uid: currentUID, player2: '',
+            board: ["","","","","","","","",""], turn: 'X',
+            status: 'waiting', winner: '', createdAt: Date.now()
         }).then(()=>{
-            database.ref('invites/'+friendNick).set({
-                from: currentNick,
-                room: roomCode,
-                createdAt: Date.now()
-            });
+            database.ref('invites/'+friendNick).set({from: currentNick, room: roomCode, createdAt: Date.now()});
             statusEl.style.color='#2ecc71';
             statusEl.innerHTML = '✅ Приглашение отправлено!<br>Код комнаты: <b>'+roomCode+'</b><br><span style="font-size:12px;opacity:0.8;">Ждём, пока друг подключится...</span>';
             waitForOpponent(roomRef, 'player1');
@@ -1120,11 +1160,7 @@ function joinRoomByCode(){
         const room = s.val();
         if(room.status !== 'waiting'){statusEl.style.color='#e74c3c';statusEl.textContent='Комната уже занята';return;}
         if(room.player1.toLowerCase() === currentNick.toLowerCase()){statusEl.style.color='#e74c3c';statusEl.textContent='Вы уже в этой комнате';return;}
-        database.ref('rooms/'+code).update({
-            player2: currentNick,
-            player2uid: currentUID,
-            status: 'playing'
-        }).then(()=>{
+        database.ref('rooms/'+code).update({player2: currentNick, player2uid: currentUID, status: 'playing'}).then(()=>{
             onlineModal.classList.remove('active');
             startOnlineGame(code, 'player2');
         });
@@ -1143,13 +1179,10 @@ function waitForOpponent(roomRef, role){
 }
 
 function startOnlineGame(roomCode, role){
-    onlineMode = true;
-    onlineRole = role;
+    onlineMode = true; onlineRole = role;
     onlineRoomRef = database.ref('rooms/'+roomCode);
-    vsBot = false;
-    difficulty = 'online';
-    survivalActive = false;
-    survivalBar.style.display = 'none';
+    vsBot = false; difficulty = 'online';
+    survivalActive = false; survivalBar.style.display = 'none';
     winStreakEl.style.display = 'none';
     statusEl.textContent = 'Онлайн-игра. Ваш ход...';
     onlineRoomRef.on('value', snapshot=>{
@@ -1169,11 +1202,8 @@ function updateOnlineBoard(room){
     cs.forEach((c, i)=>{
         c.textContent = board[i];
         c.classList.remove('x','o','rainbow-cell','win','lose');
-        c.style.background = '';
-        c.style.webkitBackgroundClip = '';
-        c.style.backgroundClip = '';
-        c.style.webkitTextFillColor = '';
-        c.style.color = '';
+        c.style.background = ''; c.style.webkitBackgroundClip = '';
+        c.style.backgroundClip = ''; c.style.webkitTextFillColor = ''; c.style.color = '';
         if(board[i]==='X') c.classList.add('x');
         if(board[i]==='O') c.classList.add('o');
         c.disabled = (board[i] !== "") || gameOver || (currentPlayer !== myMark);
@@ -1204,9 +1234,7 @@ function loadIncomingInvites(){
         document.getElementById('accept-invite').addEventListener('click', ()=>{
             onlineModal.classList.remove('active');
             database.ref('rooms/'+inv.room).update({
-                player2: currentNick,
-                player2uid: currentUID,
-                status: 'playing'
+                player2: currentNick, player2uid: currentUID, status: 'playing'
             }).then(()=>{
                 database.ref('invites/'+currentNick.toLowerCase()).remove();
                 startOnlineGame(inv.room, 'player2');
@@ -1233,11 +1261,8 @@ function updateUI(){
     cs.forEach((c,i)=>{
         c.textContent=board[i];
         c.classList.remove('x','o','rainbow-cell');
-        c.style.background = '';
-        c.style.webkitBackgroundClip = '';
-        c.style.backgroundClip = '';
-        c.style.webkitTextFillColor = '';
-        c.style.color = '';
+        c.style.background = ''; c.style.webkitBackgroundClip = '';
+        c.style.backgroundClip = ''; c.style.webkitTextFillColor = ''; c.style.color = '';
         if(board[i]==='X') c.classList.add('x');
         if(board[i]==='O') c.classList.add('o');
         c.disabled = (board[i]!=="") || gameOver;
@@ -1343,8 +1368,7 @@ function botMove(){
                 setTimeout(()=>{
                     modal.classList.remove('active');
                     alert('🤝 Ничья! Ты остаёшься на уровне ' + survivalLevel + '. Сложность бота: ' + (10 + (survivalLevel - 1) * 3) + '%');
-                    resetGame();
-                    updateSurvivalUI();
+                    resetGame();updateSurvivalUI();
                 },1500);
             }
             return;
@@ -1383,11 +1407,8 @@ function resetGame(){
     modal.classList.remove('active');
     document.querySelectorAll('.cell').forEach(c=>{
         c.classList.remove('win','lose','rainbow-cell');
-        c.style.background = '';
-        c.style.webkitBackgroundClip = '';
-        c.style.backgroundClip = '';
-        c.style.webkitTextFillColor = '';
-        c.style.color = '';
+        c.style.background = ''; c.style.webkitBackgroundClip = '';
+        c.style.backgroundClip = ''; c.style.webkitTextFillColor = ''; c.style.color = '';
     });
     updateUI();updateSurvivalUI();
 }
@@ -1500,11 +1521,8 @@ document.getElementById('maint-approve-yes').addEventListener('click', ()=>{
     database.ref('system/maintenanceRequest').once('value').then(s=>{
         const req = s.val() || {};
         database.ref('system/maintenance').set({
-            active: true,
-            message: req.reason || 'Технический перерыв',
-            startedAt: Date.now(),
-            startedBy: req.from || 'tester',
-            approvedBy: currentNick
+            active: true, message: req.reason || 'Технический перерыв',
+            startedAt: Date.now(), startedBy: req.from || 'tester', approvedBy: currentNick
         });
         database.ref('system/maintenanceRequest').remove();
         maintApproveModal.classList.remove('active');
@@ -1677,6 +1695,7 @@ auth.onAuthStateChanged(user=>{
                 document.getElementById('set-all-players').style.display = 'block';
                 document.getElementById('set-admin-stats').style.display = 'block';
                 document.getElementById('set-admin-titles').style.display = 'block';
+                document.getElementById('set-title-history').style.display = 'block';
                 document.getElementById('set-maintenance').style.display = 'block';
                 document.getElementById('set-request-maintenance').style.display = 'none';
             } else {
@@ -1684,6 +1703,7 @@ auth.onAuthStateChanged(user=>{
                 document.getElementById('set-all-players').style.display = 'none';
                 document.getElementById('set-admin-stats').style.display = 'none';
                 document.getElementById('set-admin-titles').style.display = 'none';
+                document.getElementById('set-title-history').style.display = 'none';
                 document.getElementById('set-maintenance').style.display = 'none';
                 if(d.xColor){currentXColor = d.xColor;}
             }
@@ -1692,7 +1712,6 @@ auth.onAuthStateChanged(user=>{
             loadUserTitles(user.uid).then(()=>{
                 listenForNewTitles(user.uid);
                 loadIncomingInvites();
-                // Кнопка запроса для тестера
                 if(userTitles.includes('tester') && !isAdmin){
                     document.getElementById('set-request-maintenance').style.display = 'block';
                 } else {
@@ -1704,7 +1723,7 @@ auth.onAuthStateChanged(user=>{
     } else {
         nickClose.disabled=true;nickClose.style.opacity='0.5';nickClose.style.cursor='not-allowed';
         currentNick='';currentUID='';isAdmin=false;userConsent=false;currentStreak=0;
-        currentTitle=null;userTitles=[];
+        currentTitle=null;userTitles=[];knownTitles=[];
         currentXColor={id:'red', type:'solid', value:'#e74c3c', name:'Красный'};
         userStats={easy:{wins:0}, medium:{wins:0}, hard:{wins:0}, survival:{best:0}};
         playerNameEl.textContent='Введите ник';playerNameScoreEl.textContent='Вы';
@@ -1712,6 +1731,7 @@ auth.onAuthStateChanged(user=>{
         document.getElementById('set-all-players').style.display = 'none';
         document.getElementById('set-admin-stats').style.display = 'none';
         document.getElementById('set-admin-titles').style.display = 'none';
+        document.getElementById('set-title-history').style.display = 'none';
         document.getElementById('set-maintenance').style.display = 'none';
         document.getElementById('set-request-maintenance').style.display = 'none';
         winStreakEl.style.display='none';survivalBar.style.display='none';
@@ -1747,4 +1767,4 @@ resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 </script>
 </body>
-    </html>
+                                                                                                                       </html>
