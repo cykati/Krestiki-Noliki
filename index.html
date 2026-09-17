@@ -429,6 +429,29 @@ const COLOR_PRESETS = [
     {id:'grad_ocean', name:'Океан', type:'gradient', value:'linear-gradient(135deg,#1abc9c,#3498db,#9b59b6)', unlock:{level:'hard', wins:100, text:'100 побед на Сложной'}}
 ];
 
+// ========================================
+// ЗАЩИЩЁННЫЕ НИКИ (нельзя зарегистрировать новые)
+// ========================================
+const RESERVED_NICKS = [
+    'admin', 'administrator', 'админ', 'администратор',
+    'moderator', 'moder', 'модератор',
+    'owner', 'creator', 'создатель', 'владелец',
+    'support', 'help', 'helper', 'саппорт', 'поддержка',
+    'system', 'root', 'superuser', 'sysadmin',
+    'official', 'официальный', 'staff', 'персонал',
+    'krestiki', 'noliki', 'крестики', 'нолики',
+    'safety', 'safetykrestiki'
+];
+
+function isReservedNick(nick){
+    const lower = nick.toLowerCase().replace(/[^a-zа-я0-9]/g, '');
+    if(RESERVED_NICKS.includes(lower)) return true;
+    for(const r of RESERVED_NICKS){
+        if(lower.startsWith(r) && lower !== r) return true;
+    }
+    return false;
+}
+
 let audioCtx=null;
 function getAudioCtx(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}if(audioCtx.state==='suspended'){audioCtx.resume();}return audioCtx;}
 function playClick(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=600;g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.1);o.stop(ctx.currentTime+.1);}
@@ -1111,7 +1134,6 @@ function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
 function highlightWin(p){const c=getWinCombo(p);if(c)c.forEach(i=>{document.querySelectorAll('.cell')[i].classList.add(p==="O"?"lose":"win");});}
 
 function handleClick(i){
-    // Онлайн-режим
     if(onlineMode){
         if(gameOver) return;
         const myMark = (onlineRole === 'player1') ? 'X' : 'O';
@@ -1132,7 +1154,6 @@ function handleClick(i){
         playClick();
         return;
     }
-    // Обычный режим
     if(board[i]!==""||gameOver)return;
     playClick();board[i]=currentPlayer;updateUI();
     if(checkWin(currentPlayer)){
@@ -1319,6 +1340,11 @@ registerBtn.addEventListener('click',()=>{
     if(!n||!e||!p){nickStatusEl.textContent='Заполните все поля';nickStatusEl.style.color='#e74c3c';return;}
     if(p.length<6){nickStatusEl.textContent='Пароль минимум 6 символов';nickStatusEl.style.color='#e74c3c';return;}
     if(!userConsent){document.getElementById('consent-status').textContent='Дайте согласие';return;}
+    if(isReservedNick(n)){
+        nickStatusEl.textContent='Этот ник зарезервирован. Выберите другой.';
+        nickStatusEl.style.color='#e74c3c';
+        return;
+    }
     database.ref('nicknames/'+n.toLowerCase()).once('value',s=>{
         if(s.exists()){nickStatusEl.textContent='Этот ник уже занят';nickStatusEl.style.color='#e74c3c';return;}
         auth.createUserWithEmailAndPassword(e,p).then(cred=>{
