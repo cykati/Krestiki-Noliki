@@ -131,7 +131,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 </div>
 
 <div id="maintenance-warning">
-    ⚠️ Идёт обновление игры. Возможны ошибки.
+    🚧 Технический перерыв. Доступна только игра с ботом.
 </div>
 
 <div id="win-streak">🔥 <span id="streak-count">0</span> подряд!</div>
@@ -238,7 +238,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="maintenance-modal" style="background:rgba(0,0,0,.95);"><div class="modal" style="max-width:95vw;min-width:300px;background:linear-gradient(135deg,#8e44ad,#c0392b);">
 <h2 style="font-size:28px;color:#fff;margin-bottom:15px;">🚧 Технический перерыв</h2>
 <div id="maintenance-body" style="text-align:center;font-size:15px;line-height:1.7;color:#fff;margin-bottom:20px;"></div>
-<button id="maintenance-skip" style="background:#f39c12;margin-right:8px;">▶️ Продолжить (могут быть ошибки)</button>
 <button id="maintenance-close" style="background:#2ecc71;display:none;">Закрыть (Админ/Тестер)</button>
 </div></div>
 
@@ -471,6 +470,7 @@ let onlineMode = false;
 let onlineRole = null;
 let onlineRoomRef = null;
 let pendingChip = null;
+let maintenanceActive = false;
 
 const ADMIN_RAINBOW = {
     id: 'admin_rainbow', name: '👑 Rainbow Admin', type: 'admin_rainbow',
@@ -1190,6 +1190,10 @@ titleHistoryClose.addEventListener('click', ()=>titleHistoryModal.classList.remo
 
 /* ===================== ОНЛАЙН-ИГРА ===================== */
 modeOnlineBtn.addEventListener('click', ()=>{
+    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){
+        alert('🚧 Во время технического перерыва онлайн-игра недоступна.');
+        return;
+    }
     modeModal.classList.remove('active');
     renderOnlineMenu();
     onlineModal.classList.add('active');
@@ -1503,7 +1507,6 @@ function resetGame(){
 const maintenanceModal = document.getElementById('maintenance-modal');
 const maintenanceBody = document.getElementById('maintenance-body');
 const maintenanceClose = document.getElementById('maintenance-close');
-const maintenanceSkip = document.getElementById('maintenance-skip');
 const maintenanceWarning = document.getElementById('maintenance-warning');
 const maintControlModal = document.getElementById('maintenance-control-modal');
 const maintControlBody = document.getElementById('maintenance-control-body');
@@ -1512,61 +1515,44 @@ const maintApproveModal = document.getElementById('maintenance-approve-modal');
 const maintRequestReason = document.getElementById('maint-request-reason');
 const maintRequestStatus = document.getElementById('maint-request-status');
 
-// Проверяем, пропустил ли игрок перерыв
-function hasSkippedMaintenance(){
-    if(currentUID){
-        return localStorage.getItem('skipMaint_' + currentUID) === 'true';
-    }
-    return localStorage.getItem('skipMaint_guest') === 'true';
-}
-function setSkippedMaintenance(val){
-    if(currentUID){
-        localStorage.setItem('skipMaint_' + currentUID, val ? 'true' : 'false');
-    } else {
-        localStorage.setItem('skipMaint_guest', val ? 'true' : 'false');
-    }
-}
-
 database.ref('system/maintenance').on('value', s=>{
     const data = s.val() || {};
-    if(data.active){
-        const isTester = userTitles.includes('tester') || isAdmin;
-        const skipped = hasSkippedMaintenance();
+    maintenanceActive = data.active === true;
+    const isTester = userTitles.includes('tester') || isAdmin;
 
+    if(maintenanceActive){
         maintenanceBody.innerHTML =
             '<div style="font-size:16px;margin-bottom:15px;">Мы обновляем игру! 🎨</div>' +
             '<div style="padding:12px;background:rgba(0,0,0,.3);border-radius:10px;margin-bottom:15px;">' +
                 '<b>Сообщение:</b><br>' + (data.message || 'Скоро вернёмся!') +
             '</div>' +
             '<div style="font-size:13px;opacity:0.9;">' +
-                (isTester ? 'У вас есть доступ (Админ / TESTER).' : 
-                 'Вы можете зайти, но возможны ошибки.') +
+                (isTester 
+                    ? 'У вас есть доступ (Админ / TESTER).' 
+                    : 'Во время перерыва доступна <b>только игра с ботом</b>.<br>Онлайн и другие режимы отключены.') +
             '</div>';
 
         if(isTester){
             maintenanceClose.style.display = 'inline-block';
-            maintenanceSkip.style.display = 'none';
-            maintenanceModal.classList.add('active');
-        } else if(!skipped){
-            maintenanceClose.style.display = 'none';
-            maintenanceSkip.style.display = 'inline-block';
             maintenanceModal.classList.add('active');
         } else {
+            maintenanceClose.style.display = 'none';
             maintenanceModal.classList.remove('active');
             maintenanceWarning.style.display = 'block';
+            // Форсируем режим «Против бота»
+            vsBot = true; onlineMode = false;
+            if(typeof modeBotBtn !== 'undefined' && modeBotBtn){
+                modeBotBtn.classList.add('active');
+                modeFriendBtn.classList.remove('active');
+                modeOnlineBtn.classList.remove('active');
+            }
         }
     } else {
         maintenanceModal.classList.remove('active');
         maintenanceWarning.style.display = 'none';
-        setSkippedMaintenance(false);
     }
 });
 
-maintenanceSkip.addEventListener('click', ()=>{
-    setSkippedMaintenance(true);
-    maintenanceModal.classList.remove('active');
-    maintenanceWarning.style.display = 'block';
-});
 maintenanceClose.addEventListener('click', ()=>maintenanceModal.classList.remove('active'));
 
 document.getElementById('set-maintenance').addEventListener('click', ()=>{
@@ -1724,7 +1710,14 @@ document.getElementById('set-titles').addEventListener('click',()=>{
 });
 document.getElementById('set-history').addEventListener('click',()=>{settingsModal.classList.remove('active');loadHistory();historyModal.classList.add('active');});
 document.getElementById('set-difficulty').addEventListener('click',()=>{settingsModal.classList.remove('active');difficultyModal.classList.add('active');});
-document.getElementById('set-mode').addEventListener('click',()=>{settingsModal.classList.remove('active');modeModal.classList.add('active');});
+document.getElementById('set-mode').addEventListener('click',()=>{
+    settingsModal.classList.remove('active');
+    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){
+        alert('🚧 Во время технического перерыва доступна только игра с ботом.');
+        return;
+    }
+    modeModal.classList.add('active');
+});
 document.getElementById('set-nick').addEventListener('click',()=>{settingsModal.classList.remove('active');nickModal.classList.add('active');});
 document.getElementById('set-logout').addEventListener('click',()=>{settingsModal.classList.remove('active');auth.signOut();});
 document.getElementById('set-admin-stats').addEventListener('click',()=>{settingsModal.classList.remove('active');playerStatsModal.classList.add('active');});
@@ -1929,6 +1922,10 @@ modeBotBtn.addEventListener('click',()=>{
     modeModal.classList.remove('active');difficulty='medium';resetGame();
 });
 modeFriendBtn.addEventListener('click',()=>{
+    if(maintenanceActive && !isAdmin && !userTitles.includes('tester')){
+        alert('🚧 Во время технического перерыва игра с другом недоступна.');
+        return;
+    }
     onlineMode=false;vsBot=false;
     modeFriendBtn.classList.add('active');modeBotBtn.classList.remove('active');modeOnlineBtn.classList.remove('active');
     modeModal.classList.remove('active');survivalActive=false;survivalBar.style.display='none';resetGame();
