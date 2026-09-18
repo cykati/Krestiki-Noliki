@@ -25,7 +25,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .modal-overlay.active{display:flex;}
 .modal{background:var(--cell-bg);padding:25px 30px;border-radius:16px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:90vw;min-width:260px;margin:20px auto;}
 .modal h2{color:#f1c40f;margin-bottom:20px;font-size:22px;}
-.modal .emoji{font-size:48px;margin-bottom:12px;display:block;}
 .modal button{padding:10px 24px;font-size:15px;border:none;border-radius:8px;background:#b32e2e;color:#e0e0e0;cursor:pointer;margin-top:10px;}
 .menu-list{display:flex;flex-direction:column;gap:10px;margin-bottom:15px;}
 .menu-list button{width:100%;padding:14px 20px;font-size:15px;border:2px solid rgba(255,255,255,.2);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;text-align:left;margin-top:0;}
@@ -70,7 +69,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .title-moderator{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;}
 .title-helper{background:linear-gradient(135deg,#2ecc71,#1abc9c);color:#fff;}
 .title-tester{background:linear-gradient(135deg,#e67e22,#e84393);color:#fff;}
-.title-vip{background:linear-gradient(135deg,#f1c40f,#f39c12);color:#fff;box-shadow:0 0 12px rgba(241,196,15,.8);}
+.title-vip{background:linear-gradient(135deg,#f1c40f,#f39c12);color:#fff;}
 .title-beginner{background:linear-gradient(135deg,#95a5a6,#7f8c8d);color:#fff;}
 .title-gamer{background:linear-gradient(135deg,#3498db,#2980b9);color:#fff;}
 .title-fast{background:linear-gradient(135deg,#f1c40f,#f39c12);color:#fff;}
@@ -115,6 +114,175 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .title-admin-god{background:linear-gradient(90deg,#ff006e,#fb5607,#ffbe0b,#2ecc71,#3a86ff,#8338ec,#ff006e);background-size:300% 100%;color:#fff;font-weight:900;animation:creator2Shift 2.5s linear infinite;}
 .title-tourney{background:linear-gradient(135deg,#ffd700,#ff006e,#00d4ff,#ffd700);background-size:300% 300%;animation:tourneyShift 3s ease infinite;color:#fff;font-weight:900;}
 @keyframes tourneyShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+
+/* ===== BCSTinCN ТИТУЛ ===== */
+.title-bcstincn{
+    background:linear-gradient(135deg,#1a1a1a,#3a3a3a,#1a1a1a,#5a5a5a,#1a1a1a);
+    background-size:300% 300%;
+    animation:bcstincnShine 4s ease infinite;
+    color:#fff;
+    font-weight:900;
+    letter-spacing:2px;
+    text-shadow:0 0 8px rgba(255,255,255,.7),0 0 15px rgba(200,200,200,.5);
+    padding:3px 12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.4);
+    box-shadow:0 0 15px rgba(180,180,180,.7),inset 0 0 10px rgba(255,255,255,.3);
+    font-family:'Arial Black',sans-serif;
+}
+@keyframes bcstincnShine{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+.title-bcstincn-clan{
+    background:linear-gradient(135deg,#1a1a1a,#3a3a3a,#1a1a1a);
+    color:#ddd;
+    font-weight:900;
+    letter-spacing:1.5px;
+    padding:2px 10px;
+    border-radius:8px;
+    border:1px solid rgba(180,180,180,.5);
+    box-shadow:0 0 8px rgba(180,180,180,.5);
+    font-family:'Arial Black',sans-serif;
+}
+
+.bcstincn-trophy-container{
+    padding:20px;
+    background:linear-gradient(135deg,rgba(26,26,26,.8),rgba(58,58,58,.5));
+    border:3px solid rgba(192,192,192,.7);
+    border-radius:16px;
+    text-align:center;
+    margin-bottom:16px;
+    box-shadow:0 0 30px rgba(192,192,192,.5);
+    position:relative;
+    overflow:hidden;
+}
+.bcstincn-trophy-container::before{
+    content:'';
+    position:absolute;
+    top:-50%;left:-50%;
+    width:200%;height:200%;
+    background:radial-gradient(circle,rgba(255,255,255,.15) 0%,transparent 70%);
+    animation:rotateTrophy 8s linear infinite;
+    pointer-events:none;
+}
+@keyframes rotateTrophy{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+.bcstincn-trophy-container img{
+    max-width:180px;
+    width:80%;
+    height:auto;
+    position:relative;
+    z-index:1;
+    filter:drop-shadow(0 0 20px rgba(255,255,255,.5));
+    animation:trophyFloat 3s ease infinite;
+    border-radius:12px;
+}
+@keyframes trophyFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-8px);}
+}
+.bcstincn-trophy-container .trophy-title{
+    color:#fff;
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:4px;
+    margin-top:14px;
+    text-shadow:0 0 12px rgba(255,255,255,.9);
+    position:relative;
+    z-index:1;
+    font-family:'Arial Black',sans-serif;
+}
+.bcstincn-trophy-container .trophy-sub{
+    color:#b0b0b0;
+    font-size:12px;
+    margin-top:6px;
+    letter-spacing:1px;
+    position:relative;
+    z-index:1;
+}
+
+/* Мини-бейджи BCSTinCN для топов */
+.bcstincn-mini-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:20px;
+    height:20px;
+    background:linear-gradient(135deg,#1a1a1a,#4a4a4a);
+    border:1px solid #c0c0c0;
+    border-radius:6px;
+    box-shadow:0 0 6px rgba(192,192,192,.6);
+    margin-left:4px;
+    vertical-align:middle;
+    flex-shrink:0;
+    transition:.2s;
+    cursor:pointer;
+    animation:bcstincnPop .4s ease;
+}
+.bcstincn-mini-badge:hover{
+    transform:scale(1.2);
+    box-shadow:0 0 12px rgba(192,192,192,.9);
+}
+.bcstincn-mini-badge img{
+    width:14px;
+    height:14px;
+    object-fit:contain;
+    border-radius:3px;
+    filter:brightness(1.1);
+}
+.bcstincn-clan-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    padding:2px 8px;
+    border-radius:8px;
+    background:linear-gradient(135deg,#1a1a1a,#3a3a3a);
+    border:1px solid rgba(192,192,192,.6);
+    box-shadow:0 0 8px rgba(192,192,192,.5);
+    font-size:10px;
+    font-weight:900;
+    color:#e0e0e0;
+    letter-spacing:1px;
+    margin-left:6px;
+    vertical-align:middle;
+    cursor:pointer;
+    font-family:'Arial Black',sans-serif;
+    animation:bcstincnPop .4s ease;
+}
+.bcstincn-clan-badge img{
+    width:14px;
+    height:14px;
+    object-fit:contain;
+    border-radius:3px;
+}
+.chat-bcstincn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:16px;
+    height:16px;
+    background:#1a1a1a;
+    border:1px solid #c0c0c0;
+    border-radius:4px;
+    margin-left:4px;
+    vertical-align:middle;
+}
+.chat-bcstincn img{
+    width:12px;
+    height:12px;
+    object-fit:contain;
+    border-radius:2px;
+}
+@keyframes bcstincnPop{
+    0%{transform:scale(0) rotate(-180deg);opacity:0;}
+    50%{transform:scale(1.2) rotate(0deg);opacity:1;}
+    100%{transform:scale(1) rotate(0deg);opacity:1;}
+}
+/* ===== КЛАНЫ ===== */
 #clans-modal .modal{max-width:95vw;min-width:340px;text-align:left;}
 .clan-tabs{display:flex;gap:6px;margin-bottom:15px;background:rgba(0,0,0,.2);padding:5px;border-radius:10px;overflow-x:auto;flex-wrap:wrap;}
 .clan-tabs button{flex:1;min-width:fit-content;padding:8px 12px;font-size:12px;border:none;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;transition:.2s;margin-top:0;white-space:nowrap;}
@@ -184,6 +352,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .clan-cost-banner{padding:10px;margin-bottom:12px;background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;font-weight:bold;text-align:center;border-radius:10px;font-size:13px;}
 .clan-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;background:linear-gradient(135deg,#3498db,#2980b9);color:#fff;font-size:10px;font-weight:bold;margin-left:6px;vertical-align:middle;cursor:pointer;}
 
+/* ===== ИНВЕНТАРЬ ===== */
 #inventory-shop-modal .modal{max-width:95vw;min-width:340px;text-align:left;}
 .inv-tabs{display:flex;gap:4px;margin-bottom:12px;background:rgba(0,0,0,.2);padding:4px;border-radius:10px;overflow-x:auto;flex-wrap:wrap;}
 .inv-tabs button{flex:1;min-width:fit-content;padding:6px 10px;font-size:11px;border:none;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;transition:.2s;margin-top:0;white-space:nowrap;}
@@ -208,15 +377,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .inv-empty{grid-column:1/-1;text-align:center;padding:20px;opacity:0.6;font-size:13px;}
 .inv-header-balance{padding:8px;margin-bottom:10px;text-align:center;background:linear-gradient(135deg,#9b59b6,#8e44ad);color:#fff;font-size:14px;font-weight:bold;border-radius:10px;}
 
-.title-slot{padding:12px;margin-bottom:10px;border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:2px solid rgba(255,255,255,.15);text-align:left;}
-.title-slot.active{border-color:#f1c40f;}
-.title-slot.locked{opacity:0.5;}
-.title-slot .slot-label{font-size:11px;font-weight:bold;color:#f1c40f;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-.title-slot .slot-current{padding:8px 12px;border-radius:8px;background:rgba(0,0,0,.3);font-size:13px;min-height:36px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.title-slot .slot-empty{opacity:0.6;font-style:italic;font-size:12px;}
-.title-slot .slot-remove{padding:4px 10px;font-size:11px;font-weight:bold;border:none;border-radius:6px;background:#e74c3c;color:#fff;cursor:pointer;flex-shrink:0;}
-.title-slot .slot-lock{padding:10px;text-align:center;font-size:12px;background:rgba(243,156,18,.15);border-radius:8px;color:#f39c12;}
-.title-btn{padding:5px 10px;font-size:11px;font-weight:bold;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;}
+/* ===== КВЕСТЫ ===== */
 .quest-tabs{display:flex;gap:6px;margin-bottom:12px;background:rgba(0,0,0,.2);padding:4px;border-radius:10px;}
 .quest-tabs button{flex:1;padding:8px;font-size:13px;border:none;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;margin-top:0;}
 .quest-tabs button.active{background:linear-gradient(135deg,#3498db,#2b5b8c);color:#fff;font-weight:bold;}
@@ -237,6 +398,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .quest-badge.weekly{background:#9b59b6;color:#fff;}
 .quest-timer{text-align:center;font-size:11px;opacity:0.7;margin-bottom:10px;padding:4px;background:rgba(0,0,0,.2);border-radius:6px;}
 
+/* ===== МАГАЗИН ===== */
 #shop-modal .modal{max-width:95vw;min-width:320px;text-align:left;}
 .shop-tabs{display:flex;gap:4px;margin-bottom:12px;background:rgba(0,0,0,.2);padding:4px;border-radius:10px;overflow-x:auto;}
 .shop-tabs button{flex:1;min-width:fit-content;padding:6px 10px;font-size:11px;border:none;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;margin-top:0;white-space:nowrap;}
@@ -256,6 +418,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .shop-item .buy-btn.owned-btn{background:linear-gradient(135deg,#3498db,#2b5b8c);cursor:default;}
 .shop-balance{text-align:center;padding:8px;margin-bottom:10px;background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;font-size:16px;font-weight:bold;border-radius:10px;}
 
+/* ===== БЛОКИРОВКИ ===== */
 #ban-screen{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a1a1a,#2c0a0a);z-index:99999;justify-content:center;align-items:center;padding:20px;text-align:center;flex-direction:column;}
 #ban-screen.active{display:flex;}
 #ban-screen .ban-icon{font-size:70px;margin-bottom:15px;}
@@ -307,6 +470,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 #appeal-form textarea{width:100%;padding:10px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:13px;resize:vertical;min-height:80px;outline:none;font-family:inherit;margin-bottom:10px;}
 #appeal-form .appeal-info{padding:10px;background:rgba(243,156,18,.15);border-left:4px solid #f39c12;border-radius:8px;font-size:12px;margin-bottom:10px;}
 
+/* ===== ТУРНИРЫ ===== */
 #tournaments-modal .modal{max-width:95vw;min-width:340px;text-align:left;}
 .tour-list{display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow-y:auto;padding-right:4px;}
 .tour-card{padding:12px;border-radius:12px;background:linear-gradient(135deg,rgba(241,196,15,.15),rgba(230,126,34,.08));border:2px solid rgba(241,196,15,.35);transition:.2s;}
@@ -314,10 +478,9 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .tour-card .tour-header{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;}
 .tour-card .tour-name{font-size:15px;font-weight:900;color:#f1c40f;flex:1;}
 .tour-card .tour-status{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:bold;white-space:nowrap;}
-.tour-status-registration{background:#2ecc71;color:#fff;animation:tourPulse 1.5s ease infinite;}
-.tour-status-progress{background:#f39c12;color:#fff;animation:tourPulse 1.5s ease infinite;}
+.tour-status-registration{background:#2ecc71;color:#fff;}
+.tour-status-progress{background:#f39c12;color:#fff;}
 .tour-status-finished{background:#95a5a6;color:#fff;}
-@keyframes tourPulse{0%,100%{opacity:1;}50%{opacity:0.7;}}
 .tour-card .tour-info{font-size:12px;margin-bottom:6px;display:grid;grid-template-columns:1fr 1fr;gap:3px;}
 .tour-card .tour-info div{display:flex;justify-content:space-between;}
 .tour-card .tour-info b{color:#f1c40f;}
@@ -332,29 +495,29 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .tour-btn-disabled{background:#555;color:#999;cursor:not-allowed;}
 .bracket-container{display:flex;gap:12px;overflow-x:auto;padding:12px;background:rgba(0,0,0,.25);border-radius:12px;margin-bottom:12px;min-height:200px;}
 .bracket-round{display:flex;flex-direction:column;justify-content:space-around;min-width:180px;gap:10px;}
-.bracket-round-title{text-align:center;font-size:11px;font-weight:bold;color:#f1c40f;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;}
+.bracket-round-title{text-align:center;font-size:11px;font-weight:bold;color:#f1c40f;margin-bottom:6px;text-transform:uppercase;}
 .bracket-match{padding:8px;border-radius:8px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:2px solid rgba(255,255,255,.15);font-size:11px;}
-.bracket-match.active{border-color:#f39c12;box-shadow:0 0 12px rgba(243,156,18,.5);}
+.bracket-match.active{border-color:#f39c12;}
 .bracket-match.done{border-color:#2ecc71;}
 .bracket-match.my-match{border-color:#3498db;}
 .bracket-match .bm-player{padding:4px 8px;border-radius:6px;margin:2px 0;display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11px;}
 .bracket-match .bm-player.winner{background:#2ecc71;color:#fff;font-weight:bold;}
 .bracket-match .bm-player.loser{opacity:0.5;text-decoration:line-through;}
 .bracket-match .bm-player.you{background:#3498db;color:#fff;}
-.bracket-match .bm-vs{text-align:center;font-size:9px;opacity:0.5;font-weight:bold;letter-spacing:1px;}
+.bracket-match .bm-vs{text-align:center;font-size:9px;opacity:0.5;font-weight:bold;}
 .bracket-match .bm-status{margin-top:4px;text-align:center;font-size:9px;font-weight:bold;text-transform:uppercase;}
 .bracket-match .bm-status.pending{color:#95a5a6;}
 .bracket-match .bm-status.active{color:#f39c12;}
 .bracket-match .bm-status.done{color:#2ecc71;}
-.bracket-match .bm-play-btn{width:100%;margin-top:4px;padding:5px;font-size:11px;font-weight:bold;border:none;border-radius:6px;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;cursor:pointer;animation:tourPulse 1.2s ease infinite;}
-.final-match{border:3px solid #f1c40f !important;box-shadow:0 0 20px rgba(241,196,15,.6);background:linear-gradient(135deg,rgba(241,196,15,.2),rgba(230,126,34,.1)) !important;}
-.tour-champion-box{text-align:center;padding:14px;margin-bottom:10px;background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;font-size:15px;font-weight:bold;border-radius:12px;box-shadow:0 8px 25px rgba(241,196,15,.6);}
-.tour-live-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:10px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-left:6px;animation:tourPulse 1s ease infinite;}
+.bracket-match .bm-play-btn{width:100%;margin-top:4px;padding:5px;font-size:11px;font-weight:bold;border:none;border-radius:6px;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;cursor:pointer;}
+.final-match{border:3px solid #f1c40f !important;box-shadow:0 0 20px rgba(241,196,15,.6);}
+.tour-champion-box{text-align:center;padding:14px;margin-bottom:10px;background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;font-size:15px;font-weight:bold;border-radius:12px;}
 .create-form{display:flex;flex-direction:column;gap:8px;text-align:left;margin-bottom:12px;}
 .create-form label{font-size:12px;font-weight:bold;color:#f1c40f;margin-bottom:-2px;}
 .create-form input, .create-form select{padding:8px 12px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:13px;outline:none;font-family:inherit;}
 .create-form .input-hint{font-size:10px;opacity:0.7;margin-top:-2px;}
 
+/* ===== АВАТАРКИ ===== */
 #avatar-input{display:none;}
 .avatar-container{display:flex;justify-content:center;align-items:center;flex-direction:column;gap:10px;margin-bottom:12px;}
 .avatar-large{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#3498db,#2b5b8c);display:flex;justify-content:center;align-items:center;font-size:50px;overflow:hidden;border:4px solid #f1c40f;box-shadow:0 0 20px rgba(241,196,15,.5);}
@@ -371,7 +534,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .avatar-zoom input[type=range]{flex:1;}
 .mini-avatar{width:28px;height:28px;border-radius:50%;overflow:hidden;display:inline-flex;justify-content:center;align-items:center;background:var(--cell-bg);font-size:14px;border:2px solid rgba(255,255,255,.2);flex-shrink:0;}
 
-.achievement-popup{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:bold;z-index:9999;box-shadow:0 8px 25px rgba(0,0,0,.4);max-width:90vw;text-align:center;animation:dropIn .4s ease;}
+/* ===== ОБЩИЕ ===== */
+.achievement-popup{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:bold;z-index:9999;box-shadow:0 8px 25px rgba(0,0,0,.4);max-width:90vw;text-align:center;}
 @keyframes dropIn{from{transform:translate(-50%,-80px);opacity:0;}to{transform:translate(-50%,0);opacity:1;}}
 @keyframes explode{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0;}}
 .bot-bubble{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#3498db,#2b5b8c);color:#fff;padding:10px 16px;border-radius:14px;font-size:13px;z-index:2000;max-width:250px;box-shadow:0 4px 15px rgba(0,0,0,.4);}
@@ -400,7 +564,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 <h1>Крестики-нолики</h1>
@@ -467,6 +630,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div id="coin-toast">🪙 +0</div>
 <div id="match-notification"></div>
+
+<!-- Меню -->
 <div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-leaders">🏆 Лидеры</button><button id="menu-settings">⚙️ Настройки</button></div><button id="menu-close" style="background:#555;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list">
@@ -480,18 +645,18 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="theme-toggle">🌙 Тема</button>
 <button id="sound-toggle">🔊 Звук</button>
 <button id="set-admin-panel" style="border-color: #f1c40f; color: #f1c40f; display: none;">🛡️ Админ-панель</button>
-<button id="set-request-maintenance" style="border-color: #e67e22; color: #e67e22; display: none;">🚧 Запросить перерыв</button>
 </div><button id="settings-close" style="background:#555;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="admin-panel-modal"><div class="modal"><h2>🛡️ Админ-панель</h2><div class="menu-list">
 <button id="admin-all-players">👥 Все игроки</button>
 <button id="admin-give-titles">🎖️ Выдать титулы</button>
+<button id="admin-mass-titles" style="border-color:#e74c3c;color:#e74c3c;">👑 Выдать всем</button>
+<button id="admin-tourney-title" style="border-color:#f1c40f;color:#f1c40f;">🏆 Турнирный титул</button>
 <button id="admin-title-history">📜 История выдач</button>
-<button id="admin-maintenance">🚧 Управление перерывом</button>
 <button id="admin-bans" style="border-color:#e74c3c;color:#e74c3c;">🚫 Блокировки</button>
 <button id="admin-ban-history" style="border-color:#9b59b6;color:#c39bd3;">📜 История банов</button>
 <button id="admin-appeals" style="border-color:#f39c12;color:#f39c12;position:relative;">📩 Апелляции<span id="appeal-count" style="display:none;background:#e74c3c;color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;margin-left:6px;">0</span></button>
-<button id="admin-tournaments" style="border-color:#2ecc71;color:#2ecc71;">🏆 Управление турнирами</button>
+<button id="admin-tournaments" style="border-color:#2ecc71;color:#2ecc71;">🏆 Турниры</button>
 </div><button id="admin-panel-close" style="background:#555;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="profile-modal"><div class="modal">
@@ -499,24 +664,13 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="avatar-container">
     <div class="avatar-large" id="avatar-large">👤</div>
     <div class="avatar-actions">
-        <button class="avatar-btn-upload" id="avatar-upload-btn">📷 Загрузить</button>
-        <button class="avatar-btn-remove" id="avatar-remove-btn" style="display:none;">🗑️ Удалить</button>
+        <button class="avatar-btn-upload" id="avatar-picker-open" style="background:linear-gradient(135deg,#9b59b6,#8e44ad);">🎨 Сменить аватар</button>
+        <button class="avatar-btn-remove" id="avatar-remove-btn" style="display:none;">🗑️ Сбросить</button>
     </div>
-    <input type="file" id="avatar-input" accept="image/*">
-    <div class="avatar-uploading" id="avatar-status"></div>
 </div>
+<div id="bcstincn-profile-container"></div>
 <div id="profile-content" style="text-align:left;margin-bottom:12px;font-size:14px;line-height:1.6;"></div>
 <button id="profile-close" style="background:#555;">Закрыть</button>
-</div></div>
-
-<div class="modal-overlay" id="avatar-crop-modal"><div class="modal" style="max-width:95vw;min-width:300px;">
-<h2>✂️ Обрезка аватарки</h2>
-<div class="avatar-crop-container"><canvas id="avatar-crop-canvas" width="280" height="280"></canvas></div>
-<div class="avatar-zoom"><label>Масштаб:</label><input type="range" id="avatar-zoom-range" min="1" max="3" step="0.05" value="1"></div>
-<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-    <button id="avatar-crop-save" style="background:#2ecc71;">✅ Сохранить</button>
-    <button id="avatar-crop-cancel" style="background:#555;">Отмена</button>
-</div>
 </div></div>
 
 <div class="modal-overlay" id="titles-modal"><div class="modal"><h2>🎖️ Мои титулы</h2><div id="titles-grid" style="display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow-y:auto;"></div><div id="title-status" style="font-size:12px;color:#2ecc71;margin-bottom:8px;min-height:16px;"></div><button id="titles-close" style="background:#555;">Закрыть</button></div></div>
@@ -540,15 +694,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="mode-friend">👥 Против друга</button>
 <button id="mode-online">🌐 Онлайн 1 на 1</button>
 <button id="mode-team">👥👥 Командный 2 на 2</button>
-<button id="mode-blitz" style="border-color:#f39c12;color:#f39c12;">⏱️ Блиц</button>
-<button id="mode-snake" style="border-color:#2ecc71;color:#2ecc71;">🐍 Змейка</button>
-<button id="mode-chaos" style="border-color:#9b59b6;color:#c39bd3;">🎲 Хаос</button>
-<button id="mode-campaign" style="border-color:#e74c3c;color:#e74c3c;">🗺️ Кампания</button>
 </div><button id="mode-close" style="background:#555;">Закрыть</button></div></div>
-
-<div class="modal-overlay" id="campaign-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🗺️ Кампания</h2><div class="campaign-grid" id="campaign-grid"></div><button id="campaign-close" style="background:#555;">Закрыть</button></div></div>
-
-<div class="modal-overlay" id="mode-guide-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2 id="guide-title">📖 Режим</h2><div class="mode-guide" id="guide-body"></div><button id="guide-start" style="background:#2ecc71;">✅ Играть</button><button id="guide-cancel" style="background:#555;margin-left:6px;">Отмена</button></div></div>
 
 <div class="modal-overlay" id="online-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🌐 Онлайн</h2><div id="online-content"></div><button id="online-close" style="background:#555;">Закрыть</button></div></div>
 
@@ -558,7 +704,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="nick-input-row"><input type="text" id="nickname" placeholder="Ваш ник" maxlength="15"></div>
 <div class="nick-input-row"><input type="email" id="email" placeholder="Email" maxlength="50"></div>
 <div class="nick-input-row" style="position:relative;"><input type="password" id="password" placeholder="Пароль" maxlength="30" style="padding-right:40px;"><button type="button" id="toggle-password" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#e0e0e0;font-size:18px;cursor:pointer;padding:4px;width:auto;margin:0;">👁</button></div>
-<button id="consent-btn" style="width:100%;padding:10px;font-size:13px;border:2px solid #f1c40f;border-radius:8px;background:transparent;color:#f1c40f;cursor:pointer;margin-bottom:8px;">📄 Согласие на обработку</button>
+<button id="consent-btn" style="width:100%;padding:10px;font-size:13px;border:2px solid #f1c40f;border-radius:8px;background:transparent;color:#f1c40f;cursor:pointer;margin-bottom:8px;">📄 Согласие</button>
 <div id="consent-status" style="font-size:12px;margin-bottom:12px;color:#e74c3c;min-height:16px;"></div>
 <button id="register-btn">Регистрация (+100 🪙)</button>
 <button id="login-btn" style="background:#2b5b8c;">Войти</button>
@@ -567,7 +713,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button id="nick-close" disabled style="opacity:0.5;cursor:not-allowed;background:#555;">Закрыть</button>
 </div></div>
 
-<div class="modal-overlay" id="consent-modal"><div class="modal"><h2>📄 Согласие</h2><div style="text-align:left;font-size:13px;line-height:1.5;margin-bottom:16px;max-height:50vh;overflow-y:auto;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;"><p style="margin-bottom:8px;">Я даю согласие на:</p><ul style="padding-left:18px;"><li>Хранение email для восстановления пароля.</li><li>Хранение игровой статистики.</li><li>Отображение ника в таблице лидеров.</li></ul></div><button id="consent-agree" style="background:#2ecc71;">✅ Согласен</button><button id="consent-cancel" style="background:#b32e2e;">Отмена</button></div></div>
+<div class="modal-overlay" id="consent-modal"><div class="modal"><h2>📄 Согласие</h2><div style="text-align:left;font-size:13px;line-height:1.5;margin-bottom:16px;max-height:50vh;overflow-y:auto;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;"><p style="margin-bottom:8px;">Я даю согласие на:</p><ul style="padding-left:18px;"><li>Хранение email.</li><li>Хранение игровой статистики.</li><li>Отображение ника в таблице лидеров.</li></ul></div><button id="consent-agree" style="background:#2ecc71;">✅ Согласен</button><button id="consent-cancel" style="background:#b32e2e;">Отмена</button></div></div>
 
 <div class="modal-overlay" id="reset-email-modal"><div class="modal"><h2>📧 Письмо отправлено!</h2><div id="reset-email-body" style="text-align:left;font-size:13px;line-height:1.6;margin-bottom:16px;"></div><button id="reset-email-close" style="background:#2ecc71;">Понятно</button></div></div>
 
@@ -587,19 +733,20 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="shop-modal"><div class="modal"><h2 style="text-align:center;">🛒 Магазин</h2><div class="shop-balance">🪙 Баланс: <span id="shop-coins">0</span></div><div class="shop-tabs"><button data-tab="colors" class="active">🎨 Цвета</button><button data-tab="boosts">⚡ Бусты</button><button data-tab="titles">🎖️ Титулы</button><button data-tab="special">✨ Особое</button></div><div class="shop-list" id="shop-list"></div><button id="shop-close" style="background:#555;margin-top:12px;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="inventory-shop-modal"><div class="modal"><h2 style="text-align:center;">🎒 Инвентарь</h2><div class="inv-header-balance">🪙 Монет: <span id="inv-coins">0</span></div><div class="inv-tabs" id="inv-tabs"><button data-inv-tab="all" class="active">📦 Всё</button><button data-inv-tab="colors">🎨 Цвета</button><button data-inv-tab="titles">🎖️ Титулы</button><button data-inv-tab="boosts">⚡ Бусты</button><button data-inv-tab="consumables">🛡️ Расходники</button><button data-inv-tab="special">✨ Особое</button></div><div class="inv-list" id="inv-list"></div><button id="inventory-shop-close" style="background:#555;margin-top:12px;">Закрыть</button></div></div>
+
 <div class="modal-overlay" id="ban-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>🚫 Блокировки</h2><div class="nick-input-row" style="margin-bottom:12px;"><input type="text" id="ban-search" placeholder="Поиск..." maxlength="15"></div><div id="ban-users-list" style="text-align:left;font-size:12px;max-height:55vh;overflow-y:auto;margin-bottom:12px;"></div><button id="ban-modal-close" style="background:#555;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="ban-action-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2 id="ban-action-title">🚫 Заблокировать</h2><div id="ban-action-body" style="text-align:left;font-size:13px;margin-bottom:12px;"></div><div class="ban-modal-options" id="ban-duration-options"><button data-duration="3600000">⏱️ 1 час</button><button data-duration="21600000">⏱️ 6 часов</button><button data-duration="86400000">⏱️ 1 день</button><button data-duration="604800000">⏱️ 7 дней</button><button data-duration="2592000000">⏱️ 30 дней</button></div><textarea id="ban-reason-input" placeholder="Причина..." maxlength="200"></textarea><button id="ban-confirm-btn" style="background:#e74c3c;">🚫 Заблокировать</button><button id="ban-action-cancel" style="background:#555;margin-left:6px;">Отмена</button></div></div>
 
 <div class="modal-overlay" id="ban-history-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>📜 История банов</h2><div style="margin-bottom:10px;"><input type="text" id="ban-history-search" placeholder="🔍 Поиск..." maxlength="15" style="width:100%;padding:8px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:13px;outline:none;"></div><div id="ban-history-list" style="text-align:left;font-size:12px;max-height:55vh;overflow-y:auto;margin-bottom:12px;"></div><button id="ban-history-close" style="background:#555;">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="appeal-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>📩 Оспорить бан</h2><div id="appeal-form"><div class="appeal-info"><b>⚠️</b> Опиши ситуацию. Одна апелляция на блокировку.</div><textarea id="appeal-reason" placeholder="Почему блокировка несправедлива?" maxlength="500"></textarea><div id="appeal-status" style="font-size:12px;min-height:16px;margin-bottom:8px;color:#e74c3c;"></div></div><button id="appeal-send" style="background:#f39c12;">📨 Отправить</button><button id="appeal-close" style="background:#555;margin-left:6px;">Закрыть</button></div></div>
+<div class="modal-overlay" id="appeal-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>📩 Оспорить бан</h2><div id="appeal-form"><div class="appeal-info"><b>⚠️</b> Опиши ситуацию.</div><textarea id="appeal-reason" placeholder="Почему блокировка несправедлива?" maxlength="500"></textarea><div id="appeal-status" style="font-size:12px;min-height:16px;margin-bottom:8px;color:#e74c3c;"></div></div><button id="appeal-send" style="background:#f39c12;">📨 Отправить</button><button id="appeal-close" style="background:#555;margin-left:6px;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="appeals-modal"><div class="modal" style="max-width:95vw;min-width:340px;"><h2>📩 Апелляции</h2><div class="shop-tabs" style="margin-bottom:10px;"><button data-appeal-tab="pending" class="active">⏳ Ожидают</button><button data-appeal-tab="resolved">✅ Обработанные</button></div><div id="appeals-list" style="text-align:left;font-size:12px;max-height:55vh;overflow-y:auto;margin-bottom:12px;"></div><button id="appeals-close" style="background:#555;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="tournaments-modal"><div class="modal" style="max-width:95vw;min-width:340px;"><h2 style="text-align:center;">🏆 Турниры</h2><div class="tour-list" id="tour-list"></div><button id="tournaments-close" style="background:#555;margin-top:12px;">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="tour-create-modal"><div class="modal" style="max-width:95vw;min-width:320px;text-align:left;"><h2 style="text-align:center;color:#f1c40f;">✨ Создать турнир</h2><div class="create-form"><label>Название</label><input type="text" id="tour-name" placeholder="Champions Cup" maxlength="30"><label>Взнос (🪙)</label><input type="number" id="tour-entry" value="10000" min="0"><label>Мин. игроков</label><select id="tour-min"><option value="4">4</option><option value="8">8</option><option value="16">16</option><option value="32" selected>32</option><option value="64">64</option></select><label>Приз (🪙)</label><input type="number" id="tour-prize" value="75000" min="0"><label>Титул победителя</label><input type="text" id="tour-title" value="Tournament Champion" maxlength="40"></div><button id="tour-create-confirm" style="background:#2ecc71;">✅ Создать</button><button id="tour-create-cancel" style="background:#555;margin-left:6px;">Отмена</button></div></div>
+<div class="modal-overlay" id="tour-create-modal"><div class="modal" style="max-width:95vw;min-width:320px;text-align:left;"><h2 style="text-align:center;color:#f1c40f;">✨ Создать турнир</h2><div class="create-form"><label>Название</label><input type="text" id="tour-name" placeholder="Champions Cup" maxlength="30"><label>Взнос (🪙)</label><input type="number" id="tour-entry" value="10000" min="0"><label>Мин. игроков</label><select id="tour-min"><option value="4">4</option><option value="8">8</option><option value="16">16</option><option value="32" selected>32</option><option value="64">64</option></select><label>Приз (🪙)</label><input type="number" id="tour-prize" value="75000" min="0"><label>Титул победителя</label><input type="text" id="tour-title" value="BCSTinCN Champion" maxlength="40"></div><button id="tour-create-confirm" style="background:#2ecc71;">✅ Создать</button><button id="tour-create-cancel" style="background:#555;margin-left:6px;">Отмена</button></div></div>
 
 <div class="modal-overlay" id="tour-bracket-modal"><div class="modal" style="max-width:98vw;min-width:340px;text-align:left;"><h2 id="tour-bracket-title" style="text-align:center;">🏆 Сетка</h2><div id="tour-bracket-info" style="text-align:center;font-size:12px;opacity:0.85;margin-bottom:10px;"></div><div id="tour-bracket-champion"></div><div class="bracket-container" id="bracket-container"></div><button id="tour-bracket-close" style="background:#555;">Закрыть</button></div></div>
 
@@ -612,8 +759,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div style="text-align: center; margin-top: 30px; margin-bottom: 30px; width: 100%; max-width: 360px;">
     <p style="color: var(--text); font-size: 14px; margin-bottom: 12px; opacity: 0.9;">Нашли ошибку? Напишите нам!</p>
     <a href="mailto:Safety.Krestiki.Noliki@gmail.com?subject=Баг" style="display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 10px; font-size: 15px; font-weight: bold;">✉️ Поддержка</a>
-</div>
-
+                                                  </div>
 <script>
 /* ============================================================
    FIREBASE INIT
@@ -622,7 +768,6 @@ const firebaseConfig={apiKey:"AIzaSyB2It75ikFi-YGKA8-jUNd4x9Syv17XSQg",authDomai
 firebase.initializeApp(firebaseConfig);
 const database=firebase.database();
 const auth=firebase.auth();
-const storage=firebase.storage();
 
 const $ = (id) => document.getElementById(id);
 const boardEl=$('board'), statusEl=$('status'), resetBtn=$('reset');
@@ -635,7 +780,7 @@ const settingsModal=$('settings-modal'), menuModal=$('menu-modal');
 const titlesModal=$('titles-modal');
 const winStreakEl=$('win-streak'), streakCountEl=$('streak-count');
 const leaderTabs=$('leader-tabs');
-const inventoryModal=$('inventory-shop-modal');
+
 /* ============================================================
    СОСТОЯНИЕ
    ============================================================ */
@@ -648,18 +793,18 @@ let userStats = {easy:{wins:0}, medium:{wins:0}, hard:{wins:0}, survival:{best:0
 let survivalLevel=1, survivalActive=false;
 let currentTitle=null, currentTitle2=null, userTitles=[], knownTitles=[], pendingAwardTitle=null;
 let onlineMode=false, onlineRole=null, onlineTeam=null, onlineRoomRef=null;
-let pendingChip=null, maintenanceActive=false, teamMode=false;
-let blitzMode=false, blitzTimer=null, blitzInterval=null, bonusCell=-1;
-let snakeMode=false, chaosMode=false, moveCounter=0, frozenCell=-1;
-let campaignProgress = JSON.parse(localStorage.getItem('campaign')||'{"unlocked":1,"done":[]}');
-let currentCampaignLevel=null, campaignSpecialUsed={removeOnce:false}, campaignSlow=false, botTimeoutId=null;
+let maintenanceActive=false, teamMode=false;
+let blitzMode=false, blitzTimer=null, blitzInterval=null;
+let moveCounter=0, frozenCell=-1;
 let currentQuestTab='daily', currentShopTab='colors', currentInvTab='all';
 let banCheckInterval=null, currentBanTarget=null, currentAppealTab='pending', myCurrentBanData=null;
-let currentAvatarURL=null, avatarCropState=null;
+let currentAvatar='👤', currentAvatarTab='faces';
 let myClanId=null, myClanData=null, currentClanTab='list';
 let clanChatListener=null, clanDataListener=null, clanViewListener=null;
-let tournamentListeners={}, currentTournamentId=null;
 let roleManageTarget=null;
+let bcstincnChampions=new Set();
+let bcstincnClanWinners=new Set();
+let bcstincnClanIds=new Set();
 
 /* ============================================================
    КОНСТАНТЫ
@@ -675,12 +820,14 @@ const CLAN_ROLES = {
 };
 
 const TITLES = {
-    creator:{id:'creator',name:'⭐ CREATOR',cssClass:'title-creator',desc:'За развитие проекта',reward:'Admin',issuedBy:'Admin',adminOnly:true},
+    creator:{id:'creator',name:'⭐ CREATOR',cssClass:'title-creator',desc:'За развитие',reward:'Admin',issuedBy:'Admin',adminOnly:true},
     moderator:{id:'moderator',name:'🛡️ MODERATOR',cssClass:'title-moderator',desc:'Модератор',reward:'Admin',issuedBy:'Admin',adminOnly:true},
     helper:{id:'helper',name:'💚 HELPER',cssClass:'title-helper',desc:'Помощник',reward:'Admin',issuedBy:'Admin',adminOnly:true},
     tester:{id:'tester',name:'🧪 TESTER',cssClass:'title-tester',desc:'Тестер',reward:'Admin',issuedBy:'Admin',adminOnly:true},
     vip:{id:'vip',name:'💎 VIP',cssClass:'title-vip',desc:'VIP',reward:'Admin',issuedBy:'Admin',adminOnly:true},
-    admin_all:{id:'admin_all',name:'👑 ADMIN',cssClass:'title-admin-god',desc:'Админ',reward:'System',issuedBy:'System',adminOnly:true}
+    admin_all:{id:'admin_all',name:'👑 ADMIN',cssClass:'title-admin-god',desc:'Админ',reward:'System',issuedBy:'System',adminOnly:true},
+    bcstincn_champion:{id:'bcstincn_champion',name:'🏆 BCSTinCN',cssClass:'title-bcstincn',desc:'Чемпион турнира BCSTinCN',reward:'Победитель турнира',issuedBy:'Tournament System'},
+    bcstincn_clan:{id:'bcstincn_clan',name:'⚔️ BCSTinCN Clan',cssClass:'title-bcstincn-clan',desc:'Клан победителя BCSTinCN',reward:'Клан победил в турнире',issuedBy:'Tournament System'}
 };
 
 const SHOP_TITLES = {};
@@ -726,7 +873,7 @@ const CHEST_TITLES = {
     chest_unicorn:{id:'chest_unicorn',name:'🦄 Единорог',cssClass:'title-unicorn',desc:'Сундук',rarity:'legendary'},
     chest_jester:{id:'chest_jester',name:'🎪 Шут',cssClass:'title-jester',desc:'Сундук',rarity:'epic'}
 };
-Object.keys(CHEST_TITLES).forEach(k=>{TITLES[k]=CHEST_TITLES[k];TITLES[k].reward='Сундук удачи';TITLES[k].issuedBy='Сундук';TITLES[k].fromChest=true;});
+Object.keys(CHEST_TITLES).forEach(k=>{TITLES[k]=CHEST_TITLES[k];TITLES[k].reward='Сундук';TITLES[k].issuedBy='Сундук';TITLES[k].fromChest=true;});
 
 const ADMIN_FREE_TITLES = ['shop_fire','shop_crystal','shop_aristocrat','shop_star','shop_predator','shop_dragon','shop_wave','shop_king','shop_galaxy','shop_skull','shop_gladiator','shop_master','shop_champion','shop_legend','shop_dragonlord','shop_supernova','shop_allseer','shop_lionking','shop_emperor','shop_archmage','shop_zeus','shop_god','shop_creator2','chest_lucky','chest_jackpot','chest_alien','chest_robot','chest_unicorn','chest_jester','admin_all'];
 
@@ -751,7 +898,7 @@ const COLOR_PRESETS = [
     {id:'grad_ocean',name:'Океан',type:'gradient',value:'linear-gradient(135deg,#1abc9c,#3498db,#9b59b6)',unlock:{level:'hard',wins:100,text:'100 Hard'}}
 ];
 
-const RESERVED_NICKS = ['admin','administrator','админ','administrator','moderator','модератор','owner','creator','создатель','support','help','helper','system','root','krestiki','noliki','safety'];
+const RESERVED_NICKS = ['admin','administrator','админ','moderator','модератор','owner','creator','создатель','support','help','helper','system','root','krestiki','noliki','safety'];
 function isReservedNick(nick){
     const lower = nick.toLowerCase().replace(/[^a-zа-я0-9]/g,'');
     if(RESERVED_NICKS.includes(lower)) return true;
@@ -770,7 +917,6 @@ function playLose(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[3
 function playBonusSound(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[880,1100,1320].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.value=.1;o.start(ctx.currentTime+i*.06);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.06+.2);o.stop(ctx.currentTime+i*.06+.2);});}
 function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6'];for(let i=0;i<50;i++){const cf=document.createElement('div');cf.className='confetti';cf.style.left=Math.random()*100+'vw';cf.style.background=colors[Math.floor(Math.random()*colors.length)];cf.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(cf);setTimeout(()=>cf.remove(),2500);}}
 function createFlash(){const f=document.createElement('div');f.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:#e74c3c;opacity:.6;pointer-events:none;z-index:998;';document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
-function explodeScreen(){for(let i=0;i<40;i++){const p=document.createElement('div');const angle=Math.random()*Math.PI*2;const dist=100+Math.random()*300;p.style.cssText=`position:fixed;top:50%;left:50%;width:8px;height:8px;background:#e74c3c;border-radius:50%;pointer-events:none;z-index:9999;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;animation:explode .8s ease-out forwards;`;document.body.appendChild(p);setTimeout(()=>p.remove(),800);}}
 
 const BOT_TAUNTS = {
     win:['😏 Слишком просто.','🤖 Ты серьёзно?','🍵 Даже чай не остыл.','😎 Легко!'],
@@ -850,15 +996,10 @@ const QUEST_POOL = {
     daily:[
         {id:'d_play3',text:'Сыграть 3 партии',desc:'Любой режим',goal:3,reward:30,event:'play'},
         {id:'d_play5',text:'Сыграть 5 партий',desc:'Любой режим',goal:5,reward:50,event:'play'},
-        {id:'d_win2',text:'Выиграть 2 партии',desc:'Победить бота',goal:2,reward:40,event:'win'},
-        {id:'d_win3',text:'Выиграть 3 партии',desc:'Победить бота',goal:3,reward:70,event:'win'},
-        {id:'d_easy2',text:'Победа на Easy 2х',desc:'Easy',goal:2,reward:30,event:'easy_win'},
+        {id:'d_win2',text:'Выиграть 2 партии',desc:'Бот',goal:2,reward:40,event:'win'},
+        {id:'d_win3',text:'Выиграть 3 партии',desc:'Бот',goal:3,reward:70,event:'win'},
         {id:'d_medium2',text:'Победа на Medium 2х',desc:'Medium',goal:2,reward:60,event:'medium_win'},
         {id:'d_hard1',text:'Победа на Hard',desc:'Hard',goal:1,reward:100,event:'hard_win'},
-        {id:'d_blitz',text:'Выиграть в Блице',desc:'Блиц',goal:1,reward:80,event:'blitz_win'},
-        {id:'d_snake',text:'Выиграть в Змейке',desc:'Змейка',goal:1,reward:70,event:'snake_win'},
-        {id:'d_chaos',text:'Выиграть в Хаосе',desc:'Хаос',goal:1,reward:80,event:'chaos_win'},
-        {id:'d_campaign',text:'Победить босса',desc:'Кампания',goal:1,reward:90,event:'campaign_win'},
         {id:'d_draw1',text:'Сыграть вничью',desc:'Любой',goal:1,reward:25,event:'draw'},
         {id:'d_online1',text:'Сыграть онлайн',desc:'Онлайн',goal:1,reward:60,event:'online'},
         {id:'d_streak3',text:'Серия 3 победы',desc:'3 подряд',goal:1,reward:120,event:'streak3'}
@@ -866,15 +1007,9 @@ const QUEST_POOL = {
     weekly:[
         {id:'w_play15',text:'Сыграть 15',desc:'За неделю',goal:15,reward:200,event:'play'},
         {id:'w_win10',text:'Выиграть 10',desc:'За неделю',goal:10,reward:300,event:'win'},
-        {id:'w_win25',text:'Выиграть 25',desc:'Хардкор!',goal:25,reward:500,event:'win'},
         {id:'w_hard5',text:'Hard x5',desc:'Сложно',goal:5,reward:400,event:'hard_win'},
-        {id:'w_hard10',text:'Hard x10',desc:'Хардкор!',goal:10,reward:600,event:'hard_win'},
         {id:'w_streak5',text:'Серия 5',desc:'5 побед',goal:1,reward:250,event:'streak5'},
-        {id:'w_streak10',text:'Серия 10',desc:'Легенда!',goal:1,reward:500,event:'streak10'},
-        {id:'w_survival5',text:'Survival ур.5',desc:'До 5-го',goal:1,reward:300,event:'survival5'},
-        {id:'w_campaign5',text:'Вся Кампания',desc:'5 боссов',goal:5,reward:700,event:'campaign_win'},
-        {id:'w_blitz5',text:'Блиц x5',desc:'Режим',goal:5,reward:350,event:'blitz_win'},
-        {id:'w_online5',text:'Онлайн x5',desc:'Матчи',goal:5,reward:400,event:'online'}
+        {id:'w_campaign5',text:'Вся Кампания',desc:'5 боссов',goal:5,reward:700,event:'campaign_win'}
     ]
 };
 function getTodayKey(){const d=new Date();return `q_day_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;}
@@ -962,14 +1097,12 @@ const SHOP_ITEMS = {
         {id:'color_fire_grad',icon:'🔥',name:'Огненный',desc:'Красно-жёлтый',price:300,rarity:'epic',type:'gradient',value:'linear-gradient(135deg,#e74c3c,#f39c12,#f1c40f)'},
         {id:'color_ice_grad',icon:'❄️',name:'Ледяной',desc:'Голубой-белый',price:300,rarity:'epic',type:'gradient',value:'linear-gradient(135deg,#3498db,#a8e6ff,#ffffff)'},
         {id:'color_galaxy',icon:'🌌',name:'Галактика',desc:'Космос',price:400,rarity:'epic',type:'gradient',value:'linear-gradient(135deg,#2c3e50,#8e44ad,#3498db,#e84393)'},
-        {id:'color_matrix',icon:'🟢',name:'Матрица',desc:'Хакерский',price:400,rarity:'epic',type:'gradient',value:'linear-gradient(135deg,#0f0,#0a0,#030)'},
         {id:'color_diamond',icon:'💎',name:'Алмазный',desc:'Сине-голубой',price:600,rarity:'legendary',type:'gradient',value:'linear-gradient(135deg,#00d4ff,#5f9ea0,#00ffff,#1e90ff)'},
         {id:'color_rainbow_p',icon:'🌈',name:'Радуга',desc:'Полный спектр',price:800,rarity:'legendary',type:'gradient',value:'linear-gradient(90deg,#e74c3c,#e67e22,#f1c40f,#2ecc71,#1abc9c,#3498db,#9b59b6,#e74c3c)'}
     ],
     boosts: [
         {id:'boost_x2_1h',icon:'⚡',name:'x2 монет (1ч)',desc:'Удваивает',price:150,rarity:'rare',type:'boost',duration:3600000,multiplier:2},
         {id:'boost_x2_24h',icon:'⚡',name:'x2 монет (24ч)',desc:'Удваивает',price:600,rarity:'epic',type:'boost',duration:86400000,multiplier:2},
-        {id:'boost_x15_24h',icon:'🚀',name:'x1.5 монет (24ч)',desc:'+50%',price:350,rarity:'rare',type:'boost',duration:86400000,multiplier:1.5},
         {id:'quest_reroll',icon:'🔄',name:'Смена квестов',desc:'Перевыбрать 5',price:100,rarity:'common',type:'consumable',action:'reroll_daily'},
         {id:'quest_skip',icon:'🎫',name:'Пропуск квеста',desc:'Закрыть 1',price:300,rarity:'rare',type:'consumable',action:'skip_quest'}
     ],
@@ -986,6 +1119,9 @@ Object.values(SHOP_TITLES).forEach(t=>{
 SHOP_ITEMS.titles.sort((a,b)=>a.price-b.price);
 const RARITY_LABELS = {common:'Обычный',rare:'Редкий',epic:'Эпический',legendary:'Легендарный'};
 
+/* ============================================================
+   ИНВЕНТАРЬ
+   ============================================================ */
 function getOwnedItems(){return JSON.parse(localStorage.getItem('owned_items')||'[]');}
 function setOwnedItems(a){localStorage.setItem('owned_items',JSON.stringify(a));}
 function addOwnedItem(id){const a=getOwnedItems();if(!a.includes(id)){a.push(id);setOwnedItems(a);}}
@@ -1025,7 +1161,7 @@ function getInventoryItems(cat){
     if(cat==='titles') return all.filter(i=>i.type==='title');
     if(cat==='boosts') return all.filter(i=>i.type==='boost');
     if(cat==='consumables') return all.filter(i=>i.type==='consumable');
-    if(cat==='special') return all.filter(i=>['badge','upgrade','chest'].includes(i.type));
+    if(cat==='special') return all.filter(i=>['upgrade','chest'].includes(i.type));
     return all;
 }
 function openInventoryModal(){
@@ -1276,6 +1412,10 @@ function renderTitlesGrid(){
 function renderTitleBadge(key){
     if(!key) return '';
     const t = TITLES[key]; if(!t) return '';
+    // Особый случай — BCSTinCN с картинкой
+    if(t.id === 'bcstincn_champion'){
+        return '<span class="title-badge '+t.cssClass+'" data-title="'+key+'" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><img src="bcstincn-trophy.png" style="width:16px;height:16px;filter:brightness(1.3);vertical-align:middle;border-radius:3px;" onerror="this.style.display=\'none\'">BCSTinCN</span>';
+    }
     return '<span class="title-badge '+t.cssClass+'" data-title="'+key+'" style="cursor:pointer;">'+t.name+'</span>';
 }
 function getClanTag(){return myClanData ? '['+myClanData.tag+']' : '';}
@@ -1294,7 +1434,15 @@ document.addEventListener('click',(e)=>{
     if(badge && badge.dataset.title){
         const t = TITLES[badge.dataset.title]; if(!t) return;
         $('title-info-name').innerHTML = t.name;
-        $('title-info-body').innerHTML = '<p><b>Описание:</b><br>'+t.desc+'</p><p><b>Награда:</b><br>'+(t.reward||'—')+'</p>';
+        let body = '<p><b>Описание:</b><br>'+t.desc+'</p><p><b>Награда:</b><br>'+(t.reward||'—')+'</p>';
+        if(t.id === 'bcstincn_champion'){
+            body += '<div style="padding:12px;background:linear-gradient(135deg,#1a1a1a,#3a3a3a);border:2px solid #c0c0c0;border-radius:10px;margin-top:10px;text-align:center;">';
+            body += '<img src="bcstincn-trophy.png" style="max-width:120px;border-radius:8px;filter:drop-shadow(0 0 15px rgba(255,255,255,.5));" onerror="this.style.display=\'none\'">';
+            body += '<div style="color:#fff;font-size:16px;font-weight:900;letter-spacing:3px;margin-top:8px;font-family:\'Arial Black\',sans-serif;">BCSTinCN</div>';
+            body += '<div style="color:#b0b0b0;font-size:11px;margin-top:4px;">🏆 Чемпион турнира</div>';
+            body += '</div>';
+        }
+        $('title-info-body').innerHTML = body;
         $('title-info-modal').classList.add('active');
         e.stopPropagation();
     }
@@ -1349,141 +1497,55 @@ function listenForNewTitles(uid){
 /* ============================================================
    АВАТАРКИ
    ============================================================ */
-function uploadAvatar(blob){
-    if(!currentUID) return Promise.reject();
-    const ref = storage.ref('avatars/'+currentUID+'.jpg');
-    return ref.put(blob).then(snap=>snap.ref.getDownloadURL());
-}
-function saveAvatarURL(url){
-    if(!currentUID) return;
-    database.ref('users/'+currentUID+'/avatar').set(url);
-    if(myClanId) database.ref('clans/'+myClanId+'/members/'+currentUID+'/avatar').set(url);
-}
+const AVATAR_CATEGORIES = {
+    faces: {name:'😀 Лица',list:['😀','😎','🤓','😺','🤠','🥳','😈','🤡','👽','🤖','👻','💀','🧙','🧛','🧝','🥷','👑','🎃']},
+    animals: {name:'🐾 Животные',list:['🐶','🐱','🦊','🐺','🦁','🐯','🐨','🐼','🐸','🐵','🦉','🦅','🐲','🦄','🐙','🦈','🐊','🦖']},
+    fantasy: {name:'🐉 Фэнтези',list:['🐉','🦄','🧜','🧚','🧞','👼','😇','🗡️','⚔️','🏹','🛡️','🔮','⚗️','🌪️','🔥','❄️','⚡','🌙']},
+    games: {name:'🎮 Игровые',list:['🎮','🕹️','🎲','🎯','🎰','🃏','♟️','⚽','🏀','🎾','🎳','🏆','🥇','🥈','🥉','🎖️','🏅','👾']},
+    special: {name:'⭐ Особые',list:['🌟','💎','👑','🎩','🎭','🎨','🎪','🔱','☯️','✨','💫','🌈','❤️‍🔥','🌌','☠️','🎁','🍀','🔑']}
+};
+
 function loadAvatar(uid){
     if(!uid) return Promise.resolve(null);
     return database.ref('users/'+uid+'/avatar').once('value').then(s=>{
-        const url = s.val();
-        currentAvatarURL = url;
-        renderAvatars(url);
-        return url;
+        const av = s.val();
+        currentAvatar = av || '👤';
+        renderAvatars(currentAvatar);
+        return currentAvatar;
     });
 }
-function renderAvatars(url){
-    const topbar = $('avatar-topbar'), large = $('avatar-large'), removeBtn = $('avatar-remove-btn');
-    if(url){
-        const img = '<img src="'+url+'" onerror="this.parentNode.innerHTML=\'👤\';">';
-        if(topbar) topbar.innerHTML = img;
-        if(large) large.innerHTML = img;
-        if(removeBtn) removeBtn.style.display = 'inline-block';
-    } else {
-        if(topbar) topbar.innerHTML = '👤';
-        if(large) large.innerHTML = '👤';
-        if(removeBtn) removeBtn.style.display = 'none';
+function renderAvatars(av){
+    const topbar = $('avatar-topbar');
+    const large = $('avatar-large');
+    const removeBtn = $('avatar-remove-btn');
+    const display = av || '👤';
+    if(topbar) topbar.innerHTML = '<span style="font-size:22px;">' + display + '</span>';
+    if(large) large.innerHTML = '<span style="font-size:60px;">' + display + '</span>';
+    if(removeBtn) removeBtn.style.display = (av && av !== '👤') ? 'inline-block' : 'none';
     }
+/* ============================================================
+   ПОДТВЕРЖДЕНИЕ
+   ============================================================ */
+let confirmCallback = null;
+function askConfirm(emoji, title, text, callback){
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay active';
+    modal.innerHTML = `<div class="modal" style="max-width:340px;text-align:center;">
+        <span style="font-size:48px;display:block;margin-bottom:12px;">${emoji}</span>
+        <h3 style="font-size:18px;margin-bottom:8px;">${title}</h3>
+        <p style="font-size:14px;color:var(--text-2);margin-bottom:20px;">${text}</p>
+        <div style="display:flex;gap:8px;">
+            <button class="cn-no" style="flex:1;padding:12px;background:var(--cell-bg);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;">Отмена</button>
+            <button class="cn-yes" style="flex:1;padding:12px;background:#e74c3c;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;">Да</button>
+        </div>
+    </div>`;
+    document.body.appendChild(modal);
+    modal.querySelector('.cn-no').onclick = ()=>modal.remove();
+    modal.querySelector('.cn-yes').onclick = ()=>{ modal.remove(); callback && callback(); };
 }
-$('avatar-topbar').addEventListener('click',()=>{
-    if(!currentNick){nickModal.classList.add('active');return;}
-    loadProfile();
-    $('profile-modal').classList.add('active');
-});
-$('nick-display').addEventListener('click',()=>{
-    if(!currentNick){nickModal.classList.add('active');return;}
-    loadProfile();
-    $('profile-modal').classList.add('active');
-});
-$('avatar-upload-btn').addEventListener('click',()=>$('avatar-input').click());
-$('avatar-input').addEventListener('change',(e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    if(file.size > 32*1024*1024){alert('❌ Макс 32 МБ');return;}
-    if(!file.type.startsWith('image/')){alert('Выберите изображение');return;}
-    const reader = new FileReader();
-    reader.onload = ev=>{
-        const img = new Image();
-        img.onload = ()=>openCropModal(img);
-        img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
-});
-function openCropModal(image){
-    const canvas = $('avatar-crop-canvas');
-    const ctx = canvas.getContext('2d');
-    const size = 280;
-    $('avatar-zoom-range').value = '1';
-    avatarCropState = {image,offsetX:0,offsetY:0,zoom:1,dragging:false,dragStart:{x:0,y:0},imgStart:{x:0,y:0}};
-    function draw(){
-        ctx.clearRect(0,0,size,size);
-        ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0,0,size,size);
-        const st = avatarCropState;
-        const baseScale = Math.max(size/image.width,size/image.height);
-        const scale = baseScale*st.zoom;
-        const w = image.width*scale, h = image.height*scale;
-        const x = (size-w)/2+st.offsetX, y = (size-h)/2+st.offsetY;
-        ctx.drawImage(image,x,y,w,h);
-        ctx.globalCompositeOperation = 'destination-in';
-        ctx.beginPath();ctx.arc(size/2,size/2,size/2-2,0,Math.PI*2);ctx.fill();
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = '#f1c40f';ctx.lineWidth = 4;
-        ctx.beginPath();ctx.arc(size/2,size/2,size/2-2,0,Math.PI*2);ctx.stroke();
-    }
-    draw();
-    function getPos(e){if(e.touches&&e.touches[0])return{x:e.touches[0].clientX,y:e.touches[0].clientY};return{x:e.clientX,y:e.clientY};}
-    function startDrag(e){avatarCropState.dragging=true;const p=getPos(e);avatarCropState.dragStart=p;avatarCropState.imgStart={x:avatarCropState.offsetX,y:avatarCropState.offsetY};}
-    function moveDrag(e){if(!avatarCropState.dragging)return;const p=getPos(e);avatarCropState.offsetX=avatarCropState.imgStart.x+(p.x-avatarCropState.dragStart.x);avatarCropState.offsetY=avatarCropState.imgStart.y+(p.y-avatarCropState.dragStart.y);draw();e.preventDefault();}
-    function endDrag(){avatarCropState.dragging=false;}
-    canvas.onmousedown=startDrag;canvas.onmousemove=moveDrag;canvas.onmouseup=endDrag;canvas.onmouseleave=endDrag;
-    canvas.ontouchstart=startDrag;canvas.ontouchmove=moveDrag;canvas.ontouchend=endDrag;
-    $('avatar-zoom-range').oninput = ()=>{avatarCropState.zoom=parseFloat($('avatar-zoom-range').value);draw();};
-    $('avatar-crop-modal').classList.add('active');
-}
-$('avatar-crop-save').addEventListener('click',()=>{
-    if(!avatarCropState) return;
-    const status = $('avatar-status');
-    status.textContent = '⏳ Загрузка...';
-    const fc = document.createElement('canvas');
-    fc.width = 400; fc.height = 400;
-    const fctx = fc.getContext('2d');
-    const size = 400;
-    const st = avatarCropState;
-    const img = st.image;
-    const bs = Math.max(size/img.width,size/img.height);
-    const scale = bs*st.zoom*(size/280);
-    const w = img.width*scale, h = img.height*scale;
-    const x = (size-w)/2+st.offsetX*(size/280);
-    const y = (size-h)/2+st.offsetY*(size/280);
-    fctx.drawImage(img,x,y,w,h);
-    fc.toBlob(blob=>{
-        if(!blob){status.textContent='❌ Ошибка';return;}
-        uploadAvatar(blob).then(url=>saveAvatarURL(url)).then(()=>{
-            database.ref('users/'+currentUID+'/avatar').once('value').then(s=>{
-                currentAvatarURL = s.val();
-                renderAvatars(currentAvatarURL);
-            });
-            status.textContent = '✅ Загружено!';
-            playBonusSound(); createConfetti();
-            $('avatar-crop-modal').classList.remove('active');
-            setTimeout(()=>status.textContent='',2500);
-        }).catch(err=>status.textContent='❌ '+(err.message||'Ошибка'));
-    },'image/jpeg',0.9);
-});
-$('avatar-crop-cancel').addEventListener('click',()=>{$('avatar-crop-modal').classList.remove('active');avatarCropState=null;});
-$('avatar-remove-btn').addEventListener('click',()=>{
-    if(!confirm('Удалить аватарку?')) return;
-    const status = $('avatar-status');
-    status.textContent = '⏳ Удаление...';
-    const ref = storage.ref('avatars/'+currentUID+'.jpg');
-    ref.delete().catch(()=>{}).then(()=>database.ref('users/'+currentUID+'/avatar').remove()).then(()=>{
-        currentAvatarURL = null;
-        renderAvatars(null);
-        if(myClanId) database.ref('clans/'+myClanId+'/members/'+currentUID+'/avatar').remove();
-        status.textContent = '✅ Удалено';
-        setTimeout(()=>status.textContent='',2000);
-    }).catch(err=>status.textContent='❌ '+err.message);
-});
 
 /* ============================================================
-   ПРОФИЛЬ / ИСТОРИЯ / ЛИДЕРЫ
+   ЗАГРУЗКА ПРОФИЛЯ / ИСТОРИЯ / ЛИДЕРЫ (С BCSTinCN)
    ============================================================ */
 function loadProfile(){
     const content = $('profile-content');
@@ -1504,11 +1566,11 @@ function loadProfile(){
                 const n = lvl==='easy'?'🟢 Легко':lvl==='medium'?'🟡 Средне':'🔴 Сложно';
                 html += '<div style="margin-bottom:8px;padding:8px;background:rgba(0,0,0,.2);border-radius:8px;font-size:13px;"><b>'+n+'</b> · 🏆 '+(d.wins||0)+' · 💀 '+(d.losses||0)+' · 🤝 '+(d.draws||0)+'</div>';
             });
-            const surv = (all.survival && all.survival[currentNick.toLowerCase()]) ? all.survival[currentNick.toLowerCase()] : {best:0};
-            html += '<div style="margin-bottom:12px;padding:10px;background:linear-gradient(135deg,#8e44ad,#c0392b);border-radius:8px;color:#fff;font-size:13px;"><b>🌪️ Выживание</b> · Лучший уровень: <b>'+(surv.best||0)+'</b></div>';
             content.innerHTML = html;
         });
     });
+    // BCSTinCN трофей в профиле
+    loadBcstincnTrophyInProfile();
 }
 function loadHistory(){
     const list = $('history-list');
@@ -1530,7 +1592,14 @@ function loadLeaders(level){
         database.ref('users').once('value').then(us=>{
             const users = us.val()||{};
             const avatarMap = {};
-            Object.keys(users).forEach(uid=>{const u=users[uid];if(u.nick)avatarMap[u.nick.toLowerCase()] = u.avatar||null;});
+            const uidMap = {};
+            Object.keys(users).forEach(uid=>{
+                const u = users[uid];
+                if(u.nick){
+                    avatarMap[u.nick.toLowerCase()] = u.avatar || null;
+                    uidMap[u.nick.toLowerCase()] = uid;
+                }
+            });
             if(level==='survival'){
                 const arr = Object.keys(data).map(k=>({nick:k,...data[k]})).sort((a,b)=>(b.best||0)-(a.best||0)).slice(0,30);
                 let html = '<div style="padding:10px;margin-bottom:10px;background:linear-gradient(135deg,#8e44ad,#c0392b);border-radius:10px;color:#fff;font-weight:bold;">🌪️ SURVIVAL</div>';
@@ -1538,9 +1607,11 @@ function loadLeaders(level){
                 else{
                     html += '<ol style="padding-left:22px;">';
                     arr.forEach(p=>{
+                        const uid = uidMap[p.nick.toLowerCase()];
                         const av = avatarMap[p.nick.toLowerCase()];
-                        const avHtml = av ? '<span class="mini-avatar"><img src="'+av+'"></span>' : '<span class="mini-avatar">👤</span>';
-                        html += '<li style="margin-bottom:6px;font-size:13px;">'+avHtml+'<b>'+p.nick+'</b> — Lvl. '+(p.best||0)+'</li>';
+                        const avHtml = av ? '<span class="mini-avatar"><span style="font-size:18px;">'+av+'</span></span>' : '<span class="mini-avatar">👤</span>';
+                        const bcstincn = getBcstincnBadgeHTML(uid || p.nick);
+                        html += '<li style="margin-bottom:6px;font-size:13px;display:flex;align-items:center;">'+avHtml+'<div style="flex:1;"><b>'+p.nick+'</b>'+bcstincn+' — Lvl. '+(p.best||0)+'</div></li>';
                     });
                     html += '</ol>';
                 }
@@ -1553,9 +1624,11 @@ function loadLeaders(level){
             else{
                 html = '<ol style="padding-left:22px;">';
                 arr.forEach(p=>{
+                    const uid = uidMap[p.nick.toLowerCase()];
                     const av = avatarMap[p.nick.toLowerCase()];
-                    const avHtml = av ? '<span class="mini-avatar"><img src="'+av+'"></span>' : '<span class="mini-avatar">👤</span>';
-                    html += '<li style="margin-bottom:6px;font-size:13px;">'+avHtml+'<b>'+p.nick+'</b> — 🏆 '+(p.wins||0)+'</li>';
+                    const avHtml = av ? '<span class="mini-avatar"><span style="font-size:18px;">'+av+'</span></span>' : '<span class="mini-avatar">👤</span>';
+                    const bcstincn = getBcstincnBadgeHTML(uid || p.nick);
+                    html += '<li style="margin-bottom:6px;font-size:13px;display:flex;align-items:center;">'+avHtml+'<div style="flex:1;"><b>'+p.nick+'</b>'+bcstincn+' — 🏆 '+(p.wins||0)+'</div></li>';
                 });
                 html += '</ol>';
             }
@@ -1614,6 +1687,78 @@ function renderAdminTitlesList(){
 }
 
 /* ============================================================
+   BCSTinCN — ОТОБРАЖЕНИЕ В ТОПАХ
+   ============================================================ */
+const BCSTINCN_IMG = 'bcstincn-trophy.png';
+
+async function loadBcstincnChampions(){
+    try {
+        const snap = await database.ref('bcstincnActive').once('value');
+        const data = snap.val() || {};
+        bcstincnChampions = new Set(data.champions || []);
+        bcstincnClanWinners = new Set(data.clanMembers || []);
+        bcstincnClanIds = new Set(data.clanIds || []);
+    } catch(err){ console.error('Ошибка загрузки BCSTinCN:', err); }
+}
+function isBcstincnChampion(uidOrNick){
+    if(!uidOrNick) return false;
+    const id = String(uidOrNick).toLowerCase();
+    for(const c of bcstincnChampions){ if(String(c).toLowerCase() === id) return true; }
+    return false;
+}
+function isBcstincnClanMember(uidOrNick){
+    if(!uidOrNick) return false;
+    const id = String(uidOrNick).toLowerCase();
+    for(const c of bcstincnClanWinners){ if(String(c).toLowerCase() === id) return true; }
+    return false;
+}
+function isBcstincnWinnerClan(clanId){
+    if(!clanId) return false;
+    return bcstincnClanIds.has(clanId);
+}
+function getBcstincnBadgeHTML(uidOrNick){
+    if(isBcstincnChampion(uidOrNick)){
+        return `<span class="bcstincn-mini-badge" title="🏆 Чемпион BCSTinCN"><img src="${BCSTINCN_IMG}" alt="BCSTinCN" onerror="this.parentNode.innerHTML='🏆'"></span>`;
+    }
+    if(isBcstincnClanMember(uidOrNick)){
+        return `<span class="bcstincn-mini-badge" title="⚔️ Клан чемпиона BCSTinCN" style="border-color:#8b949e;box-shadow:0 0 6px rgba(139,148,158,.5);"><img src="${BCSTINCN_IMG}" alt="BCSTinCN" style="filter:brightness(.85);" onerror="this.parentNode.innerHTML='⚔️'"></span>`;
+    }
+    return '';
+}
+function getBcstincnClanBadgeHTML(clanId){
+    if(!isBcstincnWinnerClan(clanId)) return '';
+    return `<span class="bcstincn-clan-badge" title="🏆 Клан выиграл турнир BCSTinCN"><img src="${BCSTINCN_IMG}" alt="BCSTinCN" onerror="this.style.display='none'">BCSTinCN</span>`;
+}
+function getBcstincnChatBadgeHTML(uid){
+    if(isBcstincnChampion(uid)){
+        return `<span class="chat-bcstincn" title="🏆 Чемпион BCSTinCN"><img src="${BCSTINCN_IMG}" alt="🏆" onerror="this.parentNode.innerHTML='🏆'"></span>`;
+    }
+    if(isBcstincnClanMember(uid)){
+        return `<span class="chat-bcstincn" title="⚔️ Клан чемпиона" style="opacity:.7;"><img src="${BCSTINCN_IMG}" alt="⚔️" onerror="this.parentNode.innerHTML='⚔️'"></span>`;
+    }
+    return '';
+}
+async function loadBcstincnTrophyInProfile(){
+    if(!currentUID) return;
+    const container = $('bcstincn-profile-container');
+    if(!container) return;
+    const snap = await database.ref('users/' + currentUID + '/specialTitle').once('value');
+    const special = snap.val();
+    if(special && special.isBcstincn && special.expiresAt > Date.now()){
+        const daysLeft = Math.ceil((special.expiresAt - Date.now()) / 86400000);
+        container.innerHTML = `
+            <div class="bcstincn-trophy-container">
+                <img src="${BCSTINCN_IMG}" alt="BCSTinCN" onerror="this.style.display='none'">
+                <div class="trophy-title">BCSTinCN</div>
+                <div class="trophy-sub">🏆 Чемпион «${special.tournamentName}»</div>
+                <div class="trophy-sub" style="color:#8b949e;margin-top:4px;">⏰ Ещё ${daysLeft} дн.</div>
+            </div>
+        `;
+    } else {
+        container.innerHTML = '';
+    }
+    }
+/* ============================================================
    БЛОКИРОВКИ / АПЕЛЛЯЦИИ
    ============================================================ */
 function logBanHistory(entry){return database.ref('banHistory').push({...entry,timestamp:Date.now()});}
@@ -1655,8 +1800,7 @@ function hideBanScreen(){$('ban-screen').classList.remove('active');if(banCheckI
 $('ban-logout').addEventListener('click',()=>{if(confirm('Выйти?')){if(banCheckInterval)clearInterval(banCheckInterval);auth.signOut();}});
 $('ban-appeal').addEventListener('click',()=>{
     if(!myCurrentBanData){alert('Нет бана');return;}
-    $('appeal-reason').value = '';
-    $('appeal-status').textContent = '';
+    $('appeal-reason').value='';$('appeal-status').textContent='';
     $('appeal-modal').classList.add('active');
 });
 $('appeal-close').addEventListener('click',()=>$('appeal-modal').classList.remove('active'));
@@ -1815,26 +1959,228 @@ function updateAppealCount(){
 }
 
 /* ============================================================
+   ТУРНИРЫ
+   ============================================================ */
+function isBlitzTournamentMatch(roundIdx,totalRounds){
+    const rn = roundIdx+1; const ff = totalRounds-rn;
+    return ff===0 || ff===1;
+}
+function generateRoomCode(){
+    const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code='';
+    for(let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
+    return code;
+}
+function getTournamentDate(){
+    const d=new Date();
+    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return months[d.getMonth()]+' '+d.getFullYear();
+}
+
+/* ============================================================
+   BCSTinCN — ВЫДАЧА ПОБЕДИТЕЛЮ И КЛАНУ
+   ============================================================ */
+const BCSTINCN_CONFIG = {
+    trophyImage: 'bcstincn-trophy.png',
+    titleDurationDays: 30,
+    titleKey: 'bcstincn_champion',
+    clanTitleKey: 'bcstincn_clan'
+};
+
+async function awardBcstincnTitle(tournament, winnerUid, winnerNick){
+    if(!winnerUid){ console.warn('⚠️ Нет UID победителя'); return null; }
+    const tourId = tournament.id;
+    const tourName = tournament.name;
+    const finishedAt = tournament.finishedAt || Date.now();
+    const expiresAt = finishedAt + (BCSTINCN_CONFIG.titleDurationDays * 24 * 3600000);
+
+    const clanIdSnap = await database.ref('users/' + winnerUid + '/clanId').once('value');
+    const clanId = clanIdSnap.val();
+    let clanMembers = [];
+    let clanName = null;
+
+    if(clanId){
+        const clanSnap = await database.ref('clans/' + clanId).once('value');
+        const clan = clanSnap.val();
+        if(clan){
+            clanName = clan.name;
+            clanMembers = Object.keys(clan.members || {});
+        }
+    }
+
+    const winnerTitleData = {
+        id: BCSTINCN_CONFIG.titleKey,
+        name: '🏆 BCSTinCN',
+        cssClass: 'title-bcstincn',
+        desc: 'Чемпион турнира «' + tourName + '»',
+        reward: 'Победитель турнира',
+        issuedBy: 'Tournament System',
+        issuedAt: finishedAt,
+        expiresAt: expiresAt,
+        tournamentId: tourId,
+        tournamentName: tourName,
+        forWinner: winnerNick,
+        isBcstincn: true,
+        trophyImage: BCSTINCN_CONFIG.trophyImage
+    };
+
+    await database.ref('customTitles/' + BCSTINCN_CONFIG.titleKey).set(winnerTitleData);
+    await database.ref('users/' + winnerUid + '/titles/' + BCSTINCN_CONFIG.titleKey).set(true);
+    await database.ref('users/' + winnerUid + '/specialTitle').set({
+        titleKey: BCSTINCN_CONFIG.titleKey,
+        grantedAt: finishedAt,
+        expiresAt: expiresAt,
+        tournamentId: tourId,
+        tournamentName: tourName,
+        isBcstincn: true,
+        trophyImage: BCSTINCN_CONFIG.trophyImage
+    });
+
+    if(clanId && clanMembers.length > 0){
+        const clanTitleData = {
+            id: BCSTINCN_CONFIG.clanTitleKey,
+            name: '⚔️ BCSTinCN Clan',
+            cssClass: 'title-bcstincn-clan',
+            desc: 'Клан «' + clanName + '» выиграл турнир',
+            reward: 'Клан победил в турнире',
+            issuedBy: 'Tournament System',
+            issuedAt: finishedAt,
+            expiresAt: expiresAt,
+            tournamentId: tourId,
+            clanId: clanId,
+            clanName: clanName,
+            isBcstincn: true,
+            isClanTitle: true
+        };
+        await database.ref('customTitles/' + BCSTINCN_CONFIG.clanTitleKey).set(clanTitleData);
+
+        const updates = {};
+        clanMembers.forEach(uid => {
+            if(uid !== winnerUid){
+                updates['users/' + uid + '/titles/' + BCSTINCN_CONFIG.clanTitleKey] = true;
+                updates['users/' + uid + '/specialClanTitle'] = {
+                    titleKey: BCSTINCN_CONFIG.clanTitleKey,
+                    grantedAt: finishedAt,
+                    expiresAt: expiresAt,
+                    tournamentId: tourId,
+                    clanId: clanId,
+                    isBcstincn: true
+                };
+            }
+        });
+        if(Object.keys(updates).length > 0){ await database.ref().update(updates); }
+    }
+
+    // Обновляем активных чемпионов для топов
+    await database.ref('bcstincnActive').set({
+        champions: [winnerUid],
+        clanMembers: clanMembers,
+        clanIds: clanId ? [clanId] : [],
+        winnerNick: winnerNick,
+        winnerUid: winnerUid,
+        clanId: clanId,
+        clanName: clanName,
+        tournamentId: tourId,
+        tournamentName: tourName,
+        grantedAt: finishedAt,
+        expiresAt: expiresAt
+    });
+
+    bcstincnChampions = new Set([winnerUid]);
+    bcstincnClanWinners = new Set(clanMembers);
+    bcstincnClanIds = clanId ? new Set([clanId]) : new Set();
+
+    // История
+    await database.ref('bcstincnHistory').push({
+        tournamentId: tourId, tournamentName: tourName,
+        winnerUid: winnerUid, winnerNick: winnerNick,
+        clanId: clanId, clanName: clanName,
+        clanMembersCount: clanMembers.length,
+        grantedAt: finishedAt, expiresAt: expiresAt
+    });
+
+    // Праздничная модалка
+    if(currentUID === winnerUid){
+        setTimeout(() => showBcstincnCelebration(tourName, clanName), 500);
+    }
+
+    return { winnerTitleKey: BCSTINCN_CONFIG.titleKey, expiresAt: expiresAt };
+}
+
+function showBcstincnCelebration(tourName, clanName){
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay active';
+    modal.style.background = 'rgba(0,0,0,.95)';
+    modal.innerHTML = `
+        <div class="modal" style="max-width:95vw;min-width:300px;background:linear-gradient(135deg,#1a1a1a,#3a3a3a);border:3px solid #c0c0c0;text-align:center;padding:24px;">
+            <div class="bcstincn-trophy-container" style="background:transparent;border:none;box-shadow:none;padding:0;">
+                <img src="${BCSTINCN_CONFIG.trophyImage}" alt="BCSTinCN" onerror="this.style.display='none'">
+                <div class="trophy-title">BCSTinCN</div>
+                <div class="trophy-sub" style="font-size:13px;">🏆 ЧЕМПИОН ТУРНИРА</div>
+            </div>
+            <div style="color:#e0e0e0;font-size:15px;margin-bottom:10px;"><b>${tourName}</b></div>
+            ${clanName ? `<div style="color:#b0b0b0;font-size:13px;margin-bottom:16px;">Клан <b>${clanName}</b> тоже получил титул! ⚔️</div>` : ''}
+            <div style="color:#c0c0c0;font-size:12px;margin-bottom:20px;font-style:italic;">Титул автоматически снимется через ${BCSTINCN_CONFIG.titleDurationDays} дней<br>или при следующем турнире</div>
+            <button onclick="this.closest('.modal-overlay').remove()" style="background:linear-gradient(135deg,#4a4a4a,#1a1a1a);color:#fff;font-size:16px;font-weight:900;padding:14px 40px;border:2px solid #c0c0c0;border-radius:12px;cursor:pointer;letter-spacing:2px;font-family:'Arial Black',sans-serif;">🏆 ЗАБРАТЬ</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    for(let i=0;i<3;i++) setTimeout(createConfetti, i*300);
+    playWin();
+}
+
+async function checkAndRemoveExpiredBcstincn(){
+    if(!currentUID) return;
+    const now = Date.now();
+    const s1 = await database.ref('users/' + currentUID + '/specialTitle').once('value');
+    const special = s1.val();
+    if(special && special.isBcstincn && special.expiresAt < now){
+        await database.ref('users/' + currentUID + '/titles/' + special.titleKey).remove();
+        await database.ref('users/' + currentUID + '/specialTitle').remove();
+        if(currentTitle === special.titleKey) currentTitle = null;
+        if(currentTitle2 === special.titleKey) currentTitle2 = null;
+        applyTitleToNick();
+    }
+    const s2 = await database.ref('users/' + currentUID + '/specialClanTitle').once('value');
+    const clanSpecial = s2.val();
+    if(clanSpecial && clanSpecial.isBcstincn && clanSpecial.expiresAt < now){
+        await database.ref('users/' + currentUID + '/titles/' + clanSpecial.titleKey).remove();
+        await database.ref('users/' + currentUID + '/specialClanTitle').remove();
+        if(currentTitle === clanSpecial.titleKey) currentTitle = null;
+        if(currentTitle2 === clanSpecial.titleKey) currentTitle2 = null;
+        applyTitleToNick();
+    }
+}
+
+async function removeAllBcstincnTitles(){
+    const usersSnap = await database.ref('users').once('value');
+    const users = usersSnap.val() || {};
+    const updates = {};
+    Object.keys(users).forEach(uid => {
+        const u = users[uid];
+        if(u.titles && u.titles[BCSTINCN_CONFIG.titleKey]){ updates['users/'+uid+'/titles/'+BCSTINCN_CONFIG.titleKey]=null; updates['users/'+uid+'/specialTitle']=null; }
+        if(u.titles && u.titles[BCSTINCN_CONFIG.clanTitleKey]){ updates['users/'+uid+'/titles/'+BCSTINCN_CONFIG.clanTitleKey]=null; updates['users/'+uid+'/specialClanTitle']=null; }
+    });
+    if(Object.keys(updates).length > 0){ await database.ref().update(updates); }
+    await database.ref('bcstincnActive').remove();
+    bcstincnChampions = new Set();
+    bcstincnClanWinners = new Set();
+    bcstincnClanIds = new Set();
+}
+
+setTimeout(checkAndRemoveExpiredBcstincn, 3000);
+setInterval(checkAndRemoveExpiredBcstincn, 3600000);
+
+/* ============================================================
    КЛАНЫ
    ============================================================ */
 function getRoleInfo(roleId){return CLAN_ROLES[roleId] || CLAN_ROLES.member;}
-function getMyClanRole(){
-    if(!myClanData || !myClanData.members || !currentUID) return null;
-    const m = myClanData.members[currentUID];
-    return m ? m.role : null;
-}
-function canIRoleAction(action){
-    const role = getMyClanRole();
-    if(!role) return false;
-    const info = CLAN_ROLES[role];
-    return info ? info[action] === true : false;
-}
-function canManageRole(myRole, targetRole){
-    return getRoleInfo(myRole).priority < getRoleInfo(targetRole).priority;
-}
+function getMyClanRole(){ if(!myClanData || !myClanData.members || !currentUID) return null; const m=myClanData.members[currentUID]; return m?m.role:null; }
+function canIRoleAction(action){ const r=getMyClanRole(); if(!r) return false; const i=CLAN_ROLES[r]; return i?i[action]===true:false; }
+function canManageRole(myRole, targetRole){ return getRoleInfo(myRole).priority < getRoleInfo(targetRole).priority; }
 function generateClanId(){
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code = '';
+    const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code='';
     for(let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
     return code;
 }
@@ -1847,7 +2193,7 @@ function openClansModal(){
     if(!currentNick){nickModal.classList.add('active');return;}
     $('clans-modal').classList.add('active');
     loadMyClan().then(()=>{
-        const myTab = $('clan-tab-my'), createTab = $('clan-tab-create');
+        const myTab=$('clan-tab-my'), createTab=$('clan-tab-create');
         if(myClanId){myTab.style.display='inline-block';createTab.style.display='none';}
         else{myTab.style.display='none';createTab.style.display='inline-block';}
         switchClanTab(myClanId?'my':'list');
@@ -1859,10 +2205,7 @@ function loadMyClan(){
         const clanId = s.val();
         myClanId = clanId;
         if(!clanId){myClanData=null;return null;}
-        return database.ref('clans/'+clanId).once('value').then(cs=>{
-            myClanData = cs.val();
-            return myClanData;
-        });
+        return database.ref('clans/'+clanId).once('value').then(cs=>{ myClanData = cs.val(); return myClanData; });
     });
 }
 function switchClanTab(tab){
@@ -1873,10 +2216,7 @@ function switchClanTab(tab){
     cleanupClanListeners();
     const content = $('clan-content');
     if(tab==='list') renderClansList(content);
-    else if(tab==='my'){
-        if(!myClanId){content.innerHTML='<div style="text-align:center;padding:20px;opacity:0.7;">Вы не в клане</div>';return;}
-        renderMyClan(content);
-    }
+    else if(tab==='my'){ if(!myClanId){content.innerHTML='<div style="text-align:center;padding:20px;opacity:0.7;">Вы не в клане</div>';return;} renderMyClan(content); }
     else if(tab==='top') renderClansTop(content);
     else if(tab==='create') renderCreateClan(content);
 }
@@ -1894,16 +2234,16 @@ function renderClansList(container){
         const list = document.createElement('div');
         list.className = 'clan-list';
         clans.forEach(c=>list.appendChild(createClanCard(c)));
-        container.innerHTML = '';
-        container.appendChild(list);
+        container.innerHTML=''; container.appendChild(list);
     });
 }
 function createClanCard(clan){
     const card = document.createElement('div');
     card.className = 'clan-card';
     if(clan.id===myClanId) card.classList.add('my-clan');
-    const av = clan.avatar ? '<img src="'+clan.avatar+'" onerror="this.parentNode.innerHTML=\'⚔️\'">' : '⚔️';
-    card.innerHTML = `<div class="clan-header"><div class="clan-avatar">${av}</div><div class="clan-info"><div class="clan-name">${clan.name} <span class="clan-tag">[${clan.tag}]</span></div><div class="clan-stats"><span>👥 <b>${clan.memberCount||0}</b></span><span>🏆 <b>${clan.wins||0}</b></span><span>⭐ Lvl. <b>${clan.level||1}</b></span><span>✨ <b>${clan.xp||0}</b></span></div></div></div>`;
+    const av = clan.avatar ? '<span style="font-size:24px;">'+clan.avatar+'</span>' : '⚔️';
+    const bcstincnBadge = getBcstincnClanBadgeHTML(clan.id);
+    card.innerHTML = `<div class="clan-header"><div class="clan-avatar">${av}</div><div class="clan-info"><div class="clan-name">${clan.name} <span class="clan-tag">[${clan.tag}]</span>${bcstincnBadge}</div><div class="clan-stats"><span>👥 <b>${clan.memberCount||0}</b></span><span>🏆 <b>${clan.wins||0}</b></span><span>⭐ Lvl. <b>${clan.level||1}</b></span><span>✨ <b>${clan.xp||0}</b></span></div></div></div>`;
     card.addEventListener('click',()=>openClanView(clan.id));
     return card;
 }
@@ -1924,24 +2264,26 @@ function openClanView(clanId){
 }
 $('clan-view-close').addEventListener('click',()=>{
     $('clan-view-modal').classList.remove('active');
-    if(clanViewListener){database.ref('clans/'+currentTournamentId).off('value',clanViewListener);clanViewListener=null;}
+    if(clanViewListener && currentTournamentId){database.ref('clans/'+currentTournamentId).off('value',clanViewListener);}
+    clanViewListener = null;
     openClansModal();
 });
 function renderClanProfile(container, clan, isMember){
     const members = Object.values(clan.members||{});
-    const av = clan.avatar ? '<img src="'+clan.avatar+'" onerror="this.parentNode.innerHTML=\'⚔️\'">' : '⚔️';
+    const av = clan.avatar ? '<span style="font-size:30px;">'+clan.avatar+'</span>' : '⚔️';
     const xpNext = (clan.level||1)*1000;
     const xpPct = Math.min(100,((clan.xp||0)%xpNext)/xpNext*100);
     const myRole = (clan.members && clan.members[currentUID]) ? clan.members[currentUID].role : null;
-    let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}</div><div class="clan-profile-sub">🏷️ [${clan.tag}] · ⭐ Ур. ${clan.level||1}</div><div class="clan-profile-sub">${getRoleInfo('leader').name}: ${clan.leaderNick}</div></div></div>`;
+    const clanBcstincn = getBcstincnClanBadgeHTML(clan.id);
+    let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}${clanBcstincn}</div><div class="clan-profile-sub">🏷️ [${clan.tag}] · ⭐ Ур. ${clan.level||1}</div><div class="clan-profile-sub">${getRoleInfo('leader').name}: ${clan.leaderNick}</div></div></div>`;
     if(clan.description) html += `<div style="padding:10px;background:rgba(0,0,0,.2);border-radius:10px;margin-bottom:10px;font-size:12px;">${clan.description}</div>`;
     html += `<div class="clan-xp-bar"><div class="clan-xp-fill" style="width:${xpPct}%"></div></div><div class="clan-xp-label"><span>✨ XP: <b>${clan.xp||0}</b></span><span>До: <b>${xpNext-((clan.xp||0)%xpNext)}</b></span></div>`;
-    html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;"><div style="padding:8px;background:rgba(46,204,113,.15);border-radius:10px;text-align:center;"><div style="font-size:16px;font-weight:bold;color:#2ecc71;">${clan.wins||0}</div><div style="font-size:10px;">🏆</div></div><div style="padding:8px;background:rgba(231,76,60,.15);border-radius:10px;text-align:center;"><div style="font-size:16px;font-weight:bold;color:#e74c3c;">${clan.losses||0}</div><div style="font-size:10px;">💀</div></div><div style="padding:8px;background:rgba(241,196,15,.15);border-radius:10px;text-align:center;"><div style="font-size:16px;font-weight:bold;color:#f1c40f;">${clan.memberCount||0}</div><div style="font-size:10px;">👥</div></div></div>`;
     html += `<div style="font-size:13px;font-weight:bold;color:#f1c40f;margin-bottom:8px;">👥 Участники (${members.length})</div>`;
     members.sort((a,b)=>getRoleInfo(a.role).priority - getRoleInfo(b.role).priority);
     members.forEach(m=>{
         const roleInfo = getRoleInfo(m.role);
-        const av2 = m.avatar ? '<img src="'+m.avatar+'" onerror="this.parentNode.innerHTML=\'👤\'">' : '👤';
+        const av2 = m.avatar ? '<span style="font-size:18px;">'+m.avatar+'</span>' : '👤';
+        const bcstincnBadge = getBcstincnBadgeHTML(m.uid);
         const canManage = myRole && canIRoleAction('canChangeRoles') && canManageRole(myRole, m.role) && m.uid !== currentUID;
         const canKick = myRole && canIRoleAction('canKick') && canManageRole(myRole, m.role) && m.uid !== currentUID;
         let actionsHtml = '';
@@ -1951,21 +2293,14 @@ function renderClanProfile(container, clan, isMember){
             if(canKick) actionsHtml += `<button class="member-kick" data-uid="${m.uid||''}">🚪</button>`;
             actionsHtml += '</div>';
         }
-        html += `<div class="clan-member-row"><div class="member-avatar">${av2}</div><div class="member-info"><div class="member-name">${m.nick} <span class="member-role ${roleInfo.cssClass}">${roleInfo.name}</span></div><div class="member-stats">🏆 ${m.wins||0} · ✨ ${m.xp||0} XP</div></div>${actionsHtml}</div>`;
+        html += `<div class="clan-member-row"><div class="member-avatar">${av2}</div><div class="member-info"><div class="member-name">${m.nick}${bcstincnBadge} <span class="member-role ${roleInfo.cssClass}">${roleInfo.name}</span></div><div class="member-stats">🏆 ${m.wins||0} · ✨ ${m.xp||0} XP</div></div>${actionsHtml}</div>`;
     });
     if(!isMember){
         html += `<button id="clan-join-btn" style="width:100%;margin-top:12px;padding:12px;font-size:14px;font-weight:bold;background:linear-gradient(135deg,#2ecc71,#27ae60);border:none;border-radius:8px;color:#fff;cursor:pointer;">🚪 Попросить вступить</button>`;
     }
-    if(isMember && canIRoleAction('canEditClan')){
-        html += `<div style="margin-top:15px;padding:12px;background:rgba(231,76,60,.15);border-radius:10px;"><div style="font-size:12px;margin-bottom:8px;">🛡️ Управление кланом</div><button id="clan-upload-avatar" style="padding:8px 14px;font-size:12px;background:#3498db;color:#fff;border:none;border-radius:8px;cursor:pointer;margin-right:6px;">📷 Аватар</button><button id="clan-edit-desc" style="padding:8px 14px;font-size:12px;background:#9b59b6;color:#fff;border:none;border-radius:8px;cursor:pointer;">✏️ Описание</button></div>`;
-    }
     container.innerHTML = html;
     const jb = container.querySelector('#clan-join-btn');
     if(jb) jb.addEventListener('click',()=>requestJoinClan(clan.id, clan.leaderNick));
-    const avBtn = container.querySelector('#clan-upload-avatar');
-    if(avBtn) avBtn.addEventListener('click',()=>uploadClanAvatar(clan.id));
-    const edBtn = container.querySelector('#clan-edit-desc');
-    if(edBtn) edBtn.addEventListener('click',()=>editClanDescription(clan.id));
     container.querySelectorAll('.member-kick').forEach(btn=>{
         btn.addEventListener('click',()=>{if(!confirm('Кикнуть?')) return; kickMember(clan.id, btn.dataset.uid);});
     });
@@ -1987,12 +2322,13 @@ function renderMyClan(container){
         const clan = s.val(); if(!clan) return;
         myClanData = clan;
         applyTitleToNick();
-        const av = clan.avatar ? '<img src="'+clan.avatar+'" style="width:100%;height:100%;object-fit:cover;">' : '⚔️';
-        let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}</div><div class="clan-profile-sub">🏷️ [${clan.tag}] · ⭐ Ур. ${clan.level||1}</div><div class="clan-profile-sub">${getRoleInfo('leader').name}: ${clan.leaderNick}</div></div></div>`;
+        const av = clan.avatar ? '<span style="font-size:36px;">'+clan.avatar+'</span>' : '⚔️';
+        const clanBcstincn = getBcstincnClanBadgeHTML(clan.id);
+        let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}${clanBcstincn}</div><div class="clan-profile-sub">🏷️ [${clan.tag}] · ⭐ Ур. ${clan.level||1}</div><div class="clan-profile-sub">${getRoleInfo('leader').name}: ${clan.leaderNick}</div></div></div>`;
         const xpNext = (clan.level||1)*1000;
         const xpPct = Math.min(100,((clan.xp||0)%xpNext)/xpNext*100);
         html += `<div class="clan-xp-bar"><div class="clan-xp-fill" style="width:${xpPct}%"></div></div><div class="clan-xp-label"><span>✨ XP: <b>${clan.xp||0}</b></span><span>🏆 Побед: <b>${clan.wins||0}</b></span></div>`;
-        html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;"><div style="padding:8px;background:rgba(46,204,113,.15);border-radius:8px;text-align:center;font-size:12px;"><b style="color:#2ecc71;font-size:15px;">${clan.wins||0}</b><br>🏆 Побед</div><div style="padding:8px;background:rgba(231,76,60,.15);border-radius:8px;text-align:center;font-size:12px;"><b style="color:#e74c3c;font-size:15px;">${clan.losses||0}</b><br>💀 Проигр</div><div style="padding:8px;background:rgba(241,196,15,.15);border-radius:8px;text-align:center;font-size:12px;"><b style="color:#f1c40f;font-size:15px;">${clan.memberCount||0}</b><br>👥 Участ</div></div>`;
+        html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;"><div style="padding:8px;background:rgba(46,204,113,.15);border-radius:8px;text-align:center;font-size:12px;"><b style="color:#2ecc71;font-size:15px;">${clan.wins||0}</b><br>🏆</div><div style="padding:8px;background:rgba(231,76,60,.15);border-radius:8px;text-align:center;font-size:12px;"><b style="color:#e74c3c;font-size:15px;">${clan.losses||0}</b><br>💀</div><div style="padding:8px;background:rgba(241,196,15,.15);border-radius:8px;text-align:center;font-size:12px;"><b style="color:#f1c40f;font-size:15px;">${clan.memberCount||0}</b><br>👥</div></div>`;
         html += `<div class="clan-tabs"><button data-clan-subtab="members" class="active">👥 Участники</button><button data-clan-subtab="chat">💬 Чат</button><button data-clan-subtab="quests">🎯 Квесты</button></div><div id="clan-subcontent"></div>`;
         if(clan.leaderUid !== currentUID){
             html += `<button id="clan-leave-btn" style="width:100%;margin-top:10px;padding:10px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-size:13px;">🚪 Покинуть клан</button>`;
@@ -2008,10 +2344,10 @@ function renderMyClan(container){
                 renderClanSubTab(btn.dataset.clanSubtab, clan);
             });
         });
-        const leaveBtn = container.querySelector('#clan-leave-btn');
-        if(leaveBtn) leaveBtn.addEventListener('click',()=>leaveClan(clan.id));
-        const disbandBtn = container.querySelector('#clan-disband-btn');
-        if(disbandBtn) disbandBtn.addEventListener('click',()=>disbandClan(clan.id));
+        const lv = container.querySelector('#clan-leave-btn');
+        if(lv) lv.addEventListener('click',()=>leaveClan(clan.id));
+        const db = container.querySelector('#clan-disband-btn');
+        if(db) db.addEventListener('click',()=>disbandClan(clan.id));
     });
 }
 function renderClanSubTab(tab, clan){
@@ -2023,7 +2359,8 @@ function renderClanSubTab(tab, clan){
         let html = '';
         members.forEach(m=>{
             const roleInfo = getRoleInfo(m.role);
-            const av = m.avatar ? '<img src="'+m.avatar+'" onerror="this.parentNode.innerHTML=\'👤\'">' : '👤';
+            const av = m.avatar ? '<span style="font-size:18px;">'+m.avatar+'</span>' : '👤';
+            const bcstincnBadge = getBcstincnBadgeHTML(m.uid);
             const canManage = myRole && canIRoleAction('canChangeRoles') && canManageRole(myRole, m.role) && m.uid !== currentUID;
             const canKick = myRole && canIRoleAction('canKick') && canManageRole(myRole, m.role) && m.uid !== currentUID;
             let actionsHtml = '';
@@ -2033,7 +2370,7 @@ function renderClanSubTab(tab, clan){
                 if(canKick) actionsHtml += `<button class="member-kick" data-uid="${m.uid||''}">🚪</button>`;
                 actionsHtml += '</div>';
             }
-            html += `<div class="clan-member-row"><div class="member-avatar">${av}</div><div class="member-info"><div class="member-name">${m.nick} <span class="member-role ${roleInfo.cssClass}">${roleInfo.name}</span></div><div class="member-stats">🏆 ${m.wins||0} · ✨ ${m.xp||0}</div></div>${actionsHtml}</div>`;
+            html += `<div class="clan-member-row"><div class="member-avatar">${av}</div><div class="member-info"><div class="member-name">${m.nick}${bcstincnBadge} <span class="member-role ${roleInfo.cssClass}">${roleInfo.name}</span></div><div class="member-stats">🏆 ${m.wins||0} · ✨ ${m.xp||0}</div></div>${actionsHtml}</div>`;
         });
         sc.innerHTML = html;
         sc.querySelectorAll('.member-manage').forEach(btn=>btn.addEventListener('click',()=>openRoleManager(myClanId, btn.dataset.uid)));
@@ -2055,14 +2392,15 @@ function renderClanSubTab(tab, clan){
                     const msgRole = (clan.members && clan.members[m.uid]) ? clan.members[m.uid].role : 'member';
                     const roleInfo = getRoleInfo(msgRole);
                     const roleBadge = `<span class="chat-role ${roleInfo.cssClass}">${roleInfo.shortName}</span>`;
-                    html += `<div class="chat-message ${mine?'mine':'other'}"><div class="chat-author">${m.nick}${roleBadge}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${time}</div></div>`;
+                    const bcstincnBadge = getBcstincnChatBadgeHTML(m.uid);
+                    html += `<div class="chat-message ${mine?'mine':'other'}"><div class="chat-author">${m.nick}${roleBadge}${bcstincnBadge}</div><div>${escapeHtml(m.text)}</div><div class="chat-time">${time}</div></div>`;
                 });
             }
             el.innerHTML = html;
             el.scrollTop = el.scrollHeight;
         });
         setTimeout(()=>{
-            const inp = $('clan-chat-input'), snd = $('clan-chat-send');
+            const inp=$('clan-chat-input'), snd=$('clan-chat-send');
             if(inp && snd){
                 snd.addEventListener('click',sendClanMessage);
                 inp.addEventListener('keypress',e=>{if(e.key==='Enter')sendClanMessage();});
@@ -2081,7 +2419,7 @@ function renderClanSubTab(tab, clan){
         sc.innerHTML = html;
     }
 }
-function escapeHtml(s){const d = document.createElement('div');d.textContent = s;return d.innerHTML;}
+function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 function sendClanMessage(){
     const inp = $('clan-chat-input');
     if(!inp || !inp.value.trim()) return;
@@ -2094,41 +2432,38 @@ function getClanQuests(){
         {id:'cq_win100',text:'100 побед клана',desc:'Общими усилиями',goal:100,xp:500},
         {id:'cq_win500',text:'500 побед клана',desc:'Серьёзная цель!',goal:500,xp:2500},
         {id:'cq_members5',text:'5 участников',desc:'Расширение',goal:5,xp:200},
-        {id:'cq_members10',text:'10 участников',desc:'Большая семья',goal:10,xp:500},
-        {id:'cq_hard50',text:'50 побед на Hard',desc:'Хардкор',goal:50,xp:1000}
+        {id:'cq_members10',text:'10 участников',desc:'Большая семья',goal:10,xp:500}
     ];
 }
 function uploadClanAvatar(clanId){
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = 'image/*';
-    input.onchange = (e)=>{
-        const file = e.target.files[0]; if(!file) return;
-        if(file.size > 32*1024*1024){alert('Макс 32 МБ');return;}
-        const reader = new FileReader();
-        reader.onload = ev=>{
-            const img = new Image();
-            img.onload = ()=>{
-                const canvas = document.createElement('canvas');
-                canvas.width = 300; canvas.height = 300;
-                const ctx = canvas.getContext('2d');
-                const size = Math.min(img.width,img.height);
-                ctx.drawImage(img,(img.width-size)/2,(img.height-size)/2,size,size,0,0,300,300);
-                canvas.toBlob(blob=>{
-                    const ref = storage.ref('clans/'+clanId+'.jpg');
-                    ref.put(blob).then(snap=>snap.ref.getDownloadURL()).then(url=>{
-                        database.ref('clans/'+clanId+'/avatar').set(url);
-                        alert('✅ Аватар обновлён');
-                    });
-                },'image/jpeg',0.9);
-            };
-            img.src = ev.target.result;
-        };
-        reader.readAsDataURL(file);
-    };
-    input.click();
+    const CLAN_ICONS = ['⚔️','🛡️','🐉','🦁','🐺','🦅','🐯','🐻','🦊','🦄','👑','💎','🔱','⭐','🌟','🔥','❄️','⚡','🌙','☀️','🌌','🏆','🥇','🎖️','🏰','⛩️','⚜️','🗡️','🏹','🪓','💀','☠️','👹','👺','🎭','🎨','🌊','🌪️','🌋','🗻','🌑','✨','💫','🔮','📿','🎯','🎲'];
+    const picker = document.createElement('div');
+    picker.className = 'modal-overlay active';
+    picker.innerHTML = `<div class="modal" style="max-width:95vw;min-width:320px;">
+        <h2>🎨 Иконка клана</h2>
+        <div class="avatar-picker" id="clan-icon-picker"></div>
+        <button id="clan-icon-close" style="background:#555;">Закрыть</button>
+    </div>`;
+    document.body.appendChild(picker);
+    const pickerEl = picker.querySelector('#clan-icon-picker');
+    CLAN_ICONS.forEach(emoji=>{
+        const el = document.createElement('div');
+        el.className = 'avatar-option';
+        if(myClanData && myClanData.avatar === emoji) el.classList.add('selected');
+        el.textContent = emoji;
+        el.addEventListener('click', ()=>{
+            database.ref('clans/'+clanId+'/avatar').set(emoji).then(()=>{
+                playBonusSound();
+                showAchievement({icon:'🎨', text:'Иконка клана обновлена!'});
+                picker.remove();
+            });
+        });
+        pickerEl.appendChild(el);
+    });
+    picker.querySelector('#clan-icon-close').addEventListener('click', ()=>picker.remove());
 }
 function editClanDescription(clanId){
-    const desc = prompt('Новое описание клана (макс 200):','');
+    const desc = prompt('Новое описание клана:','');
     if(desc === null) return;
     database.ref('clans/'+clanId+'/description').set(desc.slice(0,200)).then(()=>alert('✅ Обновлено'));
 }
@@ -2164,7 +2499,7 @@ function leaveClan(clanId){
     });
 }
 function disbandClan(clanId){
-    if(!confirm('Распустить клан? Это необратимо!')) return;
+    if(!confirm('Распустить клан? Необратимо!')) return;
     database.ref('clans/'+clanId+'/members').once('value').then(s=>{
         const members = s.val()||{};
         Object.keys(members).forEach(uid=>{ database.ref('users/'+uid+'/clanId').remove(); });
@@ -2182,7 +2517,7 @@ function disbandClan(clanId){
     openClansModal();
 }
 function renderCreateClan(container){
-    container.innerHTML = `<div class="clan-cost-banner">💰 Стоимость: <b>${CLAN_CREATE_COST} 🪙</b><br><span style="font-size:11px;">У вас: ${getCoins()} 🪙</span></div><div class="create-clan-form"><label>Название (3-20)</label><input type="text" id="new-clan-name" maxlength="20" placeholder="Dragon Slayers"><label>Тег (2-5, A-Z, 0-9)</label><input type="text" id="new-clan-tag" maxlength="5" placeholder="DGN" style="text-transform:uppercase;"><label>Описание (опц.)</label><textarea id="new-clan-desc" maxlength="200" placeholder="О клане..."></textarea></div><button id="create-clan-btn" style="width:100%;padding:12px;font-size:14px;font-weight:bold;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;border:none;border-radius:8px;cursor:pointer;">⚔️ Создать клан (${CLAN_CREATE_COST} 🪙)</button>`;
+    container.innerHTML = `<div class="clan-cost-banner">💰 Стоимость: <b>${CLAN_CREATE_COST} 🪙</b><br><span style="font-size:11px;">У вас: ${getCoins()} 🪙</span></div><div class="create-clan-form"><label>Название (3-20)</label><input type="text" id="new-clan-name" maxlength="20" placeholder="Dragon Slayers"><label>Тег (2-5, A-Z, 0-9)</label><input type="text" id="new-clan-tag" maxlength="5" placeholder="DGN" style="text-transform:uppercase;"><label>Описание (опц.)</label><textarea id="new-clan-desc" maxlength="200" placeholder="О клане..."></textarea></div><button id="create-clan-btn" style="width:100%;padding:12px;font-size:14px;font-weight:bold;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;border:none;border-radius:8px;cursor:pointer;">⚔️ Создать (${CLAN_CREATE_COST} 🪙)</button>`;
     $('create-clan-btn').addEventListener('click',()=>{
         const name = $('new-clan-name').value.trim();
         const tag = $('new-clan-tag').value.trim().toUpperCase();
@@ -2197,7 +2532,7 @@ function createClan(name, tag, description){
     if(!/^[A-Z0-9]+$/.test(tag)){alert('Тег: только A-Z и 0-9');return;}
     database.ref('clanNames').once('value').then(s=>{
         const names = s.val()||{};
-        if(names[name.toLowerCase()]){alert('❌ Клан с таким названием уже есть');return;}
+        if(names[name.toLowerCase()]){alert('❌ Название занято');return;}
         if(names['tag_'+tag.toLowerCase()]){alert('❌ Тег занят');return;}
         database.ref('users/'+currentUID+'/clanId').once('value').then(cs=>{
             if(cs.val()){alert('Вы уже в клане');return;}
@@ -2207,7 +2542,7 @@ function createClan(name, tag, description){
                 leaderUid:currentUID,leaderNick:currentNick,
                 createdAt:Date.now(),xp:0,level:1,wins:0,losses:0,draws:0,
                 memberCount:1,
-                members:{[currentUID]:{nick:currentNick,uid:currentUID,role:'leader',joinedAt:Date.now(),xp:0,wins:0,avatar:currentAvatarURL}},
+                members:{[currentUID]:{nick:currentNick,uid:currentUID,role:'leader',joinedAt:Date.now(),xp:0,wins:0,avatar:currentAvatar}},
                 chat:{},quests:{}
             };
             const updates = {};
@@ -2235,8 +2570,9 @@ function renderClansTop(container){
         let html = '<div style="display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto;">';
         clans.forEach((c,i)=>{
             const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
-            const av = c.avatar ? '<img src="'+c.avatar+'" style="width:100%;height:100%;object-fit:cover;">' : '⚔️';
-            html += `<div class="clan-card" style="margin-bottom:0;" data-clan-id="${c.id}"><div class="clan-header"><div style="min-width:40px;text-align:center;font-size:20px;font-weight:bold;">${medal}</div><div class="clan-avatar">${av}</div><div class="clan-info"><div class="clan-name">${c.name} [${c.tag}]</div><div class="clan-stats"><span>✨ XP: <b>${c.xp||0}</b></span><span>🏆 <b>${c.wins||0}</b></span><span>👥 <b>${c.memberCount||0}</b></span></div></div></div></div>`;
+            const av = c.avatar ? '<span style="font-size:24px;">'+c.avatar+'</span>' : '⚔️';
+            const bcstincnBadge = getBcstincnClanBadgeHTML(c.id);
+            html += `<div class="clan-card" style="margin-bottom:0;" data-clan-id="${c.id}"><div class="clan-header"><div style="min-width:40px;text-align:center;font-size:20px;font-weight:bold;">${medal}</div><div class="clan-avatar">${av}</div><div class="clan-info"><div class="clan-name">${c.name} [${c.tag}]${bcstincnBadge}</div><div class="clan-stats"><span>✨ XP: <b>${c.xp||0}</b></span><span>🏆 <b>${c.wins||0}</b></span><span>👥 <b>${c.memberCount||0}</b></span></div></div></div></div>`;
         });
         html += '</div>';
         container.innerHTML = html;
@@ -2285,20 +2621,10 @@ function renderRoleManager(){
     }
     $('role-manage-body').innerHTML = html;
     $('role-manage-body').querySelectorAll('.role-selector button[data-role]').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-            const newRole = btn.dataset.role;
-            if(newRole === currentRole) return;
-            assignRole(uid, newRole);
-        });
+        btn.addEventListener('click', ()=>{ const newRole = btn.dataset.role; if(newRole === currentRole) return; assignRole(uid, newRole); });
     });
-    const transferBtn = $('role-manage-body').querySelector('#transfer-leadership-btn');
-    if(transferBtn){
-        transferBtn.addEventListener('click', ()=>{
-            if(confirm(`Передать клан игроку ${nick}?`)){
-                transferLeadership(uid);
-            }
-        });
-    }
+    const tb = $('role-manage-body').querySelector('#transfer-leadership-btn');
+    if(tb) tb.addEventListener('click', ()=>{ if(confirm(`Передать клан ${nick}?`)) transferLeadership(uid); });
 }
 function assignRole(uid, newRole){
     if(!myClanId || !uid) return;
@@ -2332,10 +2658,7 @@ function transferLeadership(targetUid){
         roleManageTarget = null;
     }).catch(err=>alert('Ошибка: '+err.message));
 }
-$('role-manage-close').addEventListener('click', ()=>{
-    $('role-manage-modal').classList.remove('active');
-    roleManageTarget = null;
-});
+$('role-manage-close').addEventListener('click', ()=>{ $('role-manage-modal').classList.remove('active'); roleManageTarget = null; });
 
 /* ============================================================
    ИГРА
@@ -2395,27 +2718,22 @@ function handleClick(i){
     moveCounter++;
     updateUI();
     if(checkWin(currentPlayer)){
-        gameOver = true;
-        highlightWin(currentPlayer);
+        gameOver = true; highlightWin(currentPlayer);
         if(currentPlayer==='X'){
             scoreX++;updateScore();createConfetti();playWin();
             botTaunt('lose');
             if(vsBot){saveStats('win');saveHistory('win');}
             if(myClanId) addClanXp(50,true);
             updateQuestProgress('win');
-            if(difficulty==='easy') updateQuestProgress('easy_win');
             if(difficulty==='medium') updateQuestProgress('medium_win');
             if(difficulty==='hard') updateQuestProgress('hard_win');
-            if(blitzMode) updateQuestProgress('blitz_win');
-            if(snakeMode) updateQuestProgress('snake_win');
-            if(chaosMode) updateQuestProgress('chaos_win');
             if(currentStreak===3) updateQuestProgress('streak3');
             showModal('Вы выиграли!','🎉');
             if(difficulty==='medium'||difficulty==='hard'){currentStreak++;updateStreakUI();}
             checkAchievements();
         } else {
             scoreO++;updateScore();createFlash();showModal('Вы проиграли!','😢');playLose();
-            explodeScreen();botTaunt('win');
+            botTaunt('win');
             if(vsBot){saveStats('lose');saveHistory('lose');}
             if(myClanId) addClanXp(10,false);
             currentStreak=0;updateStreakUI();
@@ -2435,7 +2753,7 @@ function handleClick(i){
     if(vsBot && currentPlayer==='O'){
         statusEl.textContent = 'Ход бота...';
         updateUI();
-        botTimeoutId = setTimeout(botMove,300);
+        setTimeout(botMove,300);
     } else {
         statusEl.textContent = currentPlayer==='X'?'Ваш ход (X)':'Ход игрока O';
         updateUI();
@@ -2457,7 +2775,7 @@ function botMove(){
         if(checkWin('O')){
             gameOver = true;highlightWin('O');
             scoreO++;updateScore();showModal('Вы проиграли!','😢');playLose();
-            explodeScreen();botTaunt('win');
+            botTaunt('win');
             if(vsBot){saveStats('lose');saveHistory('lose');}
             if(myClanId) addClanXp(10,false);
             return;
@@ -2498,7 +2816,6 @@ function resetGame(){
     currentPlayer = 'X';gameOver = false;
     statusEl.textContent = vsBot?'Ваш ход (X)':'Ход игрока X';
     modal.classList.remove('active');
-    if(botTimeoutId){clearTimeout(botTimeoutId);botTimeoutId=null;}
     document.querySelectorAll('.cell').forEach(c=>{c.classList.remove('win','lose','rainbow-cell');c.style.cssText='';});
     createBoard();
     updateUI();
@@ -2511,13 +2828,6 @@ function updateStreakUI(){
 function saveStats(result){
     if(!vsBot||!currentNick) return;
     const n = currentNick.toLowerCase();
-    if(difficulty==='survival'){
-        if(result==='win'||result==='record'){
-            const ref = database.ref('stats/survival/'+n);
-            ref.once('value', s=>{let d=s.val()||{best:0};if(survivalLevel>(d.best||0)){d.best=survivalLevel;ref.set(d);}});
-        }
-        return;
-    }
     const ref = database.ref('stats/'+difficulty+'/'+n);
     ref.once('value',s=>{
         let d=s.val()||{wins:0,losses:0,draws:0,streak:0,bestStreak:0};
@@ -2591,8 +2901,8 @@ $('register-btn').addEventListener('click',()=>{
             database.ref('users/'+cred.user.uid).set({nick:n,titles:{},coins:100,inventory:{},ownedItems:[]});
             database.ref('emails/'+n.toLowerCase()).set({email:e,uid:cred.user.uid,consentGiven:true,consentDate:new Date().toISOString()});
             currentNick = n;currentUID = cred.user.uid;
-            nickClose.disabled = false;nickClose.style.opacity = '1';nickClose.style.cursor = 'pointer';
-            nickStatusEl.textContent = 'Аккаунт создан! +100 🪙';nickStatusEl.style.color = '#2ecc71';
+            nickClose.disabled = false;nickClose.style.opacity='1';nickClose.style.cursor='pointer';
+            nickStatusEl.textContent = 'Аккаунт создан! +100 🪙';nickStatusEl.style.color='#2ecc71';
             setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},800);
         }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
     });
@@ -2604,8 +2914,8 @@ $('login-btn').addEventListener('click',()=>{
         database.ref('users/'+cred.user.uid).once('value',s=>{
             const d = s.val()||{};
             currentNick = d.nick||'Игрок';currentUID = cred.user.uid;
-            nickClose.disabled = false;nickClose.style.opacity = '1';nickClose.style.cursor = 'pointer';
-            nickStatusEl.textContent = 'Вход выполнен!';nickStatusEl.style.color = '#2ecc71';
+            nickClose.disabled = false;nickClose.style.opacity='1';nickClose.style.cursor='pointer';
+            nickStatusEl.textContent = 'Вход выполнен!';nickStatusEl.style.color='#2ecc71';
             setTimeout(()=>{nickModal.classList.remove('active');loadMyStats();},500);
         });
     }).catch(err=>{nickStatusEl.textContent='Ошибка: '+err.message;nickStatusEl.style.color='#e74c3c';});
@@ -2622,7 +2932,7 @@ $('reset-email-close').addEventListener('click',()=>$('reset-email-modal').class
 
 auth.onAuthStateChanged(user=>{
     if(user){
-        nickClose.disabled = false;nickClose.style.opacity = '1';nickClose.style.cursor = 'pointer';
+        nickClose.disabled = false;nickClose.style.opacity='1';nickClose.style.cursor='pointer';
         database.ref('users/'+user.uid).once('value').then(s=>{
             const d = s.val()||{};
             currentNick = d.nick||'Игрок';currentUID = user.uid;
@@ -2635,7 +2945,6 @@ auth.onAuthStateChanged(user=>{
                 playerNameEl.classList.add('rainbow-text');
                 currentXColor = ADMIN_RAINBOW;
                 $('set-admin-panel').style.display = 'block';
-                $('set-request-maintenance').style.display = 'none';
                 grantAllTitlesToAdmin(user.uid);
             } else {
                 playerNameEl.classList.remove('rainbow-text');
@@ -2648,8 +2957,6 @@ auth.onAuthStateChanged(user=>{
                 if(!snap.exists()) database.ref('users/'+user.uid+'/titles').set({});
                 loadUserTitles(user.uid).then(()=>{
                     listenForNewTitles(user.uid);
-                    if(userTitles.includes('tester') && !isAdmin) $('set-request-maintenance').style.display = 'block';
-                    else $('set-request-maintenance').style.display = 'none';
                     applyTitleToNick();
                 });
             });
@@ -2659,19 +2966,22 @@ auth.onAuthStateChanged(user=>{
             loadInventoryFromDB(user.uid);
             loadAvatar(user.uid);
             loadMyClan().then(()=>applyTitleToNick());
+            loadBcstincnChampions();
             if(isAdmin) updateAppealCount();
         }).catch(()=>playerNameEl.textContent='Игрок');
     } else {
-        nickClose.disabled = true;nickClose.style.opacity = '0.5';nickClose.style.cursor = 'not-allowed';
+        nickClose.disabled = true;nickClose.style.opacity='0.5';nickClose.style.cursor='not-allowed';
         currentNick = '';currentUID = '';isAdmin = false;userConsent = false;currentStreak = 0;
         currentTitle = null;currentTitle2 = null;userTitles = [];knownTitles = [];
         currentXColor = {id:'red',type:'solid',value:'#e74c3c',name:'Красный'};
         userStats = {easy:{wins:0},medium:{wins:0},hard:{wins:0},survival:{best:0}};
         myClanId = null;myClanData = null;
+        bcstincnChampions = new Set();
+        bcstincnClanWinners = new Set();
+        bcstincnClanIds = new Set();
         playerNameEl.textContent = 'Введите ник';playerNameScoreEl.textContent = 'Вы';
         playerNameEl.classList.remove('rainbow-text');
         $('set-admin-panel').style.display = 'none';
-        $('set-request-maintenance').style.display = 'none';
         winStreakEl.style.display = 'none';
         hideBanScreen();
         setCoins(0);
@@ -2679,6 +2989,16 @@ auth.onAuthStateChanged(user=>{
     }
 });
 setInterval(()=>{if(currentNick && !isAdmin) checkMyBan();},60000);
+
+/* Real-time обновление BCSTinCN в топах */
+database.ref('bcstincnActive').on('value', s => {
+    const data = s.val() || {};
+    bcstincnChampions = new Set(data.champions || []);
+    bcstincnClanWinners = new Set(data.clanMembers || []);
+    bcstincnClanIds = new Set(data.clanIds || []);
+    if($('leaders-modal').classList.contains('active')) loadLeaders(currentLeaderLevel);
+    if($('clans-modal').classList.contains('active') && currentClanTab === 'top') switchClanTab('top');
+});
 
 /* ============================================================
    UI СОБЫТИЯ
@@ -2715,7 +3035,6 @@ modalClose.addEventListener('click',()=>modal.classList.remove('active'));
 $('leaders-close').addEventListener('click',()=>$('leaders-modal').classList.remove('active'));
 $('all-players-close').addEventListener('click',()=>$('all-players-modal').classList.remove('active'));
 $('survival-rules-close').addEventListener('click',()=>{$('survival-rules-modal').classList.remove('active');survivalLevel=1;survivalActive=true;resetGame();});
-$('campaign-close').addEventListener('click',()=>$('campaign-modal').classList.remove('active'));
 $('ban-modal-close').addEventListener('click',()=>$('ban-modal').classList.remove('active'));
 $('ban-history-close').addEventListener('click',()=>$('ban-history-modal').classList.remove('active'));
 $('appeals-close').addEventListener('click',()=>$('appeals-modal').classList.remove('active'));
@@ -2797,17 +3116,6 @@ document.querySelectorAll('#appeals-modal .shop-tabs button').forEach(btn=>{
         btn.classList.add('active');currentAppealTab = btn.dataset.appealTab;renderAppealsList();
     });
 });
-$('admin-maintenance').addEventListener('click',()=>{
-    $('admin-panel-modal').classList.remove('active');
-    database.ref('system/maintenance').once('value').then(s=>{
-        const data = s.val()||{};
-        $('maintenance-control-body').innerHTML = '<div style="padding:10px;background:rgba(0,0,0,.25);border-radius:8px;"><b>Статус:</b> '+(data.active?'🔴 ВКЛ':'🟢 ВЫКЛ')+'<br><b>Причина:</b> '+(data.message||'—')+'</div>';
-        $('maintenance-control-modal').classList.add('active');
-    });
-});
-$('maint-toggle-on').addEventListener('click',()=>{database.ref('system/maintenance').set({active:true,message:'Админ включил перерыв',startedAt:Date.now(),startedBy:currentNick}).then(()=>$('maintenance-control-modal').classList.remove('active'));});
-$('maint-toggle-off').addEventListener('click',()=>{database.ref('system/maintenance').update({active:false}).then(()=>$('maintenance-control-modal').classList.remove('active'));});
-$('maint-control-close').addEventListener('click',()=>$('maintenance-control-modal').classList.remove('active'));
 $('admin-tournaments').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');$('tour-create-modal').classList.add('active');});
 $('tour-create-cancel').addEventListener('click',()=>$('tour-create-modal').classList.remove('active'));
 
