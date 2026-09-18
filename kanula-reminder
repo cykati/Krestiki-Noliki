@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#2b5b8c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Смена канюли</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💉</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+    --bg:#0d1117;
+    --bg-2:#161b22;
+    --bg-3:#21262d;
+    --text:#e6edf3;
+    --text-2:#8b949e;
+    --accent:#3498db;
+    --accent-2:#2b5b8c;
+    --success:#2ecc71;
+    --warning:#f39c12;
+    --danger:#e74c3c;
+    --border:#30363d;
+    --shadow:0 4px 20px rgba(0,0,0,.4);
+}
+@media(prefers-color-scheme: light){
+    :root{
+        --bg:#f5f7fa;
+        --bg-2:#ffffff;
+        --bg-3:#eef1f5;
+        --text:#1a1a1a;
+        --text-2:#6b7280;
+        --accent:#2563eb;
+        --accent-2:#1e40af;
+        --border:#e5e7eb;
+        --shadow:0 4px 20px rgba(0,0,0,.08);
+    }
+}
+body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    padding-bottom:80px;
+    overflow-x:hidden;
+    transition:background .3s,color .3s;
+}
+
+/* ===== HEADER ===== */
+.header{
+    position:sticky;top:0;z-index:100;
+    background:var(--bg-2);
+    border-bottom:1px solid var(--border);
+    padding:16px 20px;
+    display:flex;justify-content:space-between;align-items:center;
+    backdrop-filter:blur(10px);
+}
+.header h1{
+    font-size:18px;font-weight:700;
+    display:flex;align-items:center;gap:8px;
+}
+.header h1 span.icon{font-size:22px;}
+.header .btn-icon{
+    width:40px;height:40px;
+    border:none;background:var(--bg-3);
+    color:var(--text);border-radius:50%;
+    cursor:pointer;font-size:18px;
+    display:flex;justify-content:center;align-items:center;
+    transition:.2s;
+}
+.header .btn-icon:hover{background:var(--accent);color:#fff;}
+
+/* ===== MAIN ===== */
+.main{padding:20px;max-width:600px;margin:0 auto;}
+
+/* ===== CARD ===== */
+.card{
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:16px;
+    box-shadow:var(--shadow);
+    transition:.3s;
+}
+.card-title{
+    font-size:13px;
+    color:var(--text-2);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-weight:600;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.card-value{
+    font-size:32px;
+    font-weight:800;
+    margin-bottom:6px;
+    line-height:1.2;
+}
+.card-subtitle{
+    font-size:14px;
+    color:var(--text-2);
+}
+
+/* ===== ГЛАВНАЯ КАРТОЧКА СТАТУСА ===== */
+.status-card{
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    border:none;
+    color:#fff;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+.status-card::before{
+    content:'';
+    position:absolute;
+    top:-50%;right:-50%;
+    width:200%;height:200%;
+    background:radial-gradient(circle,rgba(255,255,255,.1) 0%,transparent 70%);
+    animation:rotate 20s linear infinite;
+}
+@keyframes rotate{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+.status-card .status-emoji{
+    font-size:56px;
+    margin-bottom:12px;
+    position:relative;
+    z-index:1;
+    animation:pulse 2s ease infinite;
+}
+@keyframes pulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.1);}
+}
+.status-card .status-title{
+    font-size:22px;
+    font-weight:800;
+    margin-bottom:8px;
+    position:relative;
+    z-index:1;
+}
+.status-card .status-subtitle{
+    font-size:14px;
+    opacity:0.9;
+    margin-bottom:16px;
+    position:relative;
+    z-index:1;
+}
+.status-card .status-time{
+    font-size:36px;
+    font-weight:900;
+    font-family:'Courier New',monospace;
+    margin-bottom:4px;
+    position:relative;
+    z-index:1;
+}
+.status-card .status-label{
+    font-size:12px;
+    opacity:0.85;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    position:relative;
+    z-index:1;
+}
+
+/* ВАРИАНТЫ СТАТУСА */
+.status-card.warning{
+    background:linear-gradient(135deg,#f39c12,#e67e22);
+}
+.status-card.danger{
+    background:linear-gradient(135deg,#e74c3c,#c0392b);
+    animation:shake 1.5s ease infinite;
+}
+@keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-3px);}
+    75%{transform:translateX(3px);}
+}
+.status-card.ok{
+    background:linear-gradient(135deg,#2ecc71,#27ae60);
+}
+
+/* ===== ПРОГРЕСС-БАР ===== */
+.progress-bar{
+    width:100%;
+    height:10px;
+    background:rgba(0,0,0,.2);
+    border-radius:5px;
+    overflow:hidden;
+    margin:12px 0 8px 0;
+    position:relative;
+    z-index:1;
+}
+.progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,#fff,#f0f0f0);
+    border-radius:5px;
+    transition:width 1s ease;
+    box-shadow:0 0 10px rgba(255,255,255,.5);
+}
+
+/* ===== БОЛЬШАЯ КНОПКА ===== */
+.big-btn{
+    width:100%;
+    padding:20px;
+    font-size:18px;
+    font-weight:800;
+    border:none;
+    border-radius:16px;
+    background:var(--success);
+    color:#fff;
+    cursor:pointer;
+    transition:.2s;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    box-shadow:0 6px 20px rgba(46,204,113,.4);
+    margin-bottom:16px;
+}
+.big-btn:hover{transform:scale(1.02);box-shadow:0 8px 25px rgba(46,204,113,.5);}
+.big-btn:active{transform:scale(0.98);}
+.big-btn.btn-blue{background:var(--accent);box-shadow:0 6px 20px rgba(52,152,219,.4);}
+.big-btn.btn-blue:hover{box-shadow:0 8px 25px rgba(52,152,219,.5);}
+.big-btn .icon{font-size:24px;}
+
+/* ===== НАСТРОЙКИ ===== */
+.setting-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid var(--border);
+}
+.setting-row:last-child{border-bottom:none;}
+.setting-row .label{
+    font-size:15px;
+    font-weight:600;
+}
+.setting-row .desc{
+    font-size:12px;
+    color:var(--text-2);
+    margin-top:2px;
+}
+.setting-row input[type="number"]{
+    width:80px;
+    padding:10px 12px;
+    border:2px solid var(--border);
+    border-radius:10px;
+    background:var(--bg-3);
+    color:var(--text);
+    font-size:16px;
+    font-weight:700;
+    text-align:center;
+    outline:none;
+    transition:.2s;
+}
+.setting-row input[type="number"]:focus{border-color:var(--accent);}
+
+/* Переключатель */
+.switch{
+    position:relative;
+    width:52px;
+    height:30px;
+    flex-shrink:0;
+}
+.switch input{opacity:0;width:0;height:0;}
+.slider{
+    position:absolute;
+    cursor:pointer;
+    top:0;left:0;right:0;bottom:0;
+    background:var(--bg-3);
+    border-radius:30px;
+    transition:.3s;
+    border:1px solid var(--border);
+}
+.slider:before{
+    position:absolute;
+    content:"";
+    height:22px;width:22px;
+    left:3px;bottom:3px;
+    background:var(--text-2);
+    border-radius:50%;
+    transition:.3s;
+}
+input:checked + .slider{background:var(--accent);}
+input:checked + .slider:before{transform:translateX(22px);background:#fff;}
+
+/* ===== ИСТОРИЯ ===== */
+.history-item{
+    display:flex;
+    gap:12px;
+    padding:14px;
+    background:var(--bg-3);
+    border-radius:12px;
+    margin-bottom:10px;
+    transition:.2s;
+}
+.history-item:hover{background:var(--bg-2);border:1px solid var(--border);}
+.history-item .hi-icon{
+    width:44px;height:44px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    border-radius:12px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:22px;
+    flex-shrink:0;
+}
+.history-item .hi-body{flex:1;min-width:0;}
+.history-item .hi-date{
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:2px;
+}
+.history-item .hi-info{
+    font-size:12px;
+    color:var(--text-2);
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+.history-item .hi-note{
+    font-size:12px;
+    color:var(--text-2);
+    margin-top:4px;
+    font-style:italic;
+    padding-top:4px;
+    border-top:1px dashed var(--border);
+}
+.history-item .hi-delete{
+    width:32px;height:32px;
+    border:none;background:transparent;
+    color:var(--text-2);
+    cursor:pointer;
+    font-size:16px;
+    border-radius:50%;
+    transition:.2s;
+    flex-shrink:0;
+    align-self:flex-start;
+}
+.history-item .hi-delete:hover{background:var(--danger);color:#fff;}
+
+.empty-history{
+    text-align:center;
+    padding:40px 20px;
+    color:var(--text-2);
+}
+.empty-history .icon{font-size:48px;margin-bottom:12px;display:block;opacity:0.5;}
+
+/* ===== СТАТИСТИКА ===== */
+.stats-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+.stat-box{
+    padding:16px;
+    background:var(--bg-3);
+    border-radius:12px;
+    text-align:center;
+}
+.stat-box .val{
+    font-size:26px;
+    font-weight:800;
+    color:var(--accent);
+    margin-bottom:4px;
+}
+.stat-box .lbl{
+    font-size:11px;
+    color:var(--text-2);
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    font-weight:600;
+}
+
+/* ===== МОДАЛКА ===== */
+.modal-overlay{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,.7);
+    display:none;
+    justify-content:center;
+    align-items:flex-end;
+    z-index:1000;
+    backdrop-filter:blur(4px);
+}
+.modal-overlay.active{display:flex;}
+.modal{
+    background:var(--bg-2);
+    border-radius:24px 24px 0 0;
+    padding:24px;
+    width:100%;
+    max-width:600px;
+    max-height:90vh;
+    overflow-y:auto;
+    animation:slideUp .3s ease;
+}
+@keyframes slideUp{
+    from{transform:translateY(100%);}
+    to{transform:translateY(0);}
+}
+.modal h2{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.modal h2 button{
+    width:36px;height:36px;
+    border:none;background:var(--bg-3);
+    color:var(--text);border-radius:50%;
+    cursor:pointer;font-size:18px;
+}
+.modal .form-group{margin-bottom:18px;}
+.modal label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    color:var(--text-2);
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    margin-bottom:8px;
+}
+.modal input[type="text"],
+.modal input[type="datetime-local"],
+.modal textarea,
+.modal select{
+    width:100%;
+    padding:14px 16px;
+    border:2px solid var(--border);
+    border-radius:12px;
+    background:var(--bg-3);
+    color:var(--text);
+    font-size:15px;
+    font-family:inherit;
+    outline:none;
+    transition:.2s;
+}
+.modal input:focus,
+.modal textarea:focus,
+.modal select:focus{border-color:var(--accent);}
+.modal textarea{resize:vertical;min-height:80px;}
+.modal .btn-primary{
+    width:100%;
+    padding:16px;
+    font-size:16px;
+    font-weight:800;
+    border:none;
+    border-radius:12px;
+    background:var(--accent);
+    color:#fff;
+    cursor:pointer;
+    transition:.2s;
+}
+.modal .btn-primary:hover{background:var(--accent-2);}
+
+/* Выбор места */
+.location-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+}
+.location-btn{
+    padding:12px 8px;
+    border:2px solid var(--border);
+    border-radius:10px;
+    background:var(--bg-3);
+    color:var(--text);
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+}
+.location-btn .icon{font-size:20px;}
+.location-btn.selected{
+    border-color:var(--accent);
+    background:rgba(52,152,219,.15);
+    color:var(--accent);
+}
+.location-btn:hover{border-color:var(--accent);}
+
+/* Уведомление */
+.toast{
+    position:fixed;
+    bottom:100px;
+    left:50%;
+    transform:translateX(-50%) translateY(100px);
+    background:var(--bg-2);
+    color:var(--text);
+    padding:14px 24px;
+    border-radius:12px;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);
+    border:1px solid var(--border);
+    font-size:14px;
+    font-weight:600;
+    z-index:2000;
+    transition:.3s;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    max-width:90vw;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.success{border-left:4px solid var(--success);}
+.toast.warning{border-left:4px solid var(--warning);}
+.toast.error{border-left:4px solid var(--danger);}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{
+    position:fixed;
+    bottom:0;left:0;right:0;
+    background:var(--bg-2);
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:space-around;
+    padding:8px 0 max(8px,env(safe-area-inset-bottom));
+    z-index:100;
+}
+.bottom-nav button{
+    flex:1;
+    background:transparent;
+    border:none;
+    color:var(--text-2);
+    font-size:11px;
+    font-weight:700;
+    padding:6px;
+    cursor:pointer;
+    transition:.2s;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+}
+.bottom-nav button .icon{font-size:22px;}
+.bottom-nav button.active{color:var(--accent);}
+.bottom-nav button:hover{color:var(--accent);}
+
+/* ===== TAB CONTENT ===== */
+.tab-content{display:none;}
+.tab-content.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== INFO BOX ===== */
+.info-box{
+    padding:12px 16px;
+    background:rgba(52,152,219,.1);
+    border-left:4px solid var(--accent);
+    border-radius:10px;
+    font-size:13px;
+    line-height:1.6;
+    color:var(--text-2);
+    margin-bottom:16px;
+}
+.info-box .title{
+    color:var(--accent);
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+/* ===== WARNING ===== */
+.warning-box{
+    background:rgba(243,156,18,.15);
+    border-left:4px solid var(--warning);
+}
+.warning-box .title{color:var(--warning);}
+
+/* ===== CONFIRM MODAL ===== */
+.confirm-modal .modal{
+    border-radius:16px;
+    padding:24px;
+    text-align:center;
+    max-width:340px;
+    margin:auto;
+    animation:zoomIn .2s ease;
+}
+@keyframes zoomIn{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
+.confirm-modal .emoji{font-size:48px;margin-bottom:12px;display:block;}
+.confirm-modal h3{font-size:18px;margin-bottom:8px;}
+.confirm-modal p{font-size:14px;color:var(--text-2);margin-bottom:20px;}
+.confirm-modal .btns{display:flex;gap:8px;}
+.confirm-modal .btns button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+}
+.confirm-modal .btn-yes{background:var(--danger);color:#fff;}
+.confirm-modal .btn-no{background:var(--bg-3);color:var(--text);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <h1><span class="icon">💉</span> Смена канюли</h1>
+    <button class="btn-icon" id="btn-settings" title="Настройки">⚙️</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- ===== ВКЛАДКА: ГЛАВНАЯ ===== -->
+    <div class="tab-content active" id="tab-home">
+        <div class="card status-card" id="status-card">
+            <div class="status-emoji" id="status-emoji">💉</div>
+            <div class="status-title" id="status-title">Загрузка...</div>
+            <div class="status-subtitle" id="status-subtitle">Последняя замена</div>
+            <div class="status-time" id="status-time">--:--</div>
+            <div class="status-label">до следующей замены</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+            </div>
+        </div>
+
+        <button class="big-btn" id="btn-replace">
+            <span class="icon">✅</span> Я поменял канюлю
+        </button>
+
+        <div class="card" id="last-replace-info">
+            <div class="card-title">📅 Последняя замена</div>
+            <div id="last-replace-content">
+                <div class="card-subtitle">Пока нет записей</div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="title">💡 Рекомендация</div>
+            Канюлю рекомендуется менять каждые <b>48-72 часа</b> в зависимости от типа и рекомендаций врача.
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА: ИСТОРИЯ ===== -->
+    <div class="tab-content" id="tab-history">
+        <div class="card">
+            <div class="card-title">
+                <span>📋 История замен</span>
+                <span id="history-count" style="font-size:12px;color:var(--text-2);"></span>
+            </div>
+            <div id="history-list">
+                <div class="empty-history">
+                    <span class="icon">📭</span>
+                    Пока нет записей
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА: СТАТИСТИКА ===== -->
+    <div class="tab-content" id="tab-stats">
+        <div class="card">
+            <div class="card-title">📊 Статистика</div>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="val" id="stat-total">0</div>
+                    <div class="lbl">Всего замен</div>
+                </div>
+                <div class="stat-box">
+                    <div class="val" id="stat-avg">0ч</div>
+                    <div class="lbl">Средний интервал</div>
+                </div>
+                <div class="stat-box">
+                    <div class="val" id="stat-month">0</div>
+                    <div class="lbl">За месяц</div>
+                </div>
+                <div class="stat-box">
+                    <div class="val" id="stat-streak">0</div>
+                    <div class="lbl">Дней подряд</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📍 Популярные места</div>
+            <div id="stats-locations">
+                <div class="card-subtitle">Пока нет данных</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА: ПОМОЩЬ ===== -->
+    <div class="tab-content" id="tab-help">
+        <div class="card">
+            <div class="card-title">📖 Как пользоваться</div>
+            <div style="font-size:14px;line-height:1.8;color:var(--text-2);">
+                <p style="margin-bottom:12px;"><b style="color:var(--text);">1.</b> Нажми <b style="color:var(--success);">«Я поменял канюлю»</b> когда заменишь.</p>
+                <p style="margin-bottom:12px;"><b style="color:var(--text);">2.</b> Укажи место установки и добавь заметку (опционально).</p>
+                <p style="margin-bottom:12px;"><b style="color:var(--text);">3.</b> Приложение автоматически отсчитает время до следующей замены.</p>
+                <p style="margin-bottom:12px;"><b style="color:var(--text);">4.</b> Когда время придёт — приложение покажет напоминание и уведомление.</p>
+                <p><b style="color:var(--text);">5.</b> Следи за статусом на главном экране.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💉 Виды канюль и сроки</div>
+            <div style="font-size:14px;line-height:1.7;color:var(--text-2);">
+                <p style="margin-bottom:10px;"><b style="color:var(--text);">🔹 Стальные иглы</b> — 1-3 дня</p>
+                <p style="margin-bottom:10px;"><b style="color:var(--text);">🔹 Тефлоновые канюли</b> — 2-4 дня</p>
+                <p style="margin-bottom:10px;"><b style="color:var(--text);">🔹 Мягкие канюли</b> — 2-3 дня</p>
+                <p style="margin-bottom:10px;"><b style="color:var(--text);">🔹 Гибкие канюли (сталь+тефлон)</b> — 3-5 дней</p>
+                <p style="margin-top:12px;font-style:italic;">⚕️ Точный интервал определяет врач по твоему типу помпы и канюли.</p>
+            </div>
+        </div>
+
+        <div class="card warning-box info-box" style="background:rgba(243,156,18,.15);border-left-color:var(--warning);">
+            <div class="title" style="color:var(--warning);">⚠️ Важно</div>
+            Меняй канюлю <b>немедленно</b>, если:
+            <ul style="padding-left:18px;margin-top:8px;">
+                <li>Появилась боль</li>
+                <li>Покраснение вокруг места</li>
+                <li>Высокий сахар без причины</li>
+                <li>Кровотечение</li>
+                <li>Запах из места установки</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🆘 Экстренные контакты</div>
+            <div style="font-size:14px;line-height:1.8;color:var(--text-2);">
+                <p>🇷🇺 <b style="color:var(--text);">Скорая</b> — 103 / 112</p>
+                <p>🌍 <b style="color:var(--text);">Единый номер</b> — 112</p>
+                <p style="margin-top:12px;font-style:italic;">При проблемах с помпой — свяжись с эндокринологом или службой поддержки производителя.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+    <button class="active" data-tab="home">
+        <span class="icon">🏠</span>
+        Главная
+    </button>
+    <button data-tab="history">
+        <span class="icon">📋</span>
+        История
+    </button>
+    <button data-tab="stats">
+        <span class="icon">📊</span>
+        Статистика
+    </button>
+    <button data-tab="help">
+        <span class="icon">❓</span>
+        Помощь
+    </button>
+</div>
+
+<!-- ===== МОДАЛКА: ЗАМЕНА ===== -->
+<div class="modal-overlay" id="modal-replace">
+    <div class="modal">
+        <h2>
+            <span>💉 Новая замена</span>
+            <button onclick="closeModal('modal-replace')">✕</button>
+        </h2>
+        
+        <div class="form-group">
+            <label>Дата и время</label>
+            <input type="datetime-local" id="replace-date">
+        </div>
+
+        <div class="form-group">
+            <label>Место установки</label>
+            <div class="location-grid" id="location-grid">
+                <button class="location-btn" data-loc="Живот">
+                    <span class="icon">🫃</span> Живот
+                </button>
+                <button class="location-btn" data-loc="Левое бедро">
+                    <span class="icon">🦵</span> Лев. бедро
+                </button>
+                <button class="location-btn" data-loc="Правое бедро">
+                    <span class="icon">🦵</span> Прав. бедро
+                </button>
+                <button class="location-btn" data-loc="Левая рука">
+                    <span class="icon">💪</span> Лев. рука
+                </button>
+                <button class="location-btn" data-loc="Правая рука">
+                    <span class="icon">💪</span> Прав. рука
+                </button>
+                <button class="location-btn" data-loc="Ягодица">
+                    <span class="icon">🍑</span> Ягодица
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Заметка (опционально)</label>
+            <textarea id="replace-note" placeholder="Например: болело при установке, кожа чистая..."></textarea>
+        </div>
+
+        <button class="btn-primary" id="btn-confirm-replace">
+            ✅ Сохранить замену
+        </button>
+    </div>
+</div>
+
+<!-- ===== МОДАЛКА: НАСТРОЙКИ ===== -->
+<div class="modal-overlay" id="modal-settings">
+    <div class="modal">
+        <h2>
+            <span>⚙️ Настройки</span>
+            <button onclick="closeModal('modal-settings')">✕</button>
+        </h2>
+
+        <div class="card" style="margin-bottom:16px;">
+            <div class="setting-row">
+                <div>
+                    <div class="label">Интервал замены</div>
+                    <div class="desc">Через сколько напомнить</div>
+                </div>
+                <input type="number" id="setting-hours" min="1" max="168" value="72">
+            </div>
+            <div class="setting-row">
+                <div>
+                    <div class="label">Часов</div>
+                    <div class="desc">1-168 (7 дней)</div>
+                </div>
+                <div style="font-size:14px;color:var(--text-2);">часов</div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+            <div class="setting-row">
+                <div>
+                    <div class="label">🔔 Уведомления</div>
+                    <div class="desc">Показывать напоминания</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="setting-notifications" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-row">
+                <div>
+                    <div class="label">🔊 Звук</div>
+                    <div class="desc">Звуковое уведомление</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="setting-sound" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-row">
+                <div>
+                    <div class="label">🌙 Автотёмная тема</div>
+                    <div class="desc">Следовать теме системы</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="setting-dark" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+            <div class="setting-row">
+                <div>
+                    <div class="label">💾 Экспорт данных</div>
+                    <div class="desc">Сохранить историю в файл</div>
+                </div>
+                <button id="btn-export" style="padding:8px 16px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-size:12px;">📥 Экспорт</button>
+            </div>
+            <div class="setting-row">
+                <div>
+                    <div class="label">🗑️ Очистить всё</div>
+                    <div class="desc">Удалить все записи</div>
+                </div>
+                <button id="btn-clear" style="padding:8px 16px;border:none;border-radius:8px;background:var(--danger);color:#fff;font-weight:700;cursor:pointer;font-size:12px;">Очистить</button>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+            <div class="setting-row">
+                <div>
+                    <div class="label">🧪 Тест уведомления</div>
+                    <div class="desc">Проверить, работает ли</div>
+                </div>
+                <button id="btn-test-notif" style="padding:8px 16px;border:none;border-radius:8px;background:var(--warning);color:#fff;font-weight:700;cursor:pointer;font-size:12px;">🔔 Тест</button>
+            </div>
+        </div>
+
+        <button class="btn-primary" onclick="closeModal('modal-settings')">
+            ✅ Готово
+        </button>
+    </div>
+</div>
+
+<!-- ===== МОДАЛКА: ПОДТВЕРЖДЕНИЕ ===== -->
+<div class="modal-overlay confirm-modal" id="modal-confirm">
+    <div class="modal">
+        <span class="emoji" id="confirm-emoji">⚠️</span>
+        <h3 id="confirm-title">Вы уверены?</h3>
+        <p id="confirm-text">Это действие нельзя отменить</p>
+        <div class="btns">
+            <button class="btn-no" onclick="closeModal('modal-confirm')">Отмена</button>
+            <button class="btn-yes" id="confirm-yes">Да</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CONSTANTS & STATE
+   ============================================================ */
+const STORAGE_KEY = 'kanylya_app_v1';
+const DEFAULT_INTERVAL_HOURS = 72;
+
+let state = {
+    replacements: [],
+    settings: {
+        intervalHours: DEFAULT_INTERVAL_HOURS,
+        notifications: true,
+        sound: true,
+        darkTheme: true
+    }
+};
+
+let currentLocation = null;
+let checkInterval = null;
+
+/* ============================================================
+   STORAGE
+   ============================================================ */
+function loadState(){
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(raw){
+            const parsed = JSON.parse(raw);
+            state = { ...state, ...parsed };
+            state.settings = { ...state.settings, ...(parsed.settings || {}) };
+        }
+    } catch(e){ console.error('Ошибка загрузки:', e); }
+}
+
+function saveState(){
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch(e){ console.error('Ошибка сохранения:', e); }
+}
+
+/* ============================================================
+   UTILS
+   ============================================================ */
+function formatDate(ts){
+    const d = new Date(ts);
+    return d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit', year:'numeric' });
+}
+
+function formatTime(ts){
+    const d = new Date(ts);
+    return d.toLocaleTimeString('ru-RU', { hour:'2-digit', minute:'2-digit' });
+}
+
+function formatDateTime(ts){
+    return formatDate(ts) + ' ' + formatTime(ts);
+}
+
+function formatDuration(ms){
+    if(ms < 0) ms = 0;
+    const totalMin = Math.floor(ms / 60000);
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    const d = Math.floor(h / 24);
+    
+    if(d > 0){
+        const remH = h % 24;
+        return d + 'д ' + remH + 'ч';
+    }
+    if(h > 0) return h + 'ч ' + m + 'м';
+    return m + 'м';
+}
+
+function formatHoursDecimal(ms){
+    const h = ms / 3600000;
+    return h.toFixed(1) + 'ч';
+}
+
+function showToast(text, type = 'success', duration = 3000){
+    const toast = document.getElementById('toast');
+    const icons = { success:'✅', warning:'⚠️', error:'❌' };
+    toast.innerHTML = '<span>' + (icons[type] || 'ℹ️') + '</span><span>' + text + '</span>';
+    toast.className = 'toast ' + type + ' show';
+    setTimeout(()=>{ toast.classList.remove('show'); }, duration);
+}
+
+function openModal(id){
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id){
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+/* ============================================================
+   ГЛАВНАЯ ЛОГИКА
+   ============================================================ */
+function getLastReplacement(){
+    if(state.replacements.length === 0) return null;
+    return state.replacements.reduce((max, r) => r.timestamp > max.timestamp ? r : max);
+}
+
+function getNextReplacementTime(){
+    const last = getLastReplacement();
+    if(!last) return null;
+    return last.timestamp + (state.settings.intervalHours * 3600000);
+}
+
+function updateMainScreen(){
+    const card = document.getElementById('status-card');
+    const emoji = document.getElementById('status-emoji');
+    const title = document.getElementById('status-title');
+    const subtitle = document.getElementById('status-subtitle');
+    const timeEl = document.getElementById('status-time');
+    const progress = document.getElementById('progress-fill');
+    const lastInfo = document.getElementById('last-replace-content');
+
+    const last = getLastReplacement();
+
+    // Если нет записей
+    if(!last){
+        card.className = 'card status-card';
+        emoji.textContent = '💉';
+        title.textContent = 'Начни отслеживать';
+        subtitle.textContent = 'Нажми кнопку ниже, когда поменяешь канюлю';
+        timeEl.textContent = '--:--';
+        progress.style.width = '0%';
+        lastInfo.innerHTML = '<div class="card-subtitle">Пока нет записей</div>';
+        return;
+    }
+
+    const next = getNextReplacementTime();
+    const now = Date.now();
+    const interval = state.settings.intervalHours * 3600000;
+    const remaining = next - now;
+    const elapsed = now - last.timestamp;
+    const percent = Math.min(100, Math.max(0, (remaining / interval) * 100));
+
+    timeEl.textContent = formatDuration(Math.max(0, remaining));
+    progress.style.width = percent + '%';
+
+    // Определяем статус
+    if(remaining <= 0){
+        card.className = 'card status-card danger';
+        emoji.textContent = '🚨';
+        title.textContent = 'ПОРА МЕНЯТЬ!';
+        subtitle.textContent = 'Просрочено на ' + formatDuration(-remaining);
+    } else if(remaining <= interval * 0.25){
+        card.className = 'card status-card warning';
+        emoji.textContent = '⚠️';
+        title.textContent = 'Скоро менять';
+        subtitle.textContent = 'Осталось меньше ' + Math.ceil(state.settings.intervalHours * 0.25) + ' ч';
+    } else {
+        card.className = 'card status-card ok';
+        emoji.textContent = '✅';
+        title.textContent = 'Всё в порядке';
+        subtitle.textContent = 'Замена произошла в ' + formatTime(last.timestamp);
+    }
+
+    // Информация о последней замене
+    let info = '<div style="font-size:15px;font-weight:700;margin-bottom:6px;">' + formatDateTime(last.timestamp) + '</div>';
+    if(last.location){
+        info += '<div style="font-size:13px;color:var(--text-2);margin-bottom:4px;">📍 ' + last.location + '</div>';
+    }
+    if(last.note){
+        info += '<div style="font-size:12px;color:var(--text-2);font-style:italic;padding-top:6px;border-top:1px dashed var(--border);margin-top:6px;">💬 ' + escapeHtml(last.note) + '</div>';
+    }
+    info += '<div style="font-size:12px;color:var(--text-2);margin-top:6px;">Прошло: ' + formatDuration(elapsed) + '</div>';
+    lastInfo.innerHTML = info;
+}
+
+function escapeHtml(text){
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/* ============================================================
+   ИСТОРИЯ
+   ============================================================ */
+function renderHistory(){
+    const list = document.getElementById('history-list');
+    const countEl = document.getElementById('history-count');
+
+    if(state.replacements.length === 0){
+        list.innerHTML = '<div class="empty-history"><span class="icon">📭</span>Пока нет записей</div>';
+        countEl.textContent = '';
+        return;
+    }
+
+    // Сортируем по времени (новые сверху)
+    const sorted = [...state.replacements].sort((a,b) => b.timestamp - a.timestamp);
+    countEl.textContent = 'Всего: ' + sorted.length;
+
+    // Считаем интервалы
+    let html = '';
+    sorted.forEach((r, i) => {
+        const nextOlder = sorted[i + 1];
+        let intervalText = '';
+        if(nextOlder){
+            const diff = r.timestamp - nextOlder.timestamp;
+            intervalText = ' · ⏱️ ' + formatDuration(diff);
+        }
+
+        html += `
+            <div class="history-item">
+                <div class="hi-icon">💉</div>
+                <div class="hi-body">
+                    <div class="hi-date">${formatDateTime(r.timestamp)}</div>
+                    <div class="hi-info">
+                        ${r.location ? '📍 ' + escapeHtml(r.location) : ''}
+                        ${intervalText}
+                    </div>
+                    ${r.note ? '<div class="hi-note">💬 ' + escapeHtml(r.note) + '</div>' : ''}
+                </div>
+                <button class="hi-delete" data-id="${r.id}" title="Удалить">🗑️</button>
+            </div>
+        `;
+    });
+
+    list.innerHTML = html;
+
+    // Обработчики удаления
+    list.querySelectorAll('.hi-delete').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            askConfirm(
+                '🗑️',
+                'Удалить запись?',
+                'Это действие нельзя отменить',
+                () => deleteReplacement(id)
+            );
+        });
+    });
+}
+
+function deleteReplacement(id){
+    state.replacements = state.replacements.filter(r => r.id !== id);
+    saveState();
+    renderHistory();
+    updateMainScreen();
+    renderStats();
+    showToast('Запись удалена', 'warning');
+}
+
+/* ============================================================
+   СТАТИСТИКА
+   ============================================================ */
+function renderStats(){
+    const total = state.replacements.length;
+    document.getElementById('stat-total').textContent = total;
+
+    // Средний интервал
+    let avgText = '—';
+    if(total >= 2){
+        const sorted = [...state.replacements].sort((a,b) => a.timestamp - b.timestamp);
+        let totalDiff = 0;
+        for(let i = 1; i < sorted.length; i++){
+            totalDiff += sorted[i].timestamp - sorted[i-1].timestamp;
+        }
+        const avg = totalDiff / (sorted.length - 1);
+        avgText = (avg / 3600000).toFixed(1) + 'ч';
+    }
+    document.getElementById('stat-avg').textContent = avgText;
+
+    // За месяц
+    const now = Date.now();
+    const monthAgo = now - 30 * 24 * 3600000;
+    const monthCount = state.replacements.filter(r => r.timestamp >= monthAgo).length;
+    document.getElementById('stat-month').textContent = monthCount;
+
+    // Дней подряд (уникальные дни)
+    const uniqueDays = new Set(state.replacements.map(r => new Date(r.timestamp).toDateString()));
+    document.getElementById('stat-streak').textContent = uniqueDays.size;
+
+    // Популярные места
+    const locations = {};
+    state.replacements.forEach(r => {
+        if(r.location){
+            locations[r.location] = (locations[r.location] || 0) + 1;
+        }
+    });
+
+    const sortedLocs = Object.entries(locations).sort((a,b) => b[1] - a[1]);
+    const locEl = document.getElementById('stats-locations');
+    
+    if(sortedLocs.length === 0){
+        locEl.innerHTML = '<div class="card-subtitle">Пока нет данных</div>';
+        return;
+    }
+
+    const totalLoc = sortedLocs.reduce((s, [,n]) => s + n, 0);
+    let html = '';
+    sortedLocs.forEach(([loc, count]) => {
+        const pct = Math.round(count / totalLoc * 100);
+        html += `
+            <div style="margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+                    <span style="font-weight:700;">📍 ${escapeHtml(loc)}</span>
+                    <span style="color:var(--text-2);">${count} раз (${pct}%)</span>
+                </div>
+                <div style="height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:3px;transition:width .5s;"></div>
+                </div>
+            </div>
+        `;
+    });
+    locEl.innerHTML = html;
+}
+
+/* ============================================================
+   ЗАМЕНА
+   ============================================================ */
+function openReplaceModal(){
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('replace-date').value = now.toISOString().slice(0, 16);
+    document.getElementById('replace-note').value = '';
+    currentLocation = null;
+    document.querySelectorAll('.location-btn').forEach(b => b.classList.remove('selected'));
+    openModal('modal-replace');
+}
+
+function confirmReplace(){
+    const dateInput = document.getElementById('replace-date').value;
+    const note = document.getElementById('replace-note').value.trim();
+    
+    if(!dateInput){
+        showToast('Укажи дату и время', 'error');
+        return;
+    }
+
+    const timestamp = new Date(dateInput).getTime();
+    if(isNaN(timestamp)){
+        showToast('Некорректная дата', 'error');
+        return;
+    }
+
+    const replacement = {
+        id: 'r_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        timestamp: timestamp,
+        location: currentLocation,
+        note: note,
+        createdAt: Date.now()
+    };
+
+    state.replacements.push(replacement);
+    saveState();
+    
+    closeModal('modal-replace');
+    
+    updateMainScreen();
+    renderHistory();
+    renderStats();
+    
+    showToast('Замена сохранена! 💉', 'success');
+    playSound();
+    
+    // Планируем напоминание
+    scheduleNotification();
+}
+
+/* ============================================================
+   НАСТРОЙКИ
+   ============================================================ */
+function openSettings(){
+    document.getElementById('setting-hours').value = state.settings.intervalHours;
+    document.getElementById('setting-notifications').checked = state.settings.notifications;
+    document.getElementById('setting-sound').checked = state.settings.sound;
+    document.getElementById('setting-dark').checked = state.settings.darkTheme;
+    openModal('modal-settings');
+}
+
+function saveSettings(){
+    const hours = parseInt(document.getElementById('setting-hours').value) || DEFAULT_INTERVAL_HOURS;
+    state.settings.intervalHours = Math.min(168, Math.max(1, hours));
+    state.settings.notifications = document.getElementById('setting-notifications').checked;
+    state.settings.sound = document.getElementById('setting-sound').checked;
+    state.settings.darkTheme = document.getElementById('setting-dark').checked;
+    saveState();
+    updateMainScreen();
+    scheduleNotification();
+    showToast('Настройки сохранены', 'success');
+}
+
+/* ============================================================
+   УВЕДОМЛЕНИЯ
+   ============================================================ */
+async function requestNotificationPermission(){
+    if(!('Notification' in window)) return false;
+    if(Notification.permission === 'granted') return true;
+    if(Notification.permission === 'denied') return false;
+    
+    const permission = await Notification.requestPermission();
+    return permission === 'granted';
+}
+
+async function sendNotification(title, body){
+    if(!state.settings.notifications) return;
+    if(!('Notification' in window)) return;
+    
+    if(Notification.permission !== 'granted'){
+        const granted = await requestNotificationPermission();
+        if(!granted) return;
+    }
+
+    try {
+        const notif = new Notification(title, {
+            body: body,
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💉</text></svg>',
+            badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💉</text></svg>',
+            vibrate: [200, 100, 200],
+            tag: 'kanylya-reminder',
+            requireInteraction: true
+        });
+
+        notif.onclick = () => {
+            window.focus();
+            notif.close();
+        };
+    } catch(e){
+        console.error('Ошибка уведомления:', e);
+    }
+}
+
+function scheduleNotification(){
+    if(checkInterval) clearInterval(checkInterval);
+    
+    // Проверяем каждую минуту
+    checkInterval = setInterval(checkReminder, 60000);
+    checkReminder(); // проверяем сразу
+}
+
+function checkReminder(){
+    const last = getLastReplacement();
+    if(!last) return;
+    
+    const next = getNextReplacementTime();
+    const now = Date.now();
+    const remaining = next - now;
+    const interval = state.settings.intervalHours * 3600000;
+    
+    // За 2 часа до
+    if(remaining > 0 && remaining <= 2 * 3600000){
+        // Отправляем только раз в час
+        const lastNotif = parseInt(sessionStorage.getItem('last_notif_time') || '0');
+        if(now - lastNotif > 3600000){
+            sendNotification(
+                '⚠️ Скоро менять канюлю',
+                'Осталось ' + formatDuration(remaining) + '. Подготовь новую канюлю.'
+            );
+            sessionStorage.setItem('last_notif_time', String(now));
+        }
+    }
+    
+    // Просрочено
+    if(remaining <= 0){
+        const lastNotif = parseInt(sessionStorage.getItem('last_overdue_notif') || '0');
+        if(now - lastNotif > 3600000){
+            sendNotification(
+                '🚨 ПОРА МЕНЯТЬ КАНЮЛЮ!',
+                'Просрочено на ' + formatDuration(-remaining)
+            );
+            sessionStorage.setItem('last_overdue_notif', String(now));
+            playSound();
+        }
+    }
+}
+
+/* ============================================================
+   ЗВУК
+   ============================================================ */
+let audioCtx = null;
+function playSound(){
+    if(!state.settings.sound) return;
+    try {
+        if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 800;
+        osc.type = 'sine';
+        gain.gain.value = 0.1;
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+        osc.stop(audioCtx.currentTime + 0.2);
+    } catch(e){ console.error('Ошибка звука:', e); }
+}
+
+/* ============================================================
+   ПОДТВЕРЖДЕНИЕ
+   ============================================================ */
+let confirmCallback = null;
+
+function askConfirm(emoji, title, text, callback){
+    document.getElementById('confirm-emoji').textContent = emoji;
+    document.getElementById('confirm-title').textContent = title;
+    document.getElementById('confirm-text').textContent = text;
+    confirmCallback = callback;
+    openModal('modal-confirm');
+}
+
+document.getElementById('confirm-yes').addEventListener('click', () => {
+    if(confirmCallback) confirmCallback();
+    confirmCallback = null;
+    closeModal('modal-confirm');
+});
+
+/* ============================================================
+   ЭКСПОРТ
+   ============================================================ */
+function exportData(){
+    const data = {
+        exportedAt: new Date().toISOString(),
+        app: 'Смена канюли',
+        version: '1.0',
+        settings: state.settings,
+        replacements: state.replacements
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'kanylya-backup-' + formatDate(Date.now()).replace(/\./g, '-') + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showToast('Файл сохранён!', 'success');
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+document.querySelectorAll('.bottom-nav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+        
+        if(tab === 'history') renderHistory();
+        if(tab === 'stats') renderStats();
+    });
+});
+
+/* ============================================================
+   СОБЫТИЯ
+   ============================================================ */
+document.getElementById('btn-replace').addEventListener('click', openReplaceModal);
+document.getElementById('btn-settings').addEventListener('click', openSettings);
+document.getElementById('btn-confirm-replace').addEventListener('click', confirmReplace);
+
+// Выбор места
+document.querySelectorAll('.location-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.location-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        currentLocation = btn.dataset.loc;
+    });
+});
+
+// Автосохранение настроек
+['setting-hours'].forEach(id => {
+    document.getElementById(id).addEventListener('change', saveSettings);
+});
+['setting-notifications', 'setting-sound', 'setting-dark'].forEach(id => {
+    document.getElementById(id).addEventListener('change', saveSettings);
+});
+
+// Экспорт
+document.getElementById('btn-export').addEventListener('click', exportData);
+
+// Очистить всё
+document.getElementById('btn-clear').addEventListener('click', () => {
+    askConfirm(
+        '🗑️',
+        'Очистить всю историю?',
+        'Все ' + state.replacements.length + ' записей будут удалены навсегда',
+        () => {
+            state.replacements = [];
+            saveState();
+            updateMainScreen();
+            renderHistory();
+            renderStats();
+            showToast('Вся история удалена', 'warning');
+        }
+    );
+});
+
+// Тест уведомления
+document.getElementById('btn-test-notif').addEventListener('click', async () => {
+    const granted = await requestNotificationPermission();
+    if(granted){
+        sendNotification('🧪 Тест уведомления', 'Если ты это видишь — уведомления работают! 🎉');
+        playSound();
+        showToast('Уведомление отправлено!', 'success');
+    } else {
+        showToast('Разреши уведомления в браузере', 'error');
+    }
+});
+
+// Закрытие модалки по клику на оверлей
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+        if(e.target === overlay){
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init(){
+    loadState();
+    updateMainScreen();
+    renderHistory();
+    renderStats();
+    scheduleNotification();
+    
+    // Запрашиваем разрешение на уведомления
+    if(state.settings.notifications && 'Notification' in window && Notification.permission === 'default'){
+        setTimeout(async () => {
+            const granted = await requestNotificationPermission();
+            if(granted) showToast('Уведомления включены! 🔔', 'success');
+        }, 2000);
+    }
+    
+    // Обновляем экран каждые 30 секунд
+    setInterval(updateMainScreen, 30000);
+    
+    // Проверка при возврате в приложение
+    document.addEventListener('visibilitychange', () => {
+        if(!document.hidden){
+            updateMainScreen();
+            checkReminder();
+        }
+    });
+    
+    console.log('💉 Приложение готово!');
+}
+
+init();
+</script>
+</body>
+</html>
