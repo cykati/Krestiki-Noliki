@@ -115,7 +115,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .title-admin-god{background:linear-gradient(90deg,#ff006e,#fb5607,#ffbe0b,#2ecc71,#3a86ff,#8338ec,#ff006e);background-size:300% 100%;color:#fff;font-weight:900;animation:creator2Shift 2.5s linear infinite;}
 .title-tourney{background:linear-gradient(135deg,#ffd700,#ff006e,#00d4ff,#ffd700);background-size:300% 300%;animation:tourneyShift 3s ease infinite;color:#fff;font-weight:900;}
 @keyframes tourneyShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-
 #clans-modal .modal{max-width:95vw;min-width:340px;text-align:left;}
 .clan-tabs{display:flex;gap:6px;margin-bottom:15px;background:rgba(0,0,0,.2);padding:5px;border-radius:10px;overflow-x:auto;flex-wrap:wrap;}
 .clan-tabs button{flex:1;min-width:fit-content;padding:8px 12px;font-size:12px;border:none;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;transition:.2s;margin-top:0;white-space:nowrap;}
@@ -218,7 +217,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .title-slot .slot-remove{padding:4px 10px;font-size:11px;font-weight:bold;border:none;border-radius:6px;background:#e74c3c;color:#fff;cursor:pointer;flex-shrink:0;}
 .title-slot .slot-lock{padding:10px;text-align:center;font-size:12px;background:rgba(243,156,18,.15);border-radius:8px;color:#f39c12;}
 .title-btn{padding:5px 10px;font-size:11px;font-weight:bold;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;}
-
 .quest-tabs{display:flex;gap:6px;margin-bottom:12px;background:rgba(0,0,0,.2);padding:4px;border-radius:10px;}
 .quest-tabs button{flex:1;padding:8px;font-size:13px;border:none;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;margin-top:0;}
 .quest-tabs button.active{background:linear-gradient(135deg,#3498db,#2b5b8c);color:#fff;font-weight:bold;}
@@ -469,7 +467,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div id="coin-toast">🪙 +0</div>
 <div id="match-notification"></div>
-
 <div class="modal-overlay" id="menu-modal"><div class="modal"><h2>Меню</h2><div class="menu-list"><button id="menu-leaders">🏆 Лидеры</button><button id="menu-settings">⚙️ Настройки</button></div><button id="menu-close" style="background:#555;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="settings-modal"><div class="modal"><h2>Настройки</h2><div class="menu-list">
@@ -536,7 +533,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div class="modal-overlay" id="difficulty-modal"><div class="modal"><h2>Сложность</h2><div class="difficulty-row" style="display:flex;flex-direction:column;gap:6px;"><button data-level="easy">Легко</button><button data-level="medium" class="active">Средне</button><button data-level="hard">Сложно</button><button data-level="survival">🌪️ Выживание</button></div><button id="difficulty-close" style="background:#555;">Закрыть</button></div></div>
 
-<div class="modal-overlay" id="survival-rules-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🌪️ Выживание</h2><div id="survival-rules-content" style="text-align:left;font-size:13px;line-height:1.5;padding:12px;background:rgba(0,0,0,.25);border-radius:10px;margin-bottom:12px;"><h3 style="color:#f1c40f;margin-bottom:8px;">📖 Правила:</h3><ul style="padding-left:18px;"><li>Бот начинает с 10% силы.</li><li>Победа = +1 уровень, +3% к боту.</li><li>Проигрыш = конец забега.</li></ul></div><button id="survival-rules-close" style="background:#2ecc71;">✅ Играть</button></div></div>
+<div class="modal-overlay" id="survival-rules-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2>🌪️ Выживание</h2><div style="text-align:left;font-size:13px;line-height:1.5;padding:12px;background:rgba(0,0,0,.25);border-radius:10px;margin-bottom:12px;"><h3 style="color:#f1c40f;margin-bottom:8px;">📖 Правила:</h3><ul style="padding-left:18px;"><li>Бот начинает с 10% силы.</li><li>Победа = +1 уровень, +3% к боту.</li><li>Проигрыш = конец забега.</li></ul></div><button id="survival-rules-close" style="background:#2ecc71;">✅ Играть</button></div></div>
 
 <div class="modal-overlay" id="mode-modal"><div class="modal"><h2>Режим игры</h2><div class="difficulty-row" style="display:flex;flex-direction:column;gap:6px;">
 <button id="mode-bot" class="active">🤖 Против бота</button>
@@ -590,7 +587,6 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div class="modal-overlay" id="shop-modal"><div class="modal"><h2 style="text-align:center;">🛒 Магазин</h2><div class="shop-balance">🪙 Баланс: <span id="shop-coins">0</span></div><div class="shop-tabs"><button data-tab="colors" class="active">🎨 Цвета</button><button data-tab="boosts">⚡ Бусты</button><button data-tab="titles">🎖️ Титулы</button><button data-tab="special">✨ Особое</button></div><div class="shop-list" id="shop-list"></div><button id="shop-close" style="background:#555;margin-top:12px;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="inventory-shop-modal"><div class="modal"><h2 style="text-align:center;">🎒 Инвентарь</h2><div class="inv-header-balance">🪙 Монет: <span id="inv-coins">0</span></div><div class="inv-tabs" id="inv-tabs"><button data-inv-tab="all" class="active">📦 Всё</button><button data-inv-tab="colors">🎨 Цвета</button><button data-inv-tab="titles">🎖️ Титулы</button><button data-inv-tab="boosts">⚡ Бусты</button><button data-inv-tab="consumables">🛡️ Расходники</button><button data-inv-tab="special">✨ Особое</button></div><div class="inv-list" id="inv-list"></div><button id="inventory-shop-close" style="background:#555;margin-top:12px;">Закрыть</button></div></div>
-
 <div class="modal-overlay" id="ban-modal"><div class="modal" style="max-width:95vw;min-width:320px;"><h2>🚫 Блокировки</h2><div class="nick-input-row" style="margin-bottom:12px;"><input type="text" id="ban-search" placeholder="Поиск..." maxlength="15"></div><div id="ban-users-list" style="text-align:left;font-size:12px;max-height:55vh;overflow-y:auto;margin-bottom:12px;"></div><button id="ban-modal-close" style="background:#555;">Закрыть</button></div></div>
 
 <div class="modal-overlay" id="ban-action-modal"><div class="modal" style="max-width:95vw;min-width:300px;"><h2 id="ban-action-title">🚫 Заблокировать</h2><div id="ban-action-body" style="text-align:left;font-size:13px;margin-bottom:12px;"></div><div class="ban-modal-options" id="ban-duration-options"><button data-duration="3600000">⏱️ 1 час</button><button data-duration="21600000">⏱️ 6 часов</button><button data-duration="86400000">⏱️ 1 день</button><button data-duration="604800000">⏱️ 7 дней</button><button data-duration="2592000000">⏱️ 30 дней</button></div><textarea id="ban-reason-input" placeholder="Причина..." maxlength="200"></textarea><button id="ban-confirm-btn" style="background:#e74c3c;">🚫 Заблокировать</button><button id="ban-action-cancel" style="background:#555;margin-left:6px;">Отмена</button></div></div>
@@ -616,16 +612,17 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div style="text-align: center; margin-top: 30px; margin-bottom: 30px; width: 100%; max-width: 360px;">
     <p style="color: var(--text); font-size: 14px; margin-bottom: 12px; opacity: 0.9;">Нашли ошибку? Напишите нам!</p>
     <a href="mailto:Safety.Krestiki.Noliki@gmail.com?subject=Баг" style="display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 10px; font-size: 15px; font-weight: bold;">✉️ Поддержка</a>
-    </div>
+</div>
+
 <script>
 /* ============================================================
    FIREBASE INIT
    ============================================================ */
 const firebaseConfig={apiKey:"AIzaSyB2It75ikFi-YGKA8-jUNd4x9Syv17XSQg",authDomain:"krestiki-noliki1.firebaseapp.com",databaseURL:"https://krestiki-noliki1-default-rtdb.europe-west1.firebasedatabase.app",projectId:"krestiki-noliki1",storageBucket:"krestiki-noliki1.firebasestorage.app",messagingSenderId:"108383530148",appId:"1:108383530148:web:14989e9fec349406d0ca31"};
 firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-const auth = firebase.auth();
-const storage = firebase.storage();
+const database=firebase.database();
+const auth=firebase.auth();
+const storage=firebase.storage();
 
 const $ = (id) => document.getElementById(id);
 const boardEl=$('board'), statusEl=$('status'), resetBtn=$('reset');
@@ -639,7 +636,6 @@ const titlesModal=$('titles-modal');
 const winStreakEl=$('win-streak'), streakCountEl=$('streak-count');
 const leaderTabs=$('leader-tabs');
 const inventoryModal=$('inventory-shop-modal');
-
 /* ============================================================
    СОСТОЯНИЕ
    ============================================================ */
@@ -771,7 +767,6 @@ function getAudioCtx(){if(!audioCtx){try{audioCtx=new(window.AudioContext||windo
 function playClick(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=600;g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.1);o.stop(ctx.currentTime+.1);}
 function playWin(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.1+.2);o.stop(ctx.currentTime+i*.1+.2);});}
 function playLose(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[392,330,262].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.value=.1;o.start(ctx.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.15+.25);o.stop(ctx.currentTime+i*.15+.25);});}
-function playStreak(n){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;const base=440+Math.min(n,10)*60;[base,base*1.25,base*1.5].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='triangle';g.gain.value=.08;o.start(ctx.currentTime+i*.08);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.08+.15);o.stop(ctx.currentTime+i*.08+.15);});}
 function playBonusSound(){if(!soundOn)return;const ctx=getAudioCtx();if(!ctx)return;[880,1100,1320].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.value=.1;o.start(ctx.currentTime+i*.06);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.06+.2);o.stop(ctx.currentTime+i*.06+.2);});}
 function createConfetti(){const colors=['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6'];for(let i=0;i<50;i++){const cf=document.createElement('div');cf.className='confetti';cf.style.left=Math.random()*100+'vw';cf.style.background=colors[Math.floor(Math.random()*colors.length)];cf.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(cf);setTimeout(()=>cf.remove(),2500);}}
 function createFlash(){const f=document.createElement('div');f.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:#e74c3c;opacity:.6;pointer-events:none;z-index:998;';document.body.appendChild(f);setTimeout(()=>f.remove(),400);}
@@ -804,10 +799,7 @@ const ACHIEVEMENTS = {
     ten_streak:{icon:'⚡',text:'10 побед подряд!',check:()=>currentStreak===10},
     hard_master:{icon:'🤖',text:'Бот на Hard повержен!',check:()=>difficulty==='hard'},
     survival5:{icon:'🌪️',text:'Выживание: ур.5',check:()=>survivalLevel===5},
-    survival10:{icon:'🌪️',text:'Выживание: ур.10',check:()=>survivalLevel===10},
-    blitz_win:{icon:'⏱️',text:'Победа в Блице!',check:()=>blitzMode},
-    snake_win:{icon:'🐍',text:'Змейка-победа!',check:()=>snakeMode},
-    chaos_win:{icon:'🎲',text:'Хаос обуздан!',check:()=>chaosMode}
+    survival10:{icon:'🌪️',text:'Выживание: ур.10',check:()=>survivalLevel===10}
 };
 let unlockedAch = JSON.parse(localStorage.getItem('ach')||'{}');
 function checkAchievements(){
@@ -959,7 +951,6 @@ function checkHasNewQuests(){
     else btn.classList.add('has-new');
 }
 setInterval(updateQuestTimer, 1000);
-
 /* ============================================================
    МАГАЗИН
    ============================================================ */
@@ -978,7 +969,7 @@ const SHOP_ITEMS = {
     boosts: [
         {id:'boost_x2_1h',icon:'⚡',name:'x2 монет (1ч)',desc:'Удваивает',price:150,rarity:'rare',type:'boost',duration:3600000,multiplier:2},
         {id:'boost_x2_24h',icon:'⚡',name:'x2 монет (24ч)',desc:'Удваивает',price:600,rarity:'epic',type:'boost',duration:86400000,multiplier:2},
-        {id:'boost_x15_24h',icon:'🚀',name:'x1.5 монет (24ч)',desc:'+50% к наградам',price:350,rarity:'rare',type:'boost',duration:86400000,multiplier:1.5},
+        {id:'boost_x15_24h',icon:'🚀',name:'x1.5 монет (24ч)',desc:'+50%',price:350,rarity:'rare',type:'boost',duration:86400000,multiplier:1.5},
         {id:'quest_reroll',icon:'🔄',name:'Смена квестов',desc:'Перевыбрать 5',price:100,rarity:'common',type:'consumable',action:'reroll_daily'},
         {id:'quest_skip',icon:'🎫',name:'Пропуск квеста',desc:'Закрыть 1',price:300,rarity:'rare',type:'consumable',action:'skip_quest'}
     ],
@@ -986,7 +977,7 @@ const SHOP_ITEMS = {
     special: [
         {id:'lucky_chest',icon:'🎁',name:'Сундук удачи',desc:'Случайный приз',price:250,rarity:'epic',type:'chest'},
         {id:'streak_shield',icon:'🛡️',name:'Щит серии',desc:'Не терять серию',price:200,rarity:'rare',type:'consumable',action:'streak_shield'},
-        {id:'double_title',icon:'🌟',name:'Второй слот титула',desc:'2 титула одновременно',price:600,rarity:'epic',type:'upgrade'}
+        {id:'double_title',icon:'🌟',name:'Второй слот титула',desc:'2 титула',price:600,rarity:'epic',type:'upgrade'}
     ]
 };
 Object.values(SHOP_TITLES).forEach(t=>{
@@ -995,9 +986,6 @@ Object.values(SHOP_TITLES).forEach(t=>{
 SHOP_ITEMS.titles.sort((a,b)=>a.price-b.price);
 const RARITY_LABELS = {common:'Обычный',rare:'Редкий',epic:'Эпический',legendary:'Легендарный'};
 
-/* ============================================================
-   ИНВЕНТАРЬ
-   ============================================================ */
 function getOwnedItems(){return JSON.parse(localStorage.getItem('owned_items')||'[]');}
 function setOwnedItems(a){localStorage.setItem('owned_items',JSON.stringify(a));}
 function addOwnedItem(id){const a=getOwnedItems();if(!a.includes(id)){a.push(id);setOwnedItems(a);}}
@@ -1082,12 +1070,8 @@ function renderInventory(){
         }
         else if(item.type==='upgrade'){
             const isActive = localStorage.getItem('double_title') === '1';
-            if(isActive){
-                el.classList.add('active');
-                statusHtml='<span class="inv-status inv-status-active">✅ Активно</span>';
-            } else {
-                statusHtml='<span class="inv-status inv-status-ready">🔓 Доступно</span>';
-            }
+            if(isActive){el.classList.add('active');statusHtml='<span class="inv-status inv-status-active">✅</span>';}
+            else{statusHtml='<span class="inv-status inv-status-ready">🔓</span>';}
             btnHtml='<button class="inv-btn inv-btn-equipped">—</button>';
         }
         else{statusHtml='<span class="inv-status inv-status-ready">🔓</span>';btnHtml='<button class="inv-btn inv-btn-equipped">—</button>';}
@@ -1118,7 +1102,6 @@ function useColorFromInventory(item){
 }
 function equipTitleFromInventory(item){
     if(!currentTitle){ currentTitle = item.id; if(currentUID) database.ref('users/'+currentUID+'/title').set(item.id); }
-    else if(!currentTitle2 && getTitleSlot2Enabled()){ currentTitle2 = item.id; if(currentUID) database.ref('users/'+currentUID+'/title2').set(item.id); }
     else { currentTitle2 = item.id; if(currentUID) database.ref('users/'+currentUID+'/title2').set(item.id); }
     applyTitleToNick(); playBonusSound(); renderInventory();
 }
@@ -1132,7 +1115,7 @@ function useConsumableFromInventory(item){
     const orig = SHOP_ITEMS.boosts.find(i=>i.id===item.id)||SHOP_ITEMS.special.find(i=>i.id===item.id);
     if(!orig) return;
     const action = orig.action;
-    if(action==='reroll_daily'){localStorage.removeItem(getTodayKey());loadQuestSet('daily');showAchievement({icon:'🔄',text:'Квесты дня перевыбраны!'});}
+    if(action==='reroll_daily'){localStorage.removeItem(getTodayKey());loadQuestSet('daily');showAchievement({icon:'🔄',text:'Квесты перевыбраны!'});}
     else if(action==='skip_quest'){const data=loadQuestSet('daily');const idx=data.findIndex(q=>!q.claimed&&q.progress<q.goal);if(idx>=0){data[idx].progress=data[idx].goal;saveQuestSet('daily',data);showAchievement({icon:'🎫',text:'Квест закрыт'});}}
     else if(action==='streak_shield'){localStorage.setItem('streak_shield','1');showAchievement({icon:'🛡️',text:'Щит серии активирован!'});}
     const inv = getInventory();
@@ -1144,9 +1127,6 @@ function setActiveBoosts(a){localStorage.setItem('active_boosts',JSON.stringify(
 function addBoost(item){const b=getActiveBoosts();b.push({id:item.id,icon:item.icon,multiplier:item.multiplier,expiresAt:Date.now()+item.duration});setActiveBoosts(b);}
 function getActiveMultiplier(){const b=getActiveBoosts().filter(x=>x.expiresAt>Date.now());return b.length===0?1:b.reduce((m,x)=>Math.max(m,x.multiplier),1);}
 
-/* ============================================================
-   МАГАЗИН UI
-   ============================================================ */
 function renderShop(){
     const list = $('shop-list'); if(!list) return;
     const owned = getOwnedItems();
@@ -1217,27 +1197,19 @@ function buyItem(item){
         }
     }
     else if(item.type==='upgrade'){
-        addOwnedItem(item.id);
-        addToInventory(item);
-        localStorage.setItem('double_title', '1');
+        addOwnedItem(item.id); addToInventory(item);
+        localStorage.setItem('double_title','1');
         if(currentUID) database.ref('users/'+currentUID+'/upgrades/double_title').set(true).catch(()=>{});
-        showAchievement({icon:'🌟', text:'Теперь можно надеть 2 титула!'});
+        showAchievement({icon:'🌟', text:'2 титула!'});
         applyTitleToNick();
     }
     renderShop(); refreshQuestUI();
 }
+
 /* ============================================================
    ЦВЕТА И ТИТУЛЫ
    ============================================================ */
-function getTitleSlot2Enabled(){
-    return localStorage.getItem('double_title') === '1';
-}
-function isColorUnlocked(color){
-    const u = color.unlock;
-    if(!u || u.wins===0) return true;
-    if(u.level===null){const t=(userStats.easy.wins||0)+(userStats.medium.wins||0)+(userStats.hard.wins||0);return t>=u.wins;}
-    return (userStats[u.level].wins||0) >= u.wins;
-}
+function getTitleSlot2Enabled(){return localStorage.getItem('double_title') === '1';}
 function applyXColor(color){
     currentXColor = color;
     const isRainbow = color.type==='admin_rainbow';
@@ -1270,23 +1242,15 @@ function renderTitlesGrid(){
         const isInSlot1 = currentTitle === key;
         const isInSlot2 = currentTitle2 === key;
         let btnHtml = '';
-        if(isInSlot1){
-            btnHtml = `<button class="title-btn" data-key="${key}" data-slot="1" data-action="remove" style="background:#e74c3c;color:#fff;">Снять (1)</button>`;
-        } else if(isInSlot2){
-            btnHtml = `<button class="title-btn" data-key="${key}" data-slot="2" data-action="remove" style="background:#e74c3c;color:#fff;">Снять (2)</button>`;
-        } else {
+        if(isInSlot1){btnHtml = `<button class="title-btn" data-key="${key}" data-slot="1" data-action="remove" style="background:#e74c3c;color:#fff;">Снять (1)</button>`;}
+        else if(isInSlot2){btnHtml = `<button class="title-btn" data-key="${key}" data-slot="2" data-action="remove" style="background:#e74c3c;color:#fff;">Снять (2)</button>`;}
+        else{
             btnHtml = `<button class="title-btn" data-key="${key}" data-slot="1" data-action="set" style="background:#3498db;color:#fff;">→ Слот 1</button>`;
-            if(slot2Enabled){
-                btnHtml += `<button class="title-btn" data-key="${key}" data-slot="2" data-action="set" style="background:#9b59b6;color:#fff;margin-left:4px;">→ Слот 2</button>`;
-            }
+            if(slot2Enabled) btnHtml += `<button class="title-btn" data-key="${key}" data-slot="2" data-action="set" style="background:#9b59b6;color:#fff;margin-left:4px;">→ Слот 2</button>`;
         }
         html += `<div style="padding:10px;border-radius:10px;border:2px solid ${isInSlot1||isInSlot2?'#f1c40f':'rgba(255,255,255,.15)'};background:rgba(0,0,0,.15);display:flex;justify-content:space-between;align-items:center;gap:8px;">
-            <div style="flex:1;min-width:0;">
-                <div style="font-size:12px;font-weight:bold;margin-bottom:2px;">${t.name}</div>
-                <div style="font-size:10px;opacity:0.75;">${t.desc}</div>
-            </div>
-            <div style="display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">${btnHtml}</div>
-        </div>`;
+            <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:bold;margin-bottom:2px;">${t.name}</div><div style="font-size:10px;opacity:0.75;">${t.desc}</div></div>
+            <div style="display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">${btnHtml}</div></div>`;
     });
     if(!hasAny) html += '<div style="text-align:center;padding:20px;opacity:0.7;font-size:12px;">Купите титулы в магазине!</div>';
     html += '</div>';
@@ -1297,21 +1261,15 @@ function renderTitlesGrid(){
             const slot = parseInt(btn.dataset.slot);
             const action = btn.dataset.action;
             if(action === 'remove'){
-                if(slot === 1){ currentTitle = null; if(currentUID) database.ref('users/'+currentUID+'/title').remove(); }
-                else { currentTitle2 = null; if(currentUID) database.ref('users/'+currentUID+'/title2').remove(); }
-                $('title-status').textContent = '❌ Титул снят';
-                $('title-status').style.color = '#e74c3c';
+                if(slot === 1){currentTitle = null;if(currentUID) database.ref('users/'+currentUID+'/title').remove();}
+                else{currentTitle2 = null;if(currentUID) database.ref('users/'+currentUID+'/title2').remove();}
+                $('title-status').textContent = '❌ Снят';$('title-status').style.color = '#e74c3c';
             } else {
-                if(slot === 1){ currentTitle = key; if(currentUID) database.ref('users/'+currentUID+'/title').set(key); }
-                else {
-                    if(!slot2Enabled){ alert('❌ Слот 2 не куплен! Купите "Второй слот титула" в магазине.'); return; }
-                    currentTitle2 = key; if(currentUID) database.ref('users/'+currentUID+'/title2').set(key);
-                }
-                $('title-status').textContent = '✅ Надет: ' + TITLES[key].name;
-                $('title-status').style.color = '#2ecc71';
+                if(slot === 1){currentTitle = key;if(currentUID) database.ref('users/'+currentUID+'/title').set(key);}
+                else{if(!slot2Enabled){alert('❌ Слот 2 не куплен!');return;}currentTitle2 = key;if(currentUID) database.ref('users/'+currentUID+'/title2').set(key);}
+                $('title-status').textContent = '✅ ' + TITLES[key].name;$('title-status').style.color = '#2ecc71';
             }
-            renderTitlesGrid();
-            applyTitleToNick();
+            renderTitlesGrid(); applyTitleToNick();
         });
     });
 }
@@ -1369,6 +1327,23 @@ function grantAllTitlesToAdmin(uid){
     let changed = false;
     ADMIN_FREE_TITLES.forEach(t=>{if(!owned.includes(t)){owned.push(t);changed=true;}});
     if(changed) setOwnedItems(owned);
+}
+function loadUserTitles(uid){
+    return database.ref('users/'+uid+'/titles').once('value').then(s=>{
+        const obj = s.val()||{};
+        userTitles = Object.keys(obj).filter(k=>obj[k]===true);
+        knownTitles = [...userTitles];
+        return userTitles;
+    });
+}
+function listenForNewTitles(uid){
+    database.ref('users/'+uid+'/titles').on('value', s=>{
+        const obj = s.val()||{};
+        const now = Object.keys(obj).filter(k=>obj[k]===true);
+        const added = now.filter(k=>!knownTitles.includes(k));
+        added.forEach(k=>{if(TITLES[k]&&!pendingAwardTitle&&!isAdmin){setTimeout(()=>{if(!pendingAwardTitle)showAwardNotification(k);},300);}});
+        knownTitles = now; userTitles = now;
+    });
 }
 
 /* ============================================================
@@ -1439,8 +1414,7 @@ function openCropModal(image){
     avatarCropState = {image,offsetX:0,offsetY:0,zoom:1,dragging:false,dragStart:{x:0,y:0},imgStart:{x:0,y:0}};
     function draw(){
         ctx.clearRect(0,0,size,size);
-        ctx.fillStyle = '#1a1a1a';
-        ctx.fillRect(0,0,size,size);
+        ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0,0,size,size);
         const st = avatarCropState;
         const baseScale = Math.max(size/image.width,size/image.height);
         const scale = baseScale*st.zoom;
@@ -1636,23 +1610,6 @@ function renderAdminTitlesList(){
                 else{database.ref('users/'+uid+'/titles/'+t).set(true);chip.style.background='#2ecc71';}
             });
         });
-    });
-}
-function loadUserTitles(uid){
-    return database.ref('users/'+uid+'/titles').once('value').then(s=>{
-        const obj = s.val()||{};
-        userTitles = Object.keys(obj).filter(k=>obj[k]===true);
-        knownTitles = [...userTitles];
-        return userTitles;
-    });
-}
-function listenForNewTitles(uid){
-    database.ref('users/'+uid+'/titles').on('value', s=>{
-        const obj = s.val()||{};
-        const now = Object.keys(obj).filter(k=>obj[k]===true);
-        const added = now.filter(k=>!knownTitles.includes(k));
-        added.forEach(k=>{if(TITLES[k]&&!pendingAwardTitle&&!isAdmin){setTimeout(()=>{if(!pendingAwardTitle)showAwardNotification(k);},300);}});
-        knownTitles = now; userTitles = now;
     });
 }
 
@@ -1855,7 +1812,8 @@ function updateAppealCount(){
         const badge = $('appeal-count');
         if(badge){if(pending>0){badge.style.display='inline-block';badge.textContent=pending;}else badge.style.display='none';}
     });
-    }
+}
+
 /* ============================================================
    КЛАНЫ
    ============================================================ */
@@ -1872,9 +1830,7 @@ function canIRoleAction(action){
     return info ? info[action] === true : false;
 }
 function canManageRole(myRole, targetRole){
-    const myPrio = getRoleInfo(myRole).priority;
-    const tgtPrio = getRoleInfo(targetRole).priority;
-    return myPrio < tgtPrio;
+    return getRoleInfo(myRole).priority < getRoleInfo(targetRole).priority;
 }
 function generateClanId(){
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -2011,10 +1967,7 @@ function renderClanProfile(container, clan, isMember){
     const edBtn = container.querySelector('#clan-edit-desc');
     if(edBtn) edBtn.addEventListener('click',()=>editClanDescription(clan.id));
     container.querySelectorAll('.member-kick').forEach(btn=>{
-        btn.addEventListener('click',()=>{
-            if(!confirm('Кикнуть игрока?')) return;
-            kickMember(clan.id, btn.dataset.uid);
-        });
+        btn.addEventListener('click',()=>{if(!confirm('Кикнуть?')) return; kickMember(clan.id, btn.dataset.uid);});
     });
     container.querySelectorAll('.member-manage').forEach(btn=>{
         btn.addEventListener('click',()=>openRoleManager(clan.id, btn.dataset.uid));
@@ -2083,15 +2036,8 @@ function renderClanSubTab(tab, clan){
             html += `<div class="clan-member-row"><div class="member-avatar">${av}</div><div class="member-info"><div class="member-name">${m.nick} <span class="member-role ${roleInfo.cssClass}">${roleInfo.name}</span></div><div class="member-stats">🏆 ${m.wins||0} · ✨ ${m.xp||0}</div></div>${actionsHtml}</div>`;
         });
         sc.innerHTML = html;
-        sc.querySelectorAll('.member-manage').forEach(btn=>{
-            btn.addEventListener('click',()=>openRoleManager(myClanId, btn.dataset.uid));
-        });
-        sc.querySelectorAll('.member-kick').forEach(btn=>{
-            btn.addEventListener('click',()=>{
-                if(!confirm('Кикнуть игрока?')) return;
-                kickMember(myClanId, btn.dataset.uid);
-            });
-        });
+        sc.querySelectorAll('.member-manage').forEach(btn=>btn.addEventListener('click',()=>openRoleManager(myClanId, btn.dataset.uid)));
+        sc.querySelectorAll('.member-kick').forEach(btn=>btn.addEventListener('click',()=>{if(!confirm('Кикнуть?')) return; kickMember(myClanId, btn.dataset.uid);}));
     }
     else if(tab==='chat'){
         sc.innerHTML = `<div class="clan-chat"><div class="clan-chat-messages" id="clan-chat-messages">Загрузка...</div><div class="clan-chat-input"><input type="text" id="clan-chat-input" placeholder="Сообщение..." maxlength="200"><button id="clan-chat-send">📨</button></div></div>`;
@@ -2099,8 +2045,7 @@ function renderClanSubTab(tab, clan){
         clanChatListener = database.ref('clans/'+myClanId+'/chat').limitToLast(50).on('value', s=>{
             const msgs = s.val()||{};
             const arr = Object.values(msgs).sort((a,b)=>(a.time||0)-(b.time||0));
-            const el = $('clan-chat-messages');
-            if(!el) return;
+            const el = $('clan-chat-messages'); if(!el) return;
             let html = '';
             if(arr.length===0) html = '<div style="text-align:center;opacity:0.5;padding:20px;font-size:12px;">Пока нет сообщений</div>';
             else{
@@ -2155,11 +2100,9 @@ function getClanQuests(){
 }
 function uploadClanAvatar(clanId){
     const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
+    input.type = 'file'; input.accept = 'image/*';
     input.onchange = (e)=>{
-        const file = e.target.files[0];
-        if(!file) return;
+        const file = e.target.files[0]; if(!file) return;
         if(file.size > 32*1024*1024){alert('Макс 32 МБ');return;}
         const reader = new FileReader();
         reader.onload = ev=>{
@@ -2191,12 +2134,11 @@ function editClanDescription(clanId){
 }
 function kickMember(clanId, uid){
     if(!uid) return;
-    if(!canIRoleAction('canKick')){ alert('У вас нет прав'); return; }
+    if(!canIRoleAction('canKick')){ alert('Нет прав'); return; }
     database.ref('clans/'+clanId+'/members/'+uid).once('value').then(s=>{
-        const target = s.val();
-        if(!target) return;
+        const target = s.val(); if(!target) return;
         const myRole = getMyClanRole();
-        if(!canManageRole(myRole, target.role)){ alert('Нельзя кикнуть участника с этой ролью'); return; }
+        if(!canManageRole(myRole, target.role)){ alert('Нельзя кикнуть'); return; }
         if(target.role === 'leader'){ alert('Нельзя кикнуть Главу'); return; }
         database.ref('clans/'+clanId+'/members/'+uid).remove().then(()=>{
             database.ref('clans/'+clanId).once('value').then(cs=>{
@@ -2228,12 +2170,10 @@ function disbandClan(clanId){
         Object.keys(members).forEach(uid=>{ database.ref('users/'+uid+'/clanId').remove(); });
     });
     database.ref('clans/'+clanId+'/name').once('value').then(ns=>{
-        const name = ns.val();
-        if(name) database.ref('clanNames/'+name.toLowerCase()).remove();
+        const name = ns.val(); if(name) database.ref('clanNames/'+name.toLowerCase()).remove();
     });
     database.ref('clans/'+clanId+'/tag').once('value').then(ts=>{
-        const tag = ts.val();
-        if(tag) database.ref('clanNames/tag_'+tag.toLowerCase()).remove();
+        const tag = ts.val(); if(tag) database.ref('clanNames/tag_'+tag.toLowerCase()).remove();
     });
     database.ref('clans/'+clanId).remove();
     myClanId = null; myClanData = null;
@@ -2242,7 +2182,7 @@ function disbandClan(clanId){
     openClansModal();
 }
 function renderCreateClan(container){
-    container.innerHTML = `<div class="clan-cost-banner">💰 Стоимость создания: <b>${CLAN_CREATE_COST} 🪙</b><br><span style="font-size:11px;">У вас: ${getCoins()} 🪙</span></div><div class="create-clan-form"><label>Название (3-20)</label><input type="text" id="new-clan-name" maxlength="20" placeholder="Dragon Slayers"><label>Тег (2-5, A-Z, 0-9)</label><input type="text" id="new-clan-tag" maxlength="5" placeholder="DGN" style="text-transform:uppercase;"><label>Описание (опц.)</label><textarea id="new-clan-desc" maxlength="200" placeholder="О клане..."></textarea></div><button id="create-clan-btn" style="width:100%;padding:12px;font-size:14px;font-weight:bold;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;border:none;border-radius:8px;cursor:pointer;">⚔️ Создать клан (${CLAN_CREATE_COST} 🪙)</button>`;
+    container.innerHTML = `<div class="clan-cost-banner">💰 Стоимость: <b>${CLAN_CREATE_COST} 🪙</b><br><span style="font-size:11px;">У вас: ${getCoins()} 🪙</span></div><div class="create-clan-form"><label>Название (3-20)</label><input type="text" id="new-clan-name" maxlength="20" placeholder="Dragon Slayers"><label>Тег (2-5, A-Z, 0-9)</label><input type="text" id="new-clan-tag" maxlength="5" placeholder="DGN" style="text-transform:uppercase;"><label>Описание (опц.)</label><textarea id="new-clan-desc" maxlength="200" placeholder="О клане..."></textarea></div><button id="create-clan-btn" style="width:100%;padding:12px;font-size:14px;font-weight:bold;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;border:none;border-radius:8px;cursor:pointer;">⚔️ Создать клан (${CLAN_CREATE_COST} 🪙)</button>`;
     $('create-clan-btn').addEventListener('click',()=>{
         const name = $('new-clan-name').value.trim();
         const tag = $('new-clan-tag').value.trim().toUpperCase();
@@ -2354,7 +2294,7 @@ function renderRoleManager(){
     const transferBtn = $('role-manage-body').querySelector('#transfer-leadership-btn');
     if(transferBtn){
         transferBtn.addEventListener('click', ()=>{
-            if(confirm(`Передать клан игроку ${nick}?\n\nВы станете Вице-президентом.`)){
+            if(confirm(`Передать клан игроку ${nick}?`)){
                 transferLeadership(uid);
             }
         });
@@ -2363,15 +2303,15 @@ function renderRoleManager(){
 function assignRole(uid, newRole){
     if(!myClanId || !uid) return;
     const myRole = getMyClanRole();
-    if(!canIRoleAction('canChangeRoles')){ alert('У вас нет прав'); return; }
-    if(!canManageRole(myRole, newRole)){ alert('Нельзя назначить эту роль'); return; }
+    if(!canIRoleAction('canChangeRoles')){ alert('Нет прав'); return; }
+    if(!canManageRole(myRole, newRole)){ alert('Нельзя назначить'); return; }
     const updates = {};
     updates['clans/'+myClanId+'/members/'+uid+'/role'] = newRole;
     updates['clans/'+myClanId+'/members/'+uid+'/roleChangedAt'] = Date.now();
     updates['clans/'+myClanId+'/members/'+uid+'/roleChangedBy'] = currentNick;
     database.ref().update(updates).then(()=>{
         playBonusSound();
-        alert('✅ Роль обновлена: ' + CLAN_ROLES[newRole].name);
+        alert('✅ Роль: ' + CLAN_ROLES[newRole].name);
         $('role-manage-modal').classList.remove('active');
         roleManageTarget = null;
     }).catch(err=>alert('Ошибка: '+err.message));
@@ -2379,7 +2319,7 @@ function assignRole(uid, newRole){
 function transferLeadership(targetUid){
     if(!myClanId || !targetUid) return;
     const target = myClanData.members[targetUid];
-    if(!target){ alert('Участник не найден'); return; }
+    if(!target){ alert('Не найден'); return; }
     const updates = {};
     updates['clans/'+myClanId+'/members/'+currentUID+'/role'] = 'vice';
     updates['clans/'+myClanId+'/members/'+targetUid+'/role'] = 'leader';
@@ -2404,8 +2344,7 @@ function createBoard(){
     boardEl.innerHTML = '';
     for(let i=0;i<9;i++){
         const c = document.createElement('button');
-        c.className = 'cell';
-        c.dataset.index = i;
+        c.className = 'cell'; c.dataset.index = i;
         c.addEventListener('click',()=>handleClick(i));
         boardEl.appendChild(c);
     }
@@ -2427,6 +2366,7 @@ function isFull(){return board.every(c=>c!=='');}
 function getWinCombo(p){return winCombos.find(c=>c.every(i=>board[i]===p));}
 function highlightWin(p){const c = getWinCombo(p);if(c)c.forEach(i=>{document.querySelectorAll('.cell')[i].classList.add(p==='O'?'lose':'win');});}
 function updateScore(){scoreXEl.textContent=scoreX;scoreOEl.textContent=scoreO;scoreDrawEl.textContent=scoreDraw;}
+function showModal(t,e){modalText.textContent = t;modalEmoji.textContent = e;modal.classList.add('active');}
 
 function handleClick(i){
     if(onlineMode){
@@ -2434,8 +2374,7 @@ function handleClick(i){
         onlineRoomRef.once('value').then(s=>{
             const room = s.val()||{};
             const myMark = (onlineRole==='player1')?'X':'O';
-            const isMyTurn = (currentPlayer===myMark);
-            if(!isMyTurn) return;
+            if(currentPlayer!==myMark) return;
             const nb = [...room.board];
             nb[i] = myMark;
             const nt = myMark==='X'?'O':'X';
@@ -2564,7 +2503,6 @@ function resetGame(){
     createBoard();
     updateUI();
 }
-function showModal(t,e){modalText.textContent = t;modalEmoji.textContent = e;modal.classList.add('active');}
 function updateStreakUI(){
     if(difficulty!=='survival'&&currentStreak>=2&&(difficulty==='medium'||difficulty==='hard')){
         winStreakEl.style.display='flex'; streakCountEl.textContent=currentStreak;
@@ -2573,8 +2511,6 @@ function updateStreakUI(){
 function saveStats(result){
     if(!vsBot||!currentNick) return;
     const n = currentNick.toLowerCase();
-    const now = new Date();
-    const month = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
     if(difficulty==='survival'){
         if(result==='win'||result==='record'){
             const ref = database.ref('stats/survival/'+n);
@@ -2608,8 +2544,7 @@ function loadMyStats(){
     database.ref('stats/'+difficulty+'/'+currentNick.toLowerCase()).once('value',s=>{
         const d=s.val()||{wins:0,losses:0,draws:0,streak:0};
         scoreX=d.wins||0;scoreO=d.losses||0;scoreDraw=d.draws||0;currentStreak=d.streak||0;
-        updateScore();
-        updateStreakUI();
+        updateScore(); updateStreakUI();
     });
     loadAllPlayerStats();
 }
@@ -2874,6 +2809,7 @@ $('maint-toggle-on').addEventListener('click',()=>{database.ref('system/maintena
 $('maint-toggle-off').addEventListener('click',()=>{database.ref('system/maintenance').update({active:false}).then(()=>$('maintenance-control-modal').classList.remove('active'));});
 $('maint-control-close').addEventListener('click',()=>$('maintenance-control-modal').classList.remove('active'));
 $('admin-tournaments').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');$('tour-create-modal').classList.add('active');});
+$('tour-create-cancel').addEventListener('click',()=>$('tour-create-modal').classList.remove('active'));
 
 /* ============================================================
    INIT
