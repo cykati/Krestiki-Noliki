@@ -204,6 +204,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <button class="menu-btn" id="menu-btn">☰</button>
 </div>
 
+<div id="win-streak">🔥 Серия: <span id="streak-count">0</span></div>
+
 <div class="scoreboard">
 <div><span id="player-name-score">Вы</span>: <span class="x" id="score-x">0</span></div>
 <div>Бот: <span class="o" id="score-o">0</span></div>
@@ -340,6 +342,9 @@ const passwordInput=$('password'), nickStatusEl=$('nick-status'), nickClose=$('n
 const settingsModal=$('settings-modal'), menuModal=$('menu-modal');
 const titlesModal=$('titles-modal');
 const leaderTabs=$('leader-tabs');
+const winStreakEl=$('win-streak') || {style:{}};
+const streakCountEl=$('streak-count') || {textContent:''};
+const modalClose=$('modal-close') || {addEventListener:function(){}};
 
 let board=["","","","","","","","",""];
 let currentPlayer="X", gameOver=false, vsBot=true, difficulty="medium";
@@ -1558,4 +1563,4 @@ createBoard();updateUI();
 const coinEl = $('coin-count');if(coinEl) coinEl.textContent = getCoins();
 </script>
 </body>
-                                                  </html>
+    </html>
