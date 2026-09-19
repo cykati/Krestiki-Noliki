@@ -664,7 +664,7 @@ function renderTitleBadge(key){
     if(!key) return '';
     const t = TITLES[key]; if(!t) return '';
     if(t.id === 'bcstincn_champion'){
-        return '<span class="title-badge '+t.cssClass+'" data-title="'+key+'" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><img src="bcstincn-trophy.png" style="width:16px;height:16px;filter:brightness(1.3);vertical-align:middle;border-radius:3px;" onerror="this.style.display=\'none\'">BCSTinCN</span>';
+        return '<span class="title-badge '+t.cssClass+'" data-title="'+key+'" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><img src="bcstincn-trophy.png.jpg" style="width:16px;height:16px;filter:brightness(1.3);vertical-align:middle;border-radius:3px;" onerror="this.style.display=\'none\'">BCSTinCN</span>';
     }
     return '<span class="title-badge '+t.cssClass+'" data-title="'+key+'" style="cursor:pointer;">'+t.name+'</span>';
 }
@@ -829,7 +829,7 @@ $('avatar-remove-btn').addEventListener('click', ()=>{
 /* ============================================================
    BCSTinCN — ОТОБРАЖЕНИЕ В ТОПАХ
    ============================================================ */
-const BCSTINCN_IMG = 'bcstincn-trophy.png';
+const BCSTINCN_IMG = 'bcstincn-trophy.png.jpg';
 async function loadBcstincnChampions(){
     try {
         const snap = await database.ref('bcstincnActive').once('value');
@@ -1558,4 +1558,4 @@ createBoard();updateUI();
 const coinEl = $('coin-count');if(coinEl) coinEl.textContent = getCoins();
 </script>
 </body>
-    </html>
+                                                  </html>
