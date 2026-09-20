@@ -930,26 +930,44 @@ function loadLeaders(level){
         const data = s.val()||{};
         database.ref('users').once('value').then(us=>{
             const users = us.val()||{};
-            const avatarMap = {}, uidMap = {};
+            const avatarMap = {}, uidMap = {}, titleMap = {}, clanIdMap = {};
             Object.keys(users).forEach(uid=>{
                 const u = users[uid];
-                if(u.nick){avatarMap[u.nick.toLowerCase()] = u.avatar||null;uidMap[u.nick.toLowerCase()] = uid;}
+                if(u.nick){
+                    const n = u.nick.toLowerCase();
+                    avatarMap[n] = u.avatar||null;
+                    uidMap[n] = uid;
+                    titleMap[n] = u.title||null;
+                    clanIdMap[n] = u.clanId||null;
+                }
             });
-            const arr = Object.keys(data).map(k=>({nick:k,...data[k]})).sort((a,b)=>(b.wins||0)-(a.wins||0)).slice(0,20);
-            let html = '';
-            if(arr.length===0) html = '<div style="text-align:center;opacity:0.7;">Пусто</div>';
-            else{
-                html = '<ol style="padding-left:22px;">';
-                arr.forEach(p=>{
-                    const uid = uidMap[p.nick.toLowerCase()];
-                    const av = avatarMap[p.nick.toLowerCase()];
-                    const avHtml = av ? '<span class="mini-avatar">'+av+'</span>' : '<span class="mini-avatar">👤</span>';
-                    const bcstincn = getBcstincnBadgeHTML(uid || p.nick);
-                    html += '<li style="margin-bottom:6px;font-size:13px;display:flex;align-items:center;">'+avHtml+'<div style="flex:1;"><b>'+p.nick+'</b>'+bcstincn+' — 🏆 '+(p.wins||0)+'</div></li>';
-                });
-                html += '</ol>';
-            }
-            $('leaders-list').innerHTML = html;
+            database.ref('clans').once('value').then(cs=>{
+                const clans = cs.val()||{};
+                const arr = Object.keys(data).map(k=>({nick:k,...data[k]})).sort((a,b)=>(b.wins||0)-(a.wins||0)).slice(0,20);
+                let html = '';
+                if(arr.length===0) html = '<div style="text-align:center;opacity:0.7;">Пусто</div>';
+                else{
+                    html = '<ol style="padding-left:22px;">';
+                    arr.forEach(p=>{
+                        const n = p.nick.toLowerCase();
+                        const uid = uidMap[n];
+                        const av = avatarMap[n];
+                        const titleKey = titleMap[n];
+                        const clanId = clanIdMap[n];
+                        const avHtml = av ? '<span class="mini-avatar">'+av+'</span>' : '<span class="mini-avatar">👤</span>';
+                        const clanTag = (clanId && clans[clanId]) ? '['+clans[clanId].tag+'] ' : '';
+                        let titleHtml = '';
+                        if(titleKey && TITLES[titleKey]){
+                            const t = TITLES[titleKey];
+                            titleHtml = ' <span class="title-badge '+t.cssClass+'" style="font-size:10px;">'+t.name+'</span>';
+                        }
+                        const bcstincn = getBcstincnBadgeHTML(uid || p.nick);
+                        html += '<li style="margin-bottom:6px;font-size:13px;display:flex;align-items:center;flex-wrap:wrap;">'+avHtml+'<div style="flex:1;"><b>'+clanTag+p.nick+'</b>'+titleHtml+bcstincn+' — 🏆 '+(p.wins||0)+'</div></li>';
+                    });
+                    html += '</ol>';
+                }
+                $('leaders-list').innerHTML = html;
+            });
         });
     });
 }
@@ -1682,16 +1700,16 @@ function showGiveTitleModal(){
     document.body.appendChild(m);
     $('give-title-close').addEventListener('click',()=>m.remove());
 
-    // загрузка игроков
     database.ref('users').once('value').then(s=>{
         const users = s.val()||{};
-        const list = Object.values(users).filter(u=>u.nick);
+        const uids = Object.keys(users);
+        const list = uids.map(uid=>({uid, ...users[uid]})).filter(u=>u.nick);
         const cont = $('give-title-players');
         if(list.length===0){cont.innerHTML='<div style="opacity:0.7;">Нет игроков</div>';return;}
         let html = '';
         list.forEach(u=>{
             const av = u.avatar ? '<span style="font-size:18px;">'+u.avatar+'</span>' : '👤';
-            html += `<div class="clan-member-row" data-uid="${u.uid||Object.keys(users).find(k=>users[k]===u)}" style="cursor:pointer;">
+            html += `<div class="clan-member-row" data-uid="${u.uid}" style="cursor:pointer;border:2px solid transparent;">
                 <div class="member-avatar">${av}</div>
                 <div class="member-info"><div class="member-name">${u.nick}</div></div>
             </div>`;
@@ -1726,4 +1744,4 @@ createBoard();updateUI();
 const coinEl = $('coin-count');if(coinEl) coinEl.textContent = getCoins();
 </script>
 </body>
-                                                                                                                                                                                                                          </html>
+    </html>
