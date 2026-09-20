@@ -930,7 +930,7 @@ function loadLeaders(level){
         const data = s.val()||{};
         database.ref('users').once('value').then(us=>{
             const users = us.val()||{};
-            const avatarMap = {}, uidMap = {}, titleMap = {}, clanIdMap = {};
+            const avatarMap = {}, uidMap = {}, titleMap = {}, clanIdMap = {}, realNickMap = {};
             Object.keys(users).forEach(uid=>{
                 const u = users[uid];
                 if(u.nick){
@@ -939,6 +939,7 @@ function loadLeaders(level){
                     uidMap[n] = uid;
                     titleMap[n] = u.title||null;
                     clanIdMap[n] = u.clanId||null;
+                    realNickMap[n] = u.nick;
                 }
             });
             database.ref('clans').once('value').then(cs=>{
@@ -954,6 +955,7 @@ function loadLeaders(level){
                         const av = avatarMap[n];
                         const titleKey = titleMap[n];
                         const clanId = clanIdMap[n];
+                        const realNick = realNickMap[n] || p.nick;
                         const avHtml = av ? '<span class="mini-avatar">'+av+'</span>' : '<span class="mini-avatar">👤</span>';
                         const clanTag = (clanId && clans[clanId]) ? '['+clans[clanId].tag+'] ' : '';
                         let titleHtml = '';
@@ -962,7 +964,7 @@ function loadLeaders(level){
                             titleHtml = ' <span class="title-badge '+t.cssClass+'" style="font-size:10px;">'+t.name+'</span>';
                         }
                         const bcstincn = getBcstincnBadgeHTML(uid || p.nick);
-                        html += '<li style="margin-bottom:6px;font-size:13px;display:flex;align-items:center;flex-wrap:wrap;">'+avHtml+'<div style="flex:1;"><b>'+clanTag+p.nick+'</b>'+titleHtml+bcstincn+' — 🏆 '+(p.wins||0)+'</div></li>';
+                        html += '<li style="margin-bottom:6px;font-size:13px;display:flex;align-items:center;flex-wrap:wrap;">'+avHtml+'<div style="flex:1;"><b>'+clanTag+realNick+'</b>'+titleHtml+bcstincn+' — 🏆 '+(p.wins||0)+'</div></li>';
                     });
                     html += '</ol>';
                 }
@@ -1560,7 +1562,7 @@ auth.onAuthStateChanged(user=>{
             const d = s.val()||{};
             currentNick = d.nick||'Игрок';currentUID = user.uid;
             currentTitle = d.title||null;
-            isAdmin = (currentNick === 'Admin');
+            isAdmin = (currentNick.toLowerCase() === 'admin');
             if(d.coins !== undefined) setCoins(d.coins);
             if(isAdmin){
                 playerNameEl.classList.add('rainbow-text');
@@ -1763,28 +1765,42 @@ function showTitleHistory(){
 
     database.ref('titleHistory').once('value').then(s=>{
         const data = s.val()||{};
-        const all = [];
-        Object.keys(data).forEach(uid=>{
-            const entries = data[uid];
-            Object.keys(entries).forEach(key=>{
-                const e = entries[key];
-                all.push({uid, ...e});
+        database.ref('users').once('value').then(us=>{
+            const users = us.val()||{};
+            const uidToNick = {};
+            Object.keys(users).forEach(uid=>{
+                if(users[uid].nick) uidToNick[uid] = users[uid].nick;
             });
+            const all = [];
+            Object.keys(data).forEach(uid=>{
+                const entries = data[uid];
+                if(!entries || typeof entries !== 'object') return;
+                Object.keys(entries).forEach(key=>{
+                    const e = entries[key];
+                    if(!e || typeof e !== 'object') return;
+                    if(!e.title && !e.titleKey) return;
+                    all.push({uid, ...e});
+                });
+            });
+            all.sort((a,b)=>(b.time||0)-(a.time||0));
+            const cont = $('title-history-content');
+            if(all.length===0){cont.innerHTML='<div style="text-align:center;padding:20px;opacity:0.7;">Пока нет выдач</div>';return;}
+            let html = '';
+            all.forEach(e=>{
+                const tKey = e.title || e.titleKey;
+                const tName = (tKey && TITLES[tKey]) ? TITLES[tKey].name : (e.titleName || 'Неизвестный титул');
+                const targetNick = e.targetNick || uidToNick[e.uid] || e.uid;
+                const giver = e.givenBy || '—';
+                const date = e.time ? new Date(e.time).toLocaleString('ru-RU') : '—';
+                html += `<div style="padding:8px;margin-bottom:6px;background:rgba(0,0,0,.2);border-radius:8px;font-size:12px;">
+                    <div><b>${tName}</b></div>
+                    <div style="opacity:0.8;">Кому: <b>${targetNick}</b></div>
+                    <div style="opacity:0.8;">Кем: ${giver}</div>
+                    <div style="opacity:0.6;font-size:10px;">${date}</div>
+                </div>`;
+            });
+            cont.innerHTML = html;
         });
-        all.sort((a,b)=>(b.time||0)-(a.time||0));
-        const cont = $('title-history-content');
-        if(all.length===0){cont.innerHTML='<div style="text-align:center;padding:20px;opacity:0.7;">Пока нет выдач</div>';return;}
-        let html = '';
-        all.forEach(e=>{
-            const date = new Date(e.time).toLocaleString('ru-RU');
-            html += `<div style="padding:8px;margin-bottom:6px;background:rgba(0,0,0,.2);border-radius:8px;font-size:12px;">
-                <div><b>${e.titleName||e.title}</b></div>
-                <div style="opacity:0.8;">Кому: <b>${e.targetNick||e.uid}</b></div>
-                <div style="opacity:0.8;">Кем: ${e.givenBy||'—'}</div>
-                <div style="opacity:0.6;font-size:10px;">${date}</div>
-            </div>`;
-        });
-        cont.innerHTML = html;
     });
 }
 
@@ -1796,4 +1812,4 @@ createBoard();updateUI();
 const coinEl = $('coin-count');if(coinEl) coinEl.textContent = getCoins();
 </script>
 </body>
-                                                </html>
+    </html>
