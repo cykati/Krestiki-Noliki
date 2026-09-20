@@ -325,8 +325,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div style="text-align:center;margin-top:30px;margin-bottom:30px;width:100%;max-width:360px;">
 <p style="color:var(--text);font-size:14px;margin-bottom:12px;opacity:0.9;">Нашли ошибку? Напишите нам!</p>
 <a href="mailto:Safety.Krestiki.Noliki@gmail.com?subject=Баг" style="display:inline-block;padding:12px 24px;background-color:#4CAF50;color:white;text-decoration:none;border-radius:10px;font-size:15px;font-weight:bold;">✉️ Поддержка</a>
-</div>
-
+                                                 </div>
 <script>
 /* FIREBASE */
 const firebaseConfig={apiKey:"AIzaSyB2It75ikFi-YGKA8-jUNd4x9Syv17XSQg",authDomain:"krestiki-noliki1.firebaseapp.com",databaseURL:"https://krestiki-noliki1-default-rtdb.europe-west1.firebasedatabase.app",projectId:"krestiki-noliki1",storageBucket:"krestiki-noliki1.firebasestorage.app",messagingSenderId:"108383530148",appId:"1:108383530148:web:14989e9fec349406d0ca31"};
@@ -357,10 +356,27 @@ let currentTitle=null, userTitles=[], knownTitles=[], pendingAwardTitle=null;
 let currentQuestTab='daily', currentShopTab='colors';
 let currentAvatar='👤', currentAvatarTab='faces';
 let myClanId=null, myClanData=null, currentClanTab='list';
-let clanChatListener=null, clanDataListener=null, clanViewListener=null;
+let clanChatListener=null, clanDataListener=null;
 let bcstincnChampions=new Set(), bcstincnClanWinners=new Set(), bcstincnClanIds=new Set();
 
 const CLAN_CREATE_COST=7000;
+
+// === КЛАН КВЕСТЫ ===
+const CLAN_QUESTS = [
+    {id:'cq_d_play10',   text:'Сыграть 10 партий',      desc:'Ежедневно · все участники', goal:10,   reward:100,   event:'play',       period:'daily'},
+    {id:'cq_d_win5',     text:'Выиграть 5 партий',      desc:'Ежедневно · все участники', goal:5,    reward:250,   event:'win',        period:'daily'},
+    {id:'cq_d_draw3',    text:'3 ничьи',                desc:'Ежедневно · все участники', goal:3,    reward:80,    event:'draw',       period:'daily'},
+    {id:'cq_d_streak3',  text:'3 победы подряд',        desc:'Ежедневно · любой участник', goal:3,    reward:300,   event:'streak',     period:'daily'},
+    {id:'cq_d_hard2',    text:'Победить на Hard',       desc:'Ежедневно · сложность Hard', goal:2,    reward:400,   event:'hard_win',   period:'daily'},
+    {id:'cq_w_play50',   text:'Сыграть 50 партий',      desc:'Недельно · все участники',  goal:50,   reward:600,   event:'play',       period:'weekly'},
+    {id:'cq_w_win25',    text:'Выиграть 25 партий',     desc:'Недельно · все участники',  goal:25,   reward:1200,  event:'win',        period:'weekly'},
+    {id:'cq_w_hard10',   text:'Победить на Hard 10 раз',desc:'Недельно · сложность Hard', goal:10,   reward:1500,  event:'hard_win',   period:'weekly'},
+    {id:'cq_w_recruit3', text:'Принять 3 участника',    desc:'Недельно · заявки в клан',  goal:3,    reward:2000,  event:'recruit',    period:'weekly'},
+    {id:'cq_w_chat20',   text:'Написать 20 сообщений',  desc:'Недельно · чат клана',      goal:20,   reward:300,   event:'chat',       period:'weekly'},
+    {id:'cq_a_win100',   text:'100 побед клана',        desc:'Достижение',                goal:100,  reward:5000,  event:'win',        period:'all'},
+    {id:'cq_a_play1000', text:'1000 партий клана',      desc:'Достижение',                goal:1000, reward:10000, event:'play',       period:'all'},
+    {id:'cq_a_members10',text:'10 участников в клане',  desc:'Достижение',                goal:10,   reward:3000,  event:'member_join',period:'all'}
+];
 
 const CLAN_ROLES = {
     leader: {id:'leader',name:'👑 Глава',shortName:'Глава',cssClass:'clan-role-leader',priority:0,color:'#f1c40f'},
@@ -460,7 +476,7 @@ function showCoinToast(n){
     setTimeout(()=>t.classList.remove('show'), 2000);
 }
 
-/* КВЕСТЫ */
+/* КВЕСТЫ ЛИЧНЫЕ */
 const QUEST_POOL = {
     daily:[
         {id:'d_play3',text:'Сыграть 3 партии',desc:'Любой режим',goal:3,reward:30,event:'play'},
@@ -494,6 +510,7 @@ function updateQuestProgress(event){
         data.forEach(q=>{if(!q.claimed && q.event===event){q.progress=Math.min(q.goal,q.progress+1);changed=true;}});
         saveQuestSet(type,data);
     });
+    if(myClanId) updateClanQuestProgress(event);
     if(changed) refreshQuestUI();
 }
 function renderQuestList(){
@@ -503,7 +520,6 @@ function renderQuestList(){
     data.forEach((q,i)=>{
         const done = q.progress >= q.goal;
         const card = document.createElement('div');
-        card.className = 'quest-card' + (done?' done':'') + (q.claimed?' claimed':'');
         const pct = Math.min(100,(q.progress/q.goal)*100);
         card.innerHTML = `<div style="padding:10px;border-radius:10px;background:rgba(0,0,0,.2);margin-bottom:8px;border:2px solid ${done?'#2ecc71':'rgba(255,255,255,.1)'};"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><b style="font-size:12px;">${q.text}</b><span style="color:#f1c40f;font-size:11px;">🪙 ${q.reward}</span></div><div style="font-size:11px;opacity:0.8;margin-bottom:6px;">${q.desc}</div><div style="height:6px;background:rgba(0,0,0,.3);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#3498db,#2ecc71);"></div></div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;margin-top:6px;"><span>${q.progress} / ${q.goal}</span>${q.claimed ? '<span style="color:#2ecc71;">✅</span>' : done ? `<button class="q-claim-btn" data-idx="${i}" style="background:#2ecc71;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:bold;">🎁 Забрать</button>` : ''}</div></div>`;
         list.appendChild(card);
@@ -537,6 +553,55 @@ function updateQuestTimer(){
 }
 setInterval(updateQuestTimer, 1000);
 
+/* КВЕСТЫ КЛАНА */
+function updateClanQuestProgress(event){
+    if(!myClanId) return;
+    database.ref('clans/'+myClanId+'/quests').once('value').then(s=>{
+        let data = s.val();
+        if(!data || typeof data !== 'object' || Array.isArray(data)){
+            data = {daily:{}, weekly:{}, all:{}};
+        }
+        if(!data.daily) data.daily = {};
+        if(!data.weekly) data.weekly = {};
+        if(!data.all) data.all = {};
+        let changed = false;
+        CLAN_QUESTS.forEach(quest=>{
+            if(quest.event !== event) return;
+            const bucket = data[quest.period];
+            if(!bucket[quest.id]) bucket[quest.id] = {id:quest.id, progress:0, claimed:false};
+            const q = bucket[quest.id];
+            if(!q.claimed && (q.progress||0) < quest.goal){
+                q.progress = Math.min(quest.goal, (q.progress||0)+1);
+                changed = true;
+            }
+        });
+        if(changed) database.ref('clans/'+myClanId+'/quests').set(data);
+    });
+}
+function claimClanQuest(period, questId){
+    if(!myClanId || !myClanData || myClanData.leaderUid !== currentUID){
+        alert('Только глава может забирать награды');
+        return;
+    }
+    const quest = CLAN_QUESTS.find(q=>q.id===questId);
+    if(!quest) return;
+    database.ref('clans/'+myClanId+'/quests').once('value').then(s=>{
+        let data = s.val()||{daily:{},weekly:{},all:{}};
+        if(!data[period]) data[period] = {};
+        const q = data[period][questId] || {id:questId, progress:0, claimed:false};
+        if(q.claimed || (q.progress||0) < quest.goal) return;
+        q.claimed = true;
+        data[period][questId] = q;
+        const newXp = (myClanData.xp||0) + quest.reward;
+        database.ref('clans/'+myClanId).update({
+            quests: data,
+            xp: newXp
+        }).then(()=>{
+            alert('✅ Клану начислено +'+quest.reward+' XP!');
+        });
+    });
+}
+
 /* МАГАЗИН */
 const SHOP_ITEMS = {
     colors: [
@@ -553,7 +618,6 @@ Object.values(SHOP_TITLES).forEach(t=>{
     SHOP_ITEMS.titles.push({id:t.id,icon:t.name.split(' ')[0],name:t.name.split(' ').slice(1).join(' '),desc:t.desc,price:t.price,rarity:'rare',type:'title',titleId:t.id});
 });
 SHOP_ITEMS.titles.sort((a,b)=>a.price-b.price);
-const RARITY_LABELS = {common:'Обычный',rare:'Редкий',epic:'Эпический',legendary:'Легендарный'};
 
 function getOwnedItems(){return JSON.parse(localStorage.getItem('owned_items')||'[]');}
 function setOwnedItems(a){localStorage.setItem('owned_items',JSON.stringify(a));}
@@ -562,8 +626,7 @@ function getInventory(){return JSON.parse(localStorage.getItem('inventory')||'{}
 function setInventory(inv){localStorage.setItem('inventory',JSON.stringify(inv));}
 function addToInventory(item){
     const inv = getInventory();
-    const existing = inv[item.id];
-    inv[item.id] = existing || {id:item.id,icon:item.icon,name:item.name,desc:item.desc,type:item.type,rarity:item.rarity,price:item.price,purchasedAt:Date.now()};
+    inv[item.id] = inv[item.id] || {id:item.id,icon:item.icon,name:item.name,desc:item.desc,type:item.type,rarity:item.rarity,price:item.price,purchasedAt:Date.now()};
     setInventory(inv); syncInventoryToDB();
 }
 function syncInventoryToDB(){
@@ -650,9 +713,7 @@ function buyItem(item){
     }
     renderShop();
 }
-/* ============================================================
-   ЦВЕТА И ТИТУЛЫ
-   ============================================================ */
+/* ЦВЕТА И ТИТУЛЫ */
 function applyXColor(color){
     currentXColor = color;
     const isRainbow = color.type==='admin_rainbow';
@@ -727,10 +788,7 @@ function renderTitlesGrid(){
         if(!owned) return;
         hasAny = true;
         const isActive = currentTitle === key;
-        html += `<div style="padding:10px;border-radius:10px;border:2px solid ${isActive?'#f1c40f':'rgba(255,255,255,.15)'};background:rgba(0,0,0,.15);display:flex;justify-content:space-between;align-items:center;gap:8px;">
-            <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:bold;">${t.name}</div></div>
-            <button class="title-btn" data-key="${key}" style="background:${isActive?'#e74c3c':'#3498db'};color:#fff;padding:5px 10px;font-size:11px;font-weight:bold;border:none;border-radius:6px;cursor:pointer;">${isActive?'Снять':'Надеть'}</button>
-        </div>`;
+        html += `<div style="padding:10px;border-radius:10px;border:2px solid ${isActive?'#f1c40f':'rgba(255,255,255,.15)'};background:rgba(0,0,0,.15);display:flex;justify-content:space-between;align-items:center;gap:8px;"><div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:bold;">${t.name}</div></div><button class="title-btn" data-key="${key}" style="background:${isActive?'#e74c3c':'#3498db'};color:#fff;padding:5px 10px;font-size:11px;font-weight:bold;border:none;border-radius:6px;cursor:pointer;">${isActive?'Снять':'Надеть'}</button></div>`;
     });
     if(!hasAny) html += '<div style="text-align:center;padding:20px;opacity:0.7;font-size:12px;">Купите титулы в магазине!</div>';
     html += '</div>';
@@ -758,9 +816,7 @@ function loadUserTitles(uid){
     });
 }
 
-/* ============================================================
-   АВАТАРКИ
-   ============================================================ */
+/* АВАТАРКИ */
 const AVATAR_CATEGORIES = {
     faces: {name:'😀 Лица',list:['😀','😎','🤓','😺','🤠','🥳','😈','🤡','👽','🤖','👻','💀','🧙','🧛','🧝','🥷','👑','🎃']},
     animals: {name:'🐾 Животные',list:['🐶','🐱','🦊','🐺','🦁','🐯','🐨','🐼','🐸','🐵','🦉','🦅','🐲','🦄','🐙','🦈','🐊','🦖']},
@@ -833,9 +889,7 @@ $('avatar-remove-btn').addEventListener('click', ()=>{
     playClick();
 });
 
-/* ============================================================
-   BCSTinCN — ОТОБРАЖЕНИЕ В ТОПАХ
-   ============================================================ */
+/* BCSTinCN */
 const BCSTINCN_IMG = 'bcstincn-trophy.png.jpg';
 async function loadBcstincnChampions(){
     try {
@@ -885,9 +939,7 @@ function getBcstincnChatBadgeHTML(uid){
     return '';
 }
 
-/* ============================================================
-   ПРОФИЛЬ / ИСТОРИЯ / ЛИДЕРЫ
-   ============================================================ */
+/* ПРОФИЛЬ / ИСТОРИЯ / ЛИДЕРЫ */
 function loadProfile(){
     const content = $('profile-content');
     if(!currentNick){content.innerHTML='Войдите';return;}
@@ -930,16 +982,12 @@ function loadLeaders(level){
         const data = s.val()||{};
         database.ref('users').once('value').then(us=>{
             const users = us.val()||{};
-            const avatarMap = {}, uidMap = {}, titleMap = {}, clanIdMap = {}, realNickMap = {};
+            const avatarMap={},uidMap={},titleMap={},clanIdMap={},realNickMap={};
             Object.keys(users).forEach(uid=>{
                 const u = users[uid];
                 if(u.nick){
                     const n = u.nick.toLowerCase();
-                    avatarMap[n] = u.avatar||null;
-                    uidMap[n] = uid;
-                    titleMap[n] = u.title||null;
-                    clanIdMap[n] = u.clanId||null;
-                    realNickMap[n] = u.nick;
+                    avatarMap[n]=u.avatar||null;uidMap[n]=uid;titleMap[n]=u.title||null;clanIdMap[n]=u.clanId||null;realNickMap[n]=u.nick;
                 }
             });
             database.ref('clans').once('value').then(cs=>{
@@ -959,11 +1007,8 @@ function loadLeaders(level){
                         const avHtml = av ? '<span class="mini-avatar">'+av+'</span>' : '<span class="mini-avatar">👤</span>';
                         const clanTag = (clanId && clans[clanId]) ? '['+clans[clanId].tag+'] ' : '';
                         let titleHtml = '';
-                        if(titleKey && TITLES[titleKey]){
-                            const t = TITLES[titleKey];
-                            titleHtml = ' <span class="title-badge '+t.cssClass+'" style="font-size:10px;">'+t.name+'</span>';
-                        }
-                        const bcstincn = getBcstincnBadgeHTML(uid || p.nick);
+                        if(titleKey && TITLES[titleKey]){const t=TITLES[titleKey];titleHtml=' <span class="title-badge '+t.cssClass+'" style="font-size:10px;">'+t.name+'</span>';}
+                        const bcstincn = getBcstincnBadgeHTML(uid||p.nick);
                         html += '<li style="margin-bottom:6px;font-size:13px;display:flex;align-items:center;flex-wrap:wrap;">'+avHtml+'<div style="flex:1;"><b>'+clanTag+realNick+'</b>'+titleHtml+bcstincn+' — 🏆 '+(p.wins||0)+'</div></li>';
                     });
                     html += '</ol>';
@@ -990,9 +1035,7 @@ function loadAllPlayers(){
     });
 }
 
-/* ============================================================
-   КЛАНЫ
-   ============================================================ */
+/* КЛАНЫ */
 function getRoleInfo(roleId){return CLAN_ROLES[roleId] || CLAN_ROLES.member;}
 function generateClanId(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='';for(let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];return code;}
 function openMyClanFromNick(){ if(!myClanId){openClansModal();return;} $('clans-modal').classList.add('active'); switchClanTab('my'); }
@@ -1050,7 +1093,7 @@ function createClanCard(clan){
     if(clan.id===myClanId) card.classList.add('my-clan');
     const av = clan.avatar ? '<span style="font-size:24px;">'+clan.avatar+'</span>' : '⚔️';
     const bcstincnBadge = getBcstincnClanBadgeHTML(clan.id);
-    card.innerHTML = `<div class="clan-header"><div class="clan-avatar">${av}</div><div class="clan-info"><div class="clan-name">${clan.name} <span class="clan-tag">[${clan.tag}]</span>${bcstincnBadge}</div><div class="clan-stats"><span>👥 <b>${clan.memberCount||0}</b></span><span>🏆 <b>${clan.wins||0}</b></span></div></div></div>`;
+    card.innerHTML = `<div class="clan-header"><div class="clan-avatar">${av}</div><div class="clan-info"><div class="clan-name">${clan.name} <span class="clan-tag">[${clan.tag}]</span>${bcstincnBadge}</div><div class="clan-stats"><span>👥 <b>${clan.memberCount||0}</b></span><span>🏆 <b>${clan.wins||0}</b></span><span>⭐ <b>${clan.xp||0} XP</b></span></div></div></div>`;
     card.addEventListener('click',()=>openClanView(clan.id));
     return card;
 }
@@ -1072,7 +1115,7 @@ function renderClanProfile(container, clan, isMember){
     const members = Object.values(clan.members||{});
     const av = clan.avatar ? '<span style="font-size:30px;">'+clan.avatar+'</span>' : '⚔️';
     const clanBcstincn = getBcstincnClanBadgeHTML(clan.id);
-    let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}${clanBcstincn}</div><div class="clan-profile-sub">🏷️ [${clan.tag}]</div><div class="clan-profile-sub">👑 ${clan.leaderNick}</div></div></div>`;
+    let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}${clanBcstincn}</div><div class="clan-profile-sub">🏷️ [${clan.tag}]</div><div class="clan-profile-sub">👑 ${clan.leaderNick}</div><div class="clan-profile-sub">⭐ XP: ${clan.xp||0}</div></div></div>`;
     html += `<div style="font-size:13px;font-weight:bold;color:#f1c40f;margin-bottom:8px;">👥 Участники (${members.length})</div>`;
     members.forEach(m=>{
         const roleInfo = getRoleInfo(m.role);
@@ -1088,29 +1131,18 @@ function renderClanProfile(container, clan, isMember){
 function requestJoinClan(clanId, leaderNick){
     if(myClanId){alert('Вы уже в клане');return;}
     database.ref('clanRequests/'+clanId+'/'+currentUID).set({
-        nick: currentNick,
-        uid: currentUID,
-        avatar: currentAvatar,
-        createdAt: Date.now()
-    }).then(()=>{
-        alert('✅ Заявка отправлена лидеру!');
-    }).catch(err=>alert('Ошибка: '+err.message));
+        nick: currentNick, uid: currentUID, avatar: currentAvatar, createdAt: Date.now()
+    }).then(()=>alert('✅ Заявка отправлена лидеру!')).catch(err=>alert('Ошибка: '+err.message));
 }
 function openClanRequests(){
     if(!myClanId){alert('Вы не в клане');return;}
-    if(myClanData && myClanData.leaderUid !== currentUID){
-        alert('Только глава может смотреть заявки');
-        return;
-    }
+    if(myClanData && myClanData.leaderUid !== currentUID){alert('Только глава может смотреть заявки');return;}
     $('clan-requests-modal').classList.add('active');
     database.ref('clanRequests/'+myClanId).on('value', s=>{
         const data = s.val()||{};
         const arr = Object.values(data);
         const content = $('clan-requests-content');
-        if(arr.length===0){
-            content.innerHTML = '<div style="text-align:center;padding:20px;opacity:0.7;">Заявок пока нет</div>';
-            return;
-        }
+        if(arr.length===0){content.innerHTML = '<div style="text-align:center;padding:20px;opacity:0.7;">Заявок пока нет</div>';return;}
         let html = '';
         arr.forEach(r=>{
             const av = r.avatar ? '<span style="font-size:22px;">'+r.avatar+'</span>' : '👤';
@@ -1123,8 +1155,7 @@ function openClanRequests(){
 }
 function acceptClanRequest(uid){
     database.ref('clanRequests/'+myClanId+'/'+uid).once('value').then(s=>{
-        const req = s.val();
-        if(!req) return;
+        const req = s.val(); if(!req) return;
         const updates = {};
         updates['clans/'+myClanId+'/members/'+uid] = {nick:req.nick,uid:req.uid,role:'member',joinedAt:Date.now(),wins:0,avatar:req.avatar||'👤'};
         updates['clans/'+myClanId+'/memberCount'] = ((myClanData&&myClanData.memberCount)||0)+1;
@@ -1132,38 +1163,28 @@ function acceptClanRequest(uid){
         updates['clanRequests/'+myClanId+'/'+uid] = null;
         database.ref().update(updates).then(()=>{
             alert('✅ '+req.nick+' принят в клан!');
+            updateClanQuestProgress('recruit');
+            updateClanQuestProgress('member_join');
         });
     });
 }
 function rejectClanRequest(uid){
     if(!confirm('Отклонить заявку?')) return;
-    database.ref('clanRequests/'+myClanId+'/'+uid).remove().then(()=>{
-        alert('❌ Заявка отклонена');
-    });
+    database.ref('clanRequests/'+myClanId+'/'+uid).remove().then(()=>alert('❌ Заявка отклонена'));
 }
 function changeClanRole(uid, role){
-    if(!myClanId || !myClanData || myClanData.leaderUid !== currentUID){
-        alert('Только глава может менять роли');
-        return;
-    }
-    database.ref('clans/'+myClanId+'/members/'+uid+'/role').set(role).then(()=>{
-        alert('✅ Роль изменена');
-    }).catch(err=>alert('Ошибка: '+err.message));
+    if(!myClanId || !myClanData || myClanData.leaderUid !== currentUID){alert('Только глава может менять роли');return;}
+    database.ref('clans/'+myClanId+'/members/'+uid+'/role').set(role).then(()=>alert('✅ Роль изменена')).catch(err=>alert('Ошибка: '+err.message));
 }
 function kickFromClan(uid){
-    if(!myClanId || !myClanData || myClanData.leaderUid !== currentUID){
-        alert('Только глава может кикать');
-        return;
-    }
+    if(!myClanId || !myClanData || myClanData.leaderUid !== currentUID){alert('Только глава может кикать');return;}
     const nick = (myClanData.members[uid] && myClanData.members[uid].nick) || 'игрока';
     if(!confirm('Кикнуть '+nick+' из клана?')) return;
     const updates = {};
     updates['clans/'+myClanId+'/members/'+uid] = null;
     updates['clans/'+myClanId+'/memberCount'] = Math.max(0, ((myClanData&&myClanData.memberCount)||1)-1);
     updates['users/'+uid+'/clanId'] = null;
-    database.ref().update(updates).then(()=>{
-        alert('✅ Игрок кикнут');
-    });
+    database.ref().update(updates).then(()=>alert('✅ Игрок кикнут'));
 }
 function renderMyClan(container){
     if(!myClanId){container.innerHTML='<div style="text-align:center;padding:20px;">Вы не в клане</div>';return;}
@@ -1177,8 +1198,8 @@ function renderMyClan(container){
         if(subContent && document.querySelector('[data-clan-subtab="chat"].active')) return;
         const av = clan.avatar ? '<span style="font-size:36px;">'+clan.avatar+'</span>' : '⚔️';
         const clanBcstincn = getBcstincnClanBadgeHTML(clan.id);
-        let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}${clanBcstincn}</div><div class="clan-profile-sub">🏷️ [${clan.tag}]</div><div class="clan-profile-sub">👑 ${clan.leaderNick}</div></div></div>`;
-        html += `<div class="clan-tabs"><button data-clan-subtab="members" class="active">👥 Участники</button><button data-clan-subtab="chat">💬 Чат</button><button id="clan-requests-btn">📩 Заявки</button></div><div id="clan-subcontent"></div>`;
+        let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}${clanBcstincn}</div><div class="clan-profile-sub">🏷️ [${clan.tag}]</div><div class="clan-profile-sub">👑 ${clan.leaderNick}</div><div class="clan-profile-sub">⭐ XP: ${clan.xp||0}</div></div></div>`;
+        html += `<div class="clan-tabs"><button data-clan-subtab="members" class="active">👥 Участники</button><button data-clan-subtab="chat">💬 Чат</button><button data-clan-subtab="quests">🎯 Квесты</button><button id="clan-requests-btn">📩 Заявки</button></div><div id="clan-subcontent"></div>`;
         if(clan.leaderUid !== currentUID) html += `<button id="clan-leave-btn" style="width:100%;margin-top:10px;padding:10px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-size:13px;">🚪 Покинуть клан</button>`;
         container.innerHTML = html;
         renderClanSubTab('members', clan);
@@ -1190,11 +1211,8 @@ function renderMyClan(container){
             });
         });
         const reqBtn = container.querySelector('#clan-requests-btn');
-        if(reqBtn && clan.leaderUid === currentUID){
-            reqBtn.addEventListener('click', openClanRequests);
-        } else if(reqBtn){
-            reqBtn.style.display = 'none';
-        }
+        if(reqBtn && clan.leaderUid === currentUID){reqBtn.addEventListener('click', openClanRequests);}
+        else if(reqBtn){reqBtn.style.display = 'none';}
         const lv = container.querySelector('#clan-leave-btn');
         if(lv) lv.addEventListener('click',()=>leaveClan(clan.id));
     });
@@ -1222,12 +1240,8 @@ function renderClanSubTab(tab, clan){
             html += `<div class="clan-member-row" style="flex-direction:column;align-items:flex-start;"><div style="display:flex;align-items:center;gap:8px;width:100%;"><div class="member-avatar">${av}</div><div class="member-info"><div class="member-name">${m.nick}${bcstincnBadge} <span class="member-role ${roleInfo.cssClass}">${roleInfo.name}</span></div></div></div>${controls}</div>`;
         });
         sc.innerHTML = html;
-        sc.querySelectorAll('.clan-role-btn').forEach(btn=>{
-            btn.addEventListener('click',()=>changeClanRole(btn.dataset.uid, btn.dataset.role));
-        });
-        sc.querySelectorAll('.clan-kick-btn').forEach(btn=>{
-            btn.addEventListener('click',()=>kickFromClan(btn.dataset.uid));
-        });
+        sc.querySelectorAll('.clan-role-btn').forEach(btn=>btn.addEventListener('click',()=>changeClanRole(btn.dataset.uid, btn.dataset.role)));
+        sc.querySelectorAll('.clan-kick-btn').forEach(btn=>btn.addEventListener('click',()=>kickFromClan(btn.dataset.uid)));
     }
     else if(tab==='chat'){
         sc.innerHTML = `<div class="clan-chat"><div class="clan-chat-messages" id="clan-chat-messages">Загрузка...</div><div class="clan-chat-input"><input type="text" id="clan-chat-input" placeholder="Сообщение..." maxlength="200"><button id="clan-chat-send">📨</button></div></div>`;
@@ -1257,6 +1271,45 @@ function renderClanSubTab(tab, clan){
             }
         },100);
     }
+    else if(tab==='quests'){
+        sc.innerHTML = '<div style="text-align:center;padding:10px;opacity:0.7;">Загрузка...</div>';
+        database.ref('clans/'+myClanId+'/quests').on('value', s=>{
+            let data = s.val();
+            if(!data || typeof data !== 'object' || Array.isArray(data)){data = {daily:{}, weekly:{}, all:{}};}
+            if(!data.daily) data.daily = {};
+            if(!data.weekly) data.weekly = {};
+            if(!data.all) data.all = {};
+            const isLeader = myClanData && myClanData.leaderUid === currentUID;
+            let html = `<div class="clan-tabs" style="margin-bottom:10px;"><button data-clan-qtab="daily" class="active">📅 День</button><button data-clan-qtab="weekly">📆 Неделя</button><button data-clan-qtab="all">🏆 Достижения</button></div><div id="clan-quests-list"></div>`;
+            sc.innerHTML = html;
+            function renderClanQuestTab(period){
+                const list = $('clan-quests-list'); if(!list) return;
+                const bucket = data[period]||{};
+                let html = '';
+                CLAN_QUESTS.filter(q=>q.period===period).forEach(quest=>{
+                    const q = bucket[quest.id] || {progress:0, claimed:false};
+                    const done = (q.progress||0) >= quest.goal;
+                    const pct = Math.min(100, ((q.progress||0)/quest.goal)*100);
+                    let btn = '';
+                    if(q.claimed){btn = '<span style="color:#2ecc71;font-size:11px;">✅ Получено</span>';}
+                    else if(done && isLeader){btn = `<button class="clan-quest-claim" data-period="${period}" data-id="${quest.id}" style="background:#2ecc71;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:11px;">🎁 Забрать +${quest.reward} XP</button>`;}
+                    else if(done){btn = '<span style="color:#f1c40f;font-size:11px;">Ждёт лидера</span>';}
+                    html += `<div style="padding:10px;border-radius:10px;background:rgba(0,0,0,.2);margin-bottom:8px;border:2px solid ${done?'#2ecc71':'rgba(255,255,255,.1)'};"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><b style="font-size:12px;">${quest.text}</b><span style="color:#f1c40f;font-size:11px;">+${quest.reward} XP</span></div><div style="font-size:11px;opacity:0.8;margin-bottom:6px;">${quest.desc}</div><div style="height:6px;background:rgba(0,0,0,.3);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#3498db,#2ecc71);"></div></div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;margin-top:6px;"><span>${q.progress||0} / ${quest.goal}</span>${btn}</div></div>`;
+                });
+                if(html==='') html = '<div style="text-align:center;padding:20px;opacity:0.6;">Нет квестов</div>';
+                list.innerHTML = html;
+                list.querySelectorAll('.clan-quest-claim').forEach(btn=>btn.addEventListener('click',()=>claimClanQuest(btn.dataset.period, btn.dataset.id)));
+            }
+            renderClanQuestTab('daily');
+            sc.querySelectorAll('[data-clan-qtab]').forEach(btn=>{
+                btn.addEventListener('click',()=>{
+                    sc.querySelectorAll('[data-clan-qtab]').forEach(b=>b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderClanQuestTab(btn.dataset.clanQtab);
+                });
+            });
+        });
+    }
 }
 function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 function sendClanMessage(){
@@ -1265,6 +1318,7 @@ function sendClanMessage(){
     const text = inp.value.trim();
     inp.value = '';
     database.ref('clans/'+myClanId+'/chat').push({nick:currentNick,uid:currentUID,text,time:Date.now()});
+    updateClanQuestProgress('chat');
 }
 function leaveClan(clanId){
     if(!confirm('Покинуть клан?')) return;
@@ -1307,7 +1361,7 @@ function createClan(name, tag, description){
                 createdAt:Date.now(),xp:0,level:1,wins:0,losses:0,
                 memberCount:1,
                 members:{[currentUID]:{nick:currentNick,uid:currentUID,role:'leader',joinedAt:Date.now(),wins:0,avatar:currentAvatar}},
-                chat:{}
+                chat:{}, quests:{daily:{},weekly:{},all:{}}
             };
             const updates = {};
             updates['clans/'+clanId] = clanData;
@@ -1336,13 +1390,11 @@ function renderClansTop(container){
             const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
             const av = c.avatar ? '<span style="font-size:24px;">'+c.avatar+'</span>' : '⚔️';
             const bcstincnBadge = getBcstincnClanBadgeHTML(c.id);
-            html += `<div class="clan-card" style="margin-bottom:0;" data-clan-id="${c.id}"><div class="clan-header"><div style="min-width:40px;text-align:center;font-size:20px;font-weight:bold;">${medal}</div><div class="clan-avatar">${av}</div><div class="clan-info"><div class="clan-name">${c.name} [${c.tag}]${bcstincnBadge}</div><div class="clan-stats"><span>🏆 <b>${c.wins||0}</b></span><span>👥 <b>${c.memberCount||0}</b></span></div></div></div></div>`;
+            html += `<div class="clan-card" style="margin-bottom:0;" data-clan-id="${c.id}"><div class="clan-header"><div style="min-width:40px;text-align:center;font-size:20px;font-weight:bold;">${medal}</div><div class="clan-avatar">${av}</div><div class="clan-info"><div class="clan-name">${c.name} [${c.tag}]${bcstincnBadge}</div><div class="clan-stats"><span>⭐ <b>${c.xp||0} XP</b></span><span>🏆 <b>${c.wins||0}</b></span><span>👥 <b>${c.memberCount||0}</b></span></div></div></div></div>`;
         });
         html += '</div>';
         container.innerHTML = html;
-        container.querySelectorAll('.clan-card').forEach(card=>{
-            card.addEventListener('click',()=>openClanView(card.dataset.clanId));
-        });
+        container.querySelectorAll('.clan-card').forEach(card=>card.addEventListener('click',()=>openClanView(card.dataset.clanId)));
     });
 }
 function addClanXp(amount, isWin){
@@ -1355,9 +1407,7 @@ function addClanXp(amount, isWin){
     database.ref().update(updates);
 }
 
-/* ============================================================
-   ИГРА
-   ============================================================ */
+/* ИГРА */
 function createBoard(){
     boardEl.innerHTML = '';
     for(let i=0;i<9;i++){
@@ -1400,7 +1450,11 @@ function handleClick(i){
             updateQuestProgress('win');
             if(difficulty==='hard') updateQuestProgress('hard_win');
             showModal('Вы выиграли!','🎉');
-            if(difficulty==='medium'||difficulty==='hard'){currentStreak++;updateStreakUI();}
+            if(difficulty==='medium'||difficulty==='hard'){
+                currentStreak++;
+                updateStreakUI();
+                if(currentStreak >= 3 && myClanId) updateClanQuestProgress('streak');
+            }
             checkAchievements();
         } else {
             scoreO++;updateScore();createFlash();showModal('Вы проиграли!','😢');playLose();
@@ -1414,6 +1468,7 @@ function handleClick(i){
         gameOver = true;scoreDraw++;updateScore();showModal('Ничья!','🤝');
         botTaunt('draw');
         if(vsBot){saveStats('draw');saveHistory('draw');}
+        updateQuestProgress('draw');
         return;
     }
     currentPlayer = currentPlayer==='X'?'O':'X';
@@ -1447,6 +1502,7 @@ function botMove(){
             gameOver = true;scoreDraw++;updateScore();showModal('Ничья!','🤝');
             botTaunt('draw');
             if(vsBot){saveStats('draw');saveHistory('draw');}
+            updateQuestProgress('draw');
             return;
         }
         currentPlayer = 'X';statusEl.textContent = 'Ваш ход (X)';updateUI();
@@ -1521,9 +1577,7 @@ function loadMyStats(){
     });
 }
 
-/* ============================================================
-   AUTH
-   ============================================================ */
+/* AUTH */
 $('register-btn').addEventListener('click',()=>{
     const n = nicknameInput.value.trim(), e = emailInput.value.trim(), p = passwordInput.value.trim();
     if(!n||!e||!p){nickStatusEl.textContent='Заполните поля';nickStatusEl.style.color='#e74c3c';return;}
@@ -1597,9 +1651,7 @@ auth.onAuthStateChanged(user=>{
     }
 });
 
-/* ============================================================
-   UI СОБЫТИЯ
-   ============================================================ */
+/* UI СОБЫТИЯ */
 $('theme-toggle').addEventListener('click',()=>{document.body.classList.toggle('light');const l=document.body.classList.contains('light');$('theme-toggle').textContent=l?'☀️ Тема':'🌙 Тема';});
 $('sound-toggle').addEventListener('click',()=>{soundOn=!soundOn;$('sound-toggle').textContent=soundOn?'🔊 Звук':'🔇 Звук';});
 $('menu-btn').addEventListener('click',()=>menuModal.classList.add('active'));
@@ -1680,28 +1732,15 @@ $('admin-give-titles').addEventListener('click',()=>{$('admin-panel-modal').clas
 $('admin-title-history').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');showTitleHistory();});
 $('admin-bans').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');alert('Модуль в разработке');});
 
-/* ============================================================
-   ADMIN — выдача титула (выбор игрока из списка)
-   ============================================================ */
+/* ADMIN — выдача титула */
 function showGiveTitleModal(){
-    const existing = $('give-title-modal');
-    if(existing) existing.remove();
+    const existing = $('give-title-modal'); if(existing) existing.remove();
     const m = document.createElement('div');
     m.id = 'give-title-modal';
     m.className = 'modal-overlay active';
-    m.innerHTML = `<div class="modal" style="max-width:95vw;min-width:320px;text-align:left;max-height:85vh;overflow-y:auto;">
-        <h2 style="text-align:center;">🎖️ Выдать титул</h2>
-        <div id="give-title-players" style="max-height:180px;overflow-y:auto;margin-bottom:10px;">Загрузка игроков...</div>
-        <label style="font-size:12px;font-weight:bold;color:#f1c40f;">Титул</label>
-        <select id="give-title-select" style="width:100%;padding:8px 12px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:13px;margin-bottom:12px;margin-top:4px;">
-            ${Object.keys(TITLES).map(k=>'<option value="'+k+'">'+TITLES[k].name+'</option>').join('')}
-        </select>
-        <button id="give-title-confirm" style="background:#2ecc71;">✅ Выдать</button>
-        <button id="give-title-close" style="background:#555;">Закрыть</button>
-    </div>`;
+    m.innerHTML = `<div class="modal" style="max-width:95vw;min-width:320px;text-align:left;max-height:85vh;overflow-y:auto;"><h2 style="text-align:center;">🎖️ Выдать титул</h2><div id="give-title-players" style="max-height:180px;overflow-y:auto;margin-bottom:10px;">Загрузка игроков...</div><label style="font-size:12px;font-weight:bold;color:#f1c40f;">Титул</label><select id="give-title-select" style="width:100%;padding:8px 12px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:13px;margin-bottom:12px;margin-top:4px;">${Object.keys(TITLES).map(k=>'<option value="'+k+'">'+TITLES[k].name+'</option>').join('')}</select><button id="give-title-confirm" style="background:#2ecc71;">✅ Выдать</button><button id="give-title-close" style="background:#555;">Закрыть</button></div>`;
     document.body.appendChild(m);
     $('give-title-close').addEventListener('click',()=>m.remove());
-
     database.ref('users').once('value').then(s=>{
         const users = s.val()||{};
         const uids = Object.keys(users);
@@ -1711,14 +1750,10 @@ function showGiveTitleModal(){
         let html = '';
         list.forEach(u=>{
             const av = u.avatar ? '<span style="font-size:18px;">'+u.avatar+'</span>' : '👤';
-            html += `<div class="clan-member-row" data-uid="${u.uid}" style="cursor:pointer;border:2px solid transparent;">
-                <div class="member-avatar">${av}</div>
-                <div class="member-info"><div class="member-name">${u.nick}</div></div>
-            </div>`;
+            html += `<div class="clan-member-row" data-uid="${u.uid}" style="cursor:pointer;border:2px solid transparent;"><div class="member-avatar">${av}</div><div class="member-info"><div class="member-name">${u.nick}</div></div></div>`;
         });
         cont.innerHTML = html;
-        let selectedUid = null;
-        let selectedNick = '';
+        let selectedUid = null; let selectedNick = '';
         cont.querySelectorAll('.clan-member-row').forEach(row=>{
             row.addEventListener('click',()=>{
                 cont.querySelectorAll('.clan-member-row').forEach(r=>r.style.borderColor='transparent');
@@ -1732,12 +1767,9 @@ function showGiveTitleModal(){
             const titleKey = $('give-title-select').value;
             database.ref('users/'+selectedUid+'/titles/'+titleKey).set(true).then(()=>{
                 database.ref('titleHistory/'+selectedUid).push({
-                    title: titleKey,
-                    titleName: TITLES[titleKey].name,
-                    givenBy: currentNick,
-                    givenByUid: currentUID,
-                    targetNick: selectedNick,
-                    time: Date.now()
+                    title: titleKey, titleName: TITLES[titleKey].name,
+                    givenBy: currentNick, givenByUid: currentUID,
+                    targetNick: selectedNick, time: Date.now()
                 });
                 alert('✅ Титул выдан игроку '+selectedNick);
                 m.remove();
@@ -1746,31 +1778,21 @@ function showGiveTitleModal(){
     });
 }
 
-/* ============================================================
-   ADMIN — история выдач
-   ============================================================ */
+/* ADMIN — история выдач */
 function showTitleHistory(){
-    const existing = $('title-history-modal');
-    if(existing) existing.remove();
+    const existing = $('title-history-modal'); if(existing) existing.remove();
     const m = document.createElement('div');
     m.id = 'title-history-modal';
     m.className = 'modal-overlay active';
-    m.innerHTML = `<div class="modal" style="max-width:95vw;min-width:320px;text-align:left;max-height:85vh;overflow-y:auto;">
-        <h2 style="text-align:center;">📜 История выдач титулов</h2>
-        <div id="title-history-content">Загрузка...</div>
-        <button id="title-history-close" style="background:#555;margin-top:12px;">Закрыть</button>
-    </div>`;
+    m.innerHTML = `<div class="modal" style="max-width:95vw;min-width:320px;text-align:left;max-height:85vh;overflow-y:auto;"><h2 style="text-align:center;">📜 История выдач титулов</h2><div id="title-history-content">Загрузка...</div><button id="title-history-close" style="background:#555;margin-top:12px;">Закрыть</button></div>`;
     document.body.appendChild(m);
     $('title-history-close').addEventListener('click',()=>m.remove());
-
     database.ref('titleHistory').once('value').then(s=>{
         const data = s.val()||{};
         database.ref('users').once('value').then(us=>{
             const users = us.val()||{};
             const uidToNick = {};
-            Object.keys(users).forEach(uid=>{
-                if(users[uid].nick) uidToNick[uid] = users[uid].nick;
-            });
+            Object.keys(users).forEach(uid=>{if(users[uid].nick) uidToNick[uid] = users[uid].nick;});
             const all = [];
             Object.keys(data).forEach(uid=>{
                 const entries = data[uid];
@@ -1792,24 +1814,17 @@ function showTitleHistory(){
                 const targetNick = e.targetNick || uidToNick[e.uid] || e.uid;
                 const giver = e.givenBy || '—';
                 const date = e.time ? new Date(e.time).toLocaleString('ru-RU') : '—';
-                html += `<div style="padding:8px;margin-bottom:6px;background:rgba(0,0,0,.2);border-radius:8px;font-size:12px;">
-                    <div><b>${tName}</b></div>
-                    <div style="opacity:0.8;">Кому: <b>${targetNick}</b></div>
-                    <div style="opacity:0.8;">Кем: ${giver}</div>
-                    <div style="opacity:0.6;font-size:10px;">${date}</div>
-                </div>`;
+                html += `<div style="padding:8px;margin-bottom:6px;background:rgba(0,0,0,.2);border-radius:8px;font-size:12px;"><div><b>${tName}</b></div><div style="opacity:0.8;">Кому: <b>${targetNick}</b></div><div style="opacity:0.8;">Кем: ${giver}</div><div style="opacity:0.6;font-size:10px;">${date}</div></div>`;
             });
             cont.innerHTML = html;
         });
     });
 }
 
-/* ============================================================
-   INIT
-   ============================================================ */
+/* INIT */
 resetBtn.addEventListener('click',resetGame);
 createBoard();updateUI();
 const coinEl = $('coin-count');if(coinEl) coinEl.textContent = getCoins();
-</script>
+    </script>
 </body>
-    </html>
+</html>
