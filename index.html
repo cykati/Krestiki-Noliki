@@ -185,6 +185,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 .leader-tabs{display:flex;gap:4px;margin-bottom:12px;background:rgba(0,0,0,.2);padding:4px;border-radius:10px;flex-wrap:wrap;}
 .leader-tabs button{flex:1;padding:8px;font-size:12px;border:none;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;margin-top:0;white-space:nowrap;min-width:fit-content;}
 .leader-tabs button.active{background:linear-gradient(135deg,#f39c12,#e67e22);color:#fff;font-weight:bold;}
+#admin-notify{display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;padding:14px 22px;border-radius:14px;font-weight:900;font-size:14px;z-index:99999;box-shadow:0 8px 30px rgba(241,196,15,.6);text-align:center;max-width:90vw;cursor:pointer;}
 @media(max-width:400px){#board{grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px);}.cell{font-size:48px;}.scoreboard{font-size:13px;gap:8px;}.top-bar{max-width:100%;}#avatar-topbar{width:34px;height:34px;}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -194,7 +195,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <body>
 <h1>Крестики-нолики</h1>
 
-<div id="admin-notify" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f1c40f,#e67e22);color:#fff;padding:14px 22px;border-radius:14px;font-weight:900;font-size:14px;z-index:99999;box-shadow:0 8px 30px rgba(241,196,15,.6);text-align:center;max-width:90vw;cursor:pointer;"></div>
+<div id="admin-notify"></div>
 
 <div class="top-bar">
 <div id="avatar-topbar" title="Профиль">👤</div>
@@ -352,7 +353,7 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 <div style="text-align:center;margin-top:30px;margin-bottom:30px;width:100%;max-width:360px;">
 <p style="color:var(--text);font-size:14px;margin-bottom:12px;opacity:0.9;">Нашли ошибку? Напишите нам!</p>
 <a href="mailto:Safety.Krestiki.Noliki@gmail.com?subject=Баг" style="display:inline-block;padding:12px 24px;background-color:#4CAF50;color:white;text-decoration:none;border-radius:10px;font-size:15px;font-weight:bold;">✉️ Поддержка</a>
-                                                                                        </div>
+    </div>
 <script>
 /* FIREBASE */
 const firebaseConfig={apiKey:"AIzaSyB2It75ikFi-YGKA8-jUNd4x9Syv17XSQg",authDomain:"krestiki-noliki1.firebaseapp.com",databaseURL:"https://krestiki-noliki1-default-rtdb.europe-west1.firebasedatabase.app",projectId:"krestiki-noliki1",storageBucket:"krestiki-noliki1.firebasestorage.app",messagingSenderId:"108383530148",appId:"1:108383530148:web:14989e9fec349406d0ca31"};
@@ -487,7 +488,8 @@ setInterval(updateQuestTimer,1000);
 /* КВЕСТЫ КЛАНА */
 function updateClanQuestProgress(event){if(!myClanId)return;database.ref('clans/'+myClanId+'/quests').once('value').then(s=>{let data=s.val();if(!data||typeof data!=='object'||Array.isArray(data)){data={daily:{},weekly:{},all:{}};}if(!data.daily)data.daily={};if(!data.weekly)data.weekly={};if(!data.all)data.all={};let changed=false;CLAN_QUESTS.forEach(quest=>{if(quest.event!==event)return;const bucket=data[quest.period];if(!bucket[quest.id])bucket[quest.id]={id:quest.id,progress:0,claimed:false};const q=bucket[quest.id];if(!q.claimed && (q.progress||0)<quest.goal){q.progress=Math.min(quest.goal,(q.progress||0)+1);changed=true;}});if(changed)database.ref('clans/'+myClanId+'/quests').set(data);});}
 function claimClanQuest(period,questId){if(!myClanId||!myClanData||myClanData.leaderUid!==currentUID){alert('Только глава может забирать награды');return;}const quest=CLAN_QUESTS.find(q=>q.id===questId);if(!quest)return;database.ref('clans/'+myClanId+'/quests').once('value').then(s=>{let data=s.val()||{daily:{},weekly:{},all:{}};if(!data[period])data[period]={};const q=data[period][questId]||{id:questId,progress:0,claimed:false};if(q.claimed||(q.progress||0)<quest.goal)return;q.claimed=true;data[period][questId]=q;const newXp=(myClanData.xp||0)+quest.reward;database.ref('clans/'+myClanId).update({quests:data,xp:newXp}).then(()=>alert('✅ Клану начислено +'+quest.reward+' XP!'));});}
-
+    </script>
+<script>
 /* МАГАЗИН */
 const SHOP_ITEMS = {
     colors: [
@@ -550,7 +552,43 @@ function addToInventory(item){const inv=getInventory();inv[item.id]=inv[item.id]
 function syncInventoryToDB(){if(!currentUID)return;database.ref('users/'+currentUID+'/inventory').set(getInventory()).catch(()=>{});database.ref('users/'+currentUID+'/ownedItems').set(getOwnedItems()).catch(()=>{});}
 function loadInventoryFromDB(uid){database.ref('users/'+uid+'/inventory').once('value').then(s=>{const remote=s.val()||{};const local=getInventory();Object.keys(remote).forEach(k=>{if(!local[k])local[k]=remote[k];});setInventory(local);});database.ref('users/'+uid+'/ownedItems').once('value').then(s=>{const remote=s.val()||[];if(remote.length>0){setOwnedItems([...new Set([...getOwnedItems(),...remote])]);}});}
 function openInventoryModal(){$('inventory-shop-modal').classList.add('active');$('inv-coins').textContent=getCoins();renderInventory();}
-function renderInventory(){const list=$('inv-list');if(!list)return;const items=Object.values(getInventory());if(items.length===0){list.innerHTML='<div style="text-align:center;padding:20px;opacity:0.6;">🎒 Инвентарь пуст</div>';return;}list.innerHTML='';items.forEach(item=>{const el=document.createElement('div');el.style.cssText='padding:10px;border-radius:10px;background:rgba(0,0,0,.2);margin-bottom:8px;display:flex;gap:10px;align-items:center;';el.innerHTML=`<div style="font-size:26px;">${item.icon}</div><div style="flex:1;"><div style="font-size:12px;font-weight:bold;">${item.name}</div><div style="font-size:10px;opacity:0.8;">${item.desc||''}</div></div>`;list.appendChild(el);});}
+function renderInventory(){
+    const list=$('inv-list');if(!list)return;
+    const inv = getInventory();
+    const now = Date.now();
+    let changed = false;
+    Object.keys(inv).forEach(k=>{
+        const item = inv[k];
+        if(item.type==='booster' && item.activeUntil && item.activeUntil < now){
+            delete inv[k];
+            changed = true;
+        }
+    });
+    if(changed){ setInventory(inv); syncInventoryToDB(); }
+    const items=Object.values(inv);
+    if(items.length===0){list.innerHTML='<div style="text-align:center;padding:20px;opacity:0.6;">🎒 Инвентарь пуст</div>';return;}
+    list.innerHTML='';
+    items.forEach(item=>{
+        const el=document.createElement('div');
+        el.style.cssText='padding:10px;border-radius:10px;background:rgba(0,0,0,.2);margin-bottom:8px;display:flex;gap:10px;align-items:center;';
+        let extraInfo = '';
+        let timeInfo = '';
+        if(item.type==='booster'){
+            if(item.count && item.count > 1){extraInfo=' <span style="color:#f1c40f;font-weight:bold;">x'+item.count+'</span>';}
+            if(item.activeUntil){
+                const left = item.activeUntil - now;
+                if(left > 0){
+                    const min = Math.floor(left/60000);
+                    const h = Math.floor(min/60);
+                    const m = min % 60;
+                    timeInfo = ` <span style="color:#2ecc71;font-size:10px;">⏱ ${h>0?h+'ч ':''}${m}м</span>`;
+                }
+            }
+        }
+        el.innerHTML=`<div style="font-size:26px;">${item.icon||'📦'}</div><div style="flex:1;"><div style="font-size:12px;font-weight:bold;">${item.name}${extraInfo}${timeInfo}</div><div style="font-size:10px;opacity:0.8;">${item.desc||''}</div></div>`;
+        list.appendChild(el);
+    });
+}
 function renderShop(){
     const list=$('shop-list');if(!list)return;
     const owned=getOwnedItems();
@@ -659,9 +697,10 @@ function renderCreateClan(container){container.innerHTML=`<div class="clan-cost-
 function createClan(name,tag,description){if(getCoins()<CLAN_CREATE_COST){alert('❌ Нужно '+CLAN_CREATE_COST+' 🪙');return;}if(name.length<3||name.length>20){alert('Название: 3-20 символов');return;}if(tag.length<2||tag.length>5){alert('Тег: 2-5 символов');return;}if(!/^[A-Z0-9]+$/.test(tag)){alert('Тег: только A-Z и 0-9');return;}database.ref('clanNames').once('value').then(s=>{const names=s.val()||{};if(names[name.toLowerCase()]){alert('❌ Название занято');return;}if(names['tag_'+tag.toLowerCase()]){alert('❌ Тег занят');return;}database.ref('users/'+currentUID+'/clanId').once('value').then(cs=>{if(cs.val()){alert('Вы уже в клане');return;}const clanId=generateClanId();const clanData={id:clanId,name,tag,description:description||'',avatar:null,leaderUid:currentUID,leaderNick:currentNick,createdAt:Date.now(),xp:0,level:1,wins:0,losses:0,memberCount:1,bank:0,members:{[currentUID]:{nick:currentNick,uid:currentUID,role:'leader',joinedAt:Date.now(),wins:0,avatar:currentAvatar}},chat:{},quests:{daily:{},weekly:{},all:{}}};const updates={};updates['clans/'+clanId]=clanData;updates['clanNames/'+name.toLowerCase()]=clanId;updates['clanNames/tag_'+tag.toLowerCase()]=clanId;updates['users/'+currentUID+'/clanId']=clanId;database.ref().update(updates).then(()=>{setCoins(getCoins()-CLAN_CREATE_COST);myClanId=clanId;myClanData=clanData;playBonusSound();createConfetti();alert('✅ Клан «'+name+'» ['+tag+'] создан!');applyTitleToNick();switchClanTab('my');}).catch(err=>alert('Ошибка: '+err.message));});});}
 function renderClansTop(container){container.innerHTML='Загрузка...';database.ref('clans').once('value').then(s=>{const data=s.val()||{};const clans=Object.values(data).sort((a,b)=>(b.xp||0)-(a.xp||0));if(clans.length===0){container.innerHTML='<div style="text-align:center;padding:20px;opacity:0.7;">Пока нет кланов</div>';return;}let html='<div style="display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto;">';clans.forEach((c,i)=>{const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);const av=c.avatar?'<span style="font-size:24px;">'+c.avatar+'</span>':'⚔️';const bcstincnBadge=getBcstincnClanBadgeHTML(c.id);html+=`<div class="clan-card" style="margin-bottom:0;" data-clan-id="${c.id}"><div class="clan-header"><div style="min-width:40px;text-align:center;font-size:20px;font-weight:bold;">${medal}</div><div class="clan-avatar">${av}</div><div class="clan-info"><div class="clan-name">${c.name} [${c.tag}]${bcstincnBadge}</div><div class="clan-stats"><span>⭐ <b>${c.xp||0} XP</b></span><span>🏆 <b>${c.wins||0}</b></span><span>👥 <b>${c.memberCount||0}</b></span><span>💎 <b>${c.bank||0} 🪙</b></span></div></div></div></div>`;});html+='</div>';container.innerHTML=html;container.querySelectorAll('.clan-card').forEach(card=>card.addEventListener('click',()=>openClanView(card.dataset.clanId)));});}
 function addClanXp(amount,isWin){if(!myClanId||!myClanData)return;const updates={};if(isWin){updates['clans/'+myClanId+'/wins']=(myClanData.wins||0)+1;updates['clans/'+myClanId+'/members/'+currentUID+'/wins']=((myClanData.members[currentUID]&&myClanData.members[currentUID].wins)||0)+1;}database.ref().update(updates);}
-function renderClanBank(sc){database.ref('clans/'+myClanId).once('value').then(s=>{const clan=s.val();if(!clan)return;sc.innerHTML=`<div style="padding:15px;background:rgba(0,0,0,.2);border-radius:10px;text-align:center;"><div style="font-size:16px;margin-bottom:8px;">💎 Казна клана</div><div style="font-size:28px;font-weight:900;color:#f1c40f;margin-bottom:12px;">${clan.bank||0} 🪙</div><button id="open-clan-bank-btn" style="background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:14px;margin-top:0;">💎 Пополнить казну</button><div style="font-size:11px;opacity:0.7;margin-top:10px;">10% идёт админу, 90% — в казну клана</div></div>`;$('open-clan-bank-btn').addEventListener('click',openClanBank);});}
-function openClanBank(){database.ref('clans/'+myClanId).once('value').then(s=>{const clan=s.val();if(!clan)return;const myCoins=getCoins();const modal=document.createElement('div');modal.className='modal-overlay active';modal.id='clan-bank-modal';modal.innerHTML=`<div class="modal" style="max-width:95vw;min-width:320px;text-align:left;"><h2 style="text-align:center;">💎 Казна клана</h2><div style="padding:10px;background:rgba(0,0,0,.2);border-radius:8px;margin-bottom:12px;font-size:13px;"><div>Клан: <b>[${clan.tag}] ${clan.name}</b></div><div>Текущая казна: <b>${clan.bank||0} 🪙</b></div><div>У вас: <b>${myCoins} 🪙</b></div></div><label style="font-size:12px;font-weight:bold;color:#f1c40f;">Сумма пополнения</label><input type="number" id="clan-bank-amount" value="1000" min="100" style="width:100%;padding:8px 12px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:13px;margin:4px 0 12px;outline:none;"><div style="font-size:11px;opacity:0.8;margin-bottom:12px;">ℹ️ 10% уйдёт админу, 90% пойдёт в казну клана.</div><button id="clan-bank-confirm" style="background:#2ecc71;width:100%;">💎 Пополнить казну</button><button id="clan-bank-close" style="background:#555;width:100%;margin-top:6px;">Закрыть</button></div>`;document.body.appendChild(modal);$('clan-bank-close').addEventListener('click',()=>modal.remove());$('clan-bank-confirm').addEventListener('click',()=>{const amount=parseInt($('clan-bank-amount').value)||0;if(amount<100){alert('Минимум 100 🪙');return;}if(amount>myCoins){alert('❌ Недостаточно монет!');return;}const commission=Math.floor(amount*0.1);const toClan=amount-commission;setCoins(myCoins-amount);database.ref('clans/'+myClanId+'/bank').transaction(cur=>(cur||0)+toClan);database.ref('adminEarnings/clanCommission').transaction(cur=>(cur||0)+commission);database.ref('clans/'+myClanId+'/bankHistory').push({from:currentNick,fromUid:currentUID,amount:amount,toClan:toClan,commission:commission,time:Date.now()});alert('✅ Пополнено!\nВ казну: +'+toClan+' 🪙\nКомиссия админу: '+commission+' 🪙');modal.remove();database.ref('clans/'+myClanId).once('value').then(cs=>{myClanData=cs.val();applyTitleToNick();});});});}
-
+function renderClanBank(sc){database.ref('clans/'+myClanId).once('value').then(s=>{const clan=s.val();if(!clan)return;sc.innerHTML=`<div style="padding:15px;background:rgba(0,0,0,.2);border-radius:10px;text-align:center;"><div style="font-size:16px;margin-bottom:8px;">💎 Казна клана</div><div style="font-size:28px;font-weight:900;color:#f1c40f;margin-bottom:12px;">${clan.bank||0} 🪙</div><button id="open-clan-bank-btn" style="background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:14px;margin-top:0;">💎 Пополнить казну</button>${isAdmin?'<div style="font-size:11px;opacity:0.7;margin-top:10px;">10% идёт админу, 90% — в казну клана</div>':''}</div>`;$('open-clan-bank-btn').addEventListener('click',openClanBank);});}
+function openClanBank(){database.ref('clans/'+myClanId).once('value').then(s=>{const clan=s.val();if(!clan)return;const myCoins=getCoins();const modal=document.createElement('div');modal.className='modal-overlay active';modal.id='clan-bank-modal';modal.innerHTML=`<div class="modal" style="max-width:95vw;min-width:320px;text-align:left;"><h2 style="text-align:center;">💎 Казна клана</h2><div style="padding:10px;background:rgba(0,0,0,.2);border-radius:8px;margin-bottom:12px;font-size:13px;"><div>Клан: <b>[${clan.tag}] ${clan.name}</b></div><div>Текущая казна: <b>${clan.bank||0} 🪙</b></div><div>У вас: <b>${myCoins} 🪙</b></div></div><label style="font-size:12px;font-weight:bold;color:#f1c40f;">Сумма пополнения</label><input type="number" id="clan-bank-amount" value="1000" min="100" style="width:100%;padding:8px 12px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:13px;margin:4px 0 12px;outline:none;">${isAdmin?'<div style="font-size:11px;opacity:0.8;margin-bottom:12px;">ℹ️ 10% уйдёт админу, 90% пойдёт в казну клана.</div>':''}<button id="clan-bank-confirm" style="background:#2ecc71;width:100%;">💎 Пополнить казну</button><button id="clan-bank-close" style="background:#555;width:100%;margin-top:6px;">Закрыть</button></div>`;document.body.appendChild(modal);$('clan-bank-close').addEventListener('click',()=>modal.remove());$('clan-bank-confirm').addEventListener('click',()=>{const amount=parseInt($('clan-bank-amount').value)||0;if(amount<100){alert('Минимум 100 🪙');return;}if(amount>myCoins){alert('❌ Недостаточно монет!');return;}const commission=Math.floor(amount*0.1);const toClan=amount-commission;setCoins(myCoins-amount);database.ref('clans/'+myClanId+'/bank').transaction(cur=>(cur||0)+toClan);database.ref('adminEarnings/clanCommission').transaction(cur=>(cur||0)+commission);database.ref('clans/'+myClanId+'/bankHistory').push({from:currentNick,fromUid:currentUID,amount:amount,toClan:toClan,commission:commission,time:Date.now()});const msg=isAdmin?'✅ Пополнено!\nВ казну: +'+toClan+' 🪙\nКомиссия админу: '+commission+' 🪙':'✅ Пополнено!\nВ казну: +'+toClan+' 🪙';alert(msg);modal.remove();database.ref('clans/'+myClanId).once('value').then(cs=>{myClanData=cs.val();applyTitleToNick();});});});}
+</script>
+<script>
 /* ИГРА */
 function createBoard(){boardEl.innerHTML='';for(let i=0;i<9;i++){const c=document.createElement('button');c.className='cell';c.dataset.index=i;c.addEventListener('click',()=>handleClick(i));boardEl.appendChild(c);}}
 function updateUI(){document.querySelectorAll('.cell').forEach((c,i)=>{c.textContent=board[i];c.classList.remove('x','o','rainbow-cell');c.style.background='';c.style.webkitBackgroundClip='';c.style.backgroundClip='';c.style.webkitTextFillColor='';c.style.color='';if(board[i]==='X')c.classList.add('x');if(board[i]==='O')c.classList.add('o');c.disabled=(board[i]!=='')||gameOver;});applyXColor(currentXColor);}
@@ -695,7 +734,7 @@ const WHEEL_PRIZES = [
     {id:'booster_x2',  type:'booster',value:'x2_coins', duration:3600000, weight:5, name:'💎 Буст x2 монеты (1 час)'},
     {id:'badge_gold',  type:'badge',  value:'gold',  weight:6,  name:'🥇 Золотая рамка'},
     {id:'coins_5000',  type:'coins',  value:5000,    weight:1,  name:'💰 5000 монет'},
-    {id:'jackpot',     type:'coins',  value:50000,   weight:0.1,name:'🏆 ДЖЕКПОТ 50 000!'}
+    {id:'jackpot',     type:'coins',  value:50000,   weight:3, name:'🏆 ДЖЕКПОТ 50 000!'}
 ];
 const WHEEL_PACKS = [
     {id:'spin_1',   count:1,   price:1000,   name:'1 вращение',   discount:0},
@@ -706,9 +745,9 @@ const WHEEL_PACKS = [
 
 function openWheelModal(){$('wheel-modal').classList.add('active');renderWheelShop();updateWheelUI();const d=$('wheel-display');if(d)d.textContent='🎡';const r=$('wheel-result');if(r)r.textContent='Готов крутить? 🎯';}
 function updateWheelUI(){const spins=parseInt(localStorage.getItem('wheel_spins')||'0');$('wheel-spins').textContent=spins;$('wheel-coins').textContent=getCoins();const b1=$('wheel-spin-1'),bA=$('wheel-spin-all');if(spins<1){b1.style.opacity='0.5';b1.style.cursor='not-allowed';bA.style.opacity='0.5';bA.style.cursor='not-allowed';}else{b1.style.opacity='1';b1.style.cursor='pointer';bA.style.opacity='1';bA.style.cursor='pointer';}}
-function renderWheelShop(){const cont=$('wheel-shop');if(!cont)return;cont.innerHTML='';WHEEL_PACKS.forEach(pack=>{const el=document.createElement('div');el.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;font-size:12px;';el.innerHTML=`<div><b>${pack.name}</b><div style="font-size:10px;opacity:0.7;">${pack.count} шт.</div></div><button class="wheel-buy-btn" data-pack="${pack.id}" style="background:#2ecc71;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:11px;">🪙 ${pack.price}</button>`;cont.appendChild(el);});cont.querySelectorAll('.wheel-buy-btn').forEach(btn=>{btn.addEventListener('click',()=>{const pack=WHEEL_PACKS.find(p=>p.id===btn.dataset.pack);if(!pack)return;if(getCoins()<pack.price){alert('❌ Недостаточно монет!');return;}const commission=Math.floor(pack.price*0.02);setCoins(getCoins()-pack.price);const cur=parseInt(localStorage.getItem('wheel_spins')||'0');localStorage.setItem('wheel_spins',String(cur+pack.count));if(currentUID)database.ref('users/'+currentUID+'/wheelSpins').set(cur+pack.count).catch(()=>{});database.ref('adminEarnings/wheelCommission').transaction(c=>(c||0)+commission);playBonusSound();createConfetti();alert('✅ Куплено '+pack.count+' вращений!\nКомиссия админу: '+commission+' 🪙');updateWheelUI();});});}
+function renderWheelShop(){const cont=$('wheel-shop');if(!cont)return;cont.innerHTML='';WHEEL_PACKS.forEach(pack=>{const el=document.createElement('div');el.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;font-size:12px;';el.innerHTML=`<div><b>${pack.name}</b><div style="font-size:10px;opacity:0.7;">${pack.count} шт.</div></div><button class="wheel-buy-btn" data-pack="${pack.id}" style="background:#2ecc71;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:11px;">🪙 ${pack.price}</button>`;cont.appendChild(el);});cont.querySelectorAll('.wheel-buy-btn').forEach(btn=>{btn.addEventListener('click',()=>{const pack=WHEEL_PACKS.find(p=>p.id===btn.dataset.pack);if(!pack)return;if(getCoins()<pack.price){alert('❌ Недостаточно монет!');return;}const commission=Math.floor(pack.price*0.2);setCoins(getCoins()-pack.price);const cur=parseInt(localStorage.getItem('wheel_spins')||'0');localStorage.setItem('wheel_spins',String(cur+pack.count));if(currentUID)database.ref('users/'+currentUID+'/wheelSpins').set(cur+pack.count).catch(()=>{});database.ref('adminEarnings/wheelCommission').transaction(c=>(c||0)+commission);if(commission>=5000){database.ref('adminNotifications').push({text:'🎡 '+currentNick+' купил '+pack.count+' вращений. Комиссия: +'+commission+' 🪙',fromNick:currentNick,fromUid:currentUID,amount:commission,time:Date.now()}).catch(()=>{});}playBonusSound();createConfetti();const msg=isAdmin?'✅ Куплено '+pack.count+' вращений!\nКомиссия админу: '+commission+' 🪙':'✅ Куплено '+pack.count+' вращений!';alert(msg);updateWheelUI();});});}
 function pickPrize(){const total=WHEEL_PRIZES.reduce((s,p)=>s+p.weight,0);let r=Math.random()*total;for(const prize of WHEEL_PRIZES){r-=prize.weight;if(r<=0)return prize;}return WHEEL_PRIZES[0];}
-function applyPrize(prize){
+async function applyPrize(prize){
     if(prize.type==='coins'){
         if(prize.id==='jackpot'){
             const commission=Math.floor(prize.value*0.01);
@@ -722,20 +761,84 @@ function applyPrize(prize){
         addCoins(prize.value);
         return '🪙 +'+prize.value;
     }
-    if(prize.type==='color'){addOwnedItem('wheel_color_'+Date.now());const nc={id:'wheel_color_'+Date.now(),name:'Редкий цвет',type:'solid',value:prize.value,unlock:{level:null,wins:0}};currentXColor=nc;applyXColor(nc);if(currentUID)database.ref('users/'+currentUID+'/xColor').set(nc).catch(()=>{});return'🎨 Редкий цвет X';}
-    if(prize.type==='title'){if(!userTitles.includes(prize.value))userTitles.push(prize.value);if(currentUID)database.ref('users/'+currentUID+'/title').set(prize.value);return'👑 Барон Удачи';}
-    if(prize.type==='booster'){const until=Date.now()+(prize.duration||3600000);if(currentUID)database.ref('users/'+currentUID+'/boosters/'+prize.value).set(until);return'💎 Буст активирован';}
-    if(prize.type==='badge'){if(currentUID)database.ref('users/'+currentUID+'/badge').set(prize.value);return'💠 Значок профиля';}
-    return'🎁 Приз';
+    if(prize.type==='color'){
+        const owned = getOwnedItems();
+        const hasWheelColor = owned.some(id=>id.startsWith('wheel_color_'));
+        if(hasWheelColor){
+            addCoins(5000);
+            return '🎨 Цвет уже есть → +5000 🪙';
+        }
+        const colorId = 'wheel_color_' + Date.now();
+        const colorItem = {id:colorId,icon:'🎨',name:'Редкий цвет X',desc:'Выпал из Колеса Фортуны',type:'color',rarity:'rare',price:0,value:prize.value};
+        addOwnedItem(colorId); addToInventory(colorItem);
+        const nc = {id:colorId,name:'Редкий цвет',type:'solid',value:prize.value,unlock:{level:null,wins:0}};
+        currentXColor = nc; applyXColor(nc);
+        if(currentUID) database.ref('users/'+currentUID+'/xColor').set(nc).catch(()=>{});
+        return '🎨 Редкий цвет X';
+    }
+    if(prize.type==='title'){
+        if(userTitles.includes(prize.value)){
+            const reward = Math.min(10000, 15000);
+            addCoins(reward);
+            return '👑 Барон Удачи уже есть → +'+reward+' 🪙';
+        }
+        if(currentUID){
+            database.ref('users/'+currentUID+'/titles/'+prize.value).set(true);
+            database.ref('users/'+currentUID+'/title').set(prize.value);
+        }
+        userTitles.push(prize.value);
+        return '👑 Барон Удачи';
+    }
+    if(prize.type==='booster'){
+        const duration = prize.duration || 3600000;
+        if(!currentUID) return '💎 Буст';
+        const snap = await database.ref('users/'+currentUID+'/boosters/'+prize.value).once('value');
+        const currentUntil = snap.val() || 0;
+        const now = Date.now();
+        const base = currentUntil > now ? currentUntil : now;
+        const newUntil = base + duration;
+        await database.ref('users/'+currentUID+'/boosters/'+prize.value).set(newUntil);
+        const inv = getInventory();
+        const key = 'booster_'+prize.value;
+        const existing = inv[key];
+        if(existing){
+            existing.count = (existing.count||1) + 1;
+            existing.duration = (existing.duration||duration);
+            existing.activeUntil = newUntil;
+            inv[key] = existing;
+        } else {
+            inv[key] = {id:key,icon:'💎',name:'Буст '+prize.value,desc:'Продлевается при повторном выпадении',type:'booster',rarity:'epic',price:0,value:prize.value,count:1,duration:duration,activeUntil:newUntil,purchasedAt:Date.now()};
+        }
+        setInventory(inv); syncInventoryToDB();
+        const totalMin = Math.floor((newUntil - now) / 60000);
+        const hours = Math.floor(totalMin / 60);
+        const mins = totalMin % 60;
+        return '💎 Буст продлён (+'+(hours>0?hours+'ч ':'')+mins+'м)';
+    }
+    if(prize.type==='badge'){
+        const currentBadge = currentUID ? (await database.ref('users/'+currentUID+'/badge').once('value')).val() : null;
+        if(currentBadge === prize.value){
+            const reward = Math.min(10000, prize.value === 'gold' ? 10000 : 3000);
+            addCoins(reward);
+            return '💠 Значок уже есть → +'+reward+' 🪙';
+        }
+        if(currentUID) database.ref('users/'+currentUID+'/badge').set(prize.value);
+        return '💠 Значок профиля';
+    }
+    return '🎁 Приз';
 }
 function spinWheelOnce(){if(wheelSpinning)return null;const spins=parseInt(localStorage.getItem('wheel_spins')||'0');if(spins<1){alert('❌ Нет вращений!');return null;}localStorage.setItem('wheel_spins',String(spins-1));if(currentUID)database.ref('users/'+currentUID+'/wheelSpins').set(spins-1).catch(()=>{});const prize=pickPrize();if(spins>=3){animateWheelFast(prize,spins);}else{animateWheel(prize);}return prize;}
-function animateWheel(prize){wheelSpinning=true;const display=$('wheel-display');const resultEl=$('wheel-result');$('wheel-spin-1').style.opacity='0.5';$('wheel-spin-all').style.opacity='0.5';$('wheel-spin-1').style.cursor='not-allowed';$('wheel-spin-all').style.cursor='not-allowed';resultEl.textContent='🎡 Крутится...';const visualItems=WHEEL_PRIZES.map(p=>p.name);const totalSteps=30+Math.floor(Math.random()*15);let step=0;function tick(){playSpinTick();display.textContent=visualItems[Math.floor(Math.random()*visualItems.length)];step++;let delay;if(step<totalSteps*0.5)delay=60;else if(step<totalSteps*0.75)delay=120;else if(step<totalSteps*0.9)delay=200;else delay=300;if(step>=totalSteps){display.textContent=prize.name;const result=applyPrize(prize);resultEl.innerHTML='🎉 Выпало: <b>'+result+'</b>';playWin();createConfetti();wheelSpinning=false;updateWheelUI();return;}setTimeout(tick,delay);}tick();}
-function animateWheelFast(firstPrize,totalSpins){wheelSpinning=true;const display=$('wheel-display');const resultEl=$('wheel-result');$('wheel-spin-1').style.opacity='0.5';$('wheel-spin-all').style.opacity='0.5';$('wheel-spin-1').style.cursor='not-allowed';$('wheel-spin-all').style.cursor='not-allowed';resultEl.textContent='🎰 Быстрая прокрутка...';const visualItems=WHEEL_PRIZES.map(p=>p.name);let step=0;const maxSteps=10;const interval=setInterval(()=>{display.textContent=visualItems[Math.floor(Math.random()*visualItems.length)];step++;if(step>=maxSteps){clearInterval(interval);const results={};let totalCoins=0;let jackpotCommission=0;let jackpotToPlayer=0;const nonCoinPrizes=[];function processPrize(p){if(p.type==='coins'){if(p.id==='jackpot'){const comm=Math.floor(p.value*0.01);jackpotCommission+=comm;jackpotToPlayer+=(p.value-comm);}else{totalCoins+=p.value;}}else{nonCoinPrizes.push(p);}results[p.name]=(results[p.name]||0)+1;}processPrize(firstPrize);for(let i=1;i<totalSpins;i++)processPrize(pickPrize());localStorage.setItem('wheel_spins','0');if(currentUID)database.ref('users/'+currentUID+'/wheelSpins').set(0).catch(()=>{});if(totalCoins>0)addCoins(totalCoins);if(jackpotToPlayer>0)addCoins(jackpotToPlayer);if(jackpotCommission>0){database.ref('adminEarnings/jackpotCommission').transaction(c=>(c||0)+jackpotCommission);database.ref('globalAnnouncements').push({text:'🏆 '+currentNick+' выиграл ДЖЕКПОТ в Колесе Фортуны!',fromUid:currentUID,fromNick:currentNick,time:Date.now()}).catch(()=>{});}nonCoinPrizes.forEach(p=>applyPrize(p));display.textContent='🏆';let html=`<div style="font-weight:bold;margin-bottom:6px;">🎰 Прокручено ${totalSpins} раз!</div>`;if(totalCoins>0)html+=`<div style="font-size:14px;color:#f1c40f;margin-bottom:6px;">💰 Монеты: +${totalCoins} 🪙</div>`;Object.keys(results).forEach(k=>{html+=`<div style="font-size:12px;">${k} — <b>${results[k]}x</b></div>`;});resultEl.innerHTML=html;playWin();createConfetti();wheelSpinning=false;updateWheelUI();}},80);}
-function spinWheelAll(){if(wheelSpinning)return;const spins=parseInt(localStorage.getItem('wheel_spins')||'0');if(spins<1){alert('❌ Нет вращений!');return;}wheelSpinning=true;const display=$('wheel-display');const resultEl=$('wheel-result');$('wheel-spin-1').style.opacity='0.5';$('wheel-spin-all').style.opacity='0.5';$('wheel-spin-1').style.cursor='not-allowed';$('wheel-spin-all').style.cursor='not-allowed';resultEl.textContent='🎰 Крутим '+spins+' раз...';const visualItems=WHEEL_PRIZES.map(p=>p.name);let fakeStep=0;const maxFake=Math.min(spins,30);const interval=setInterval(()=>{display.textContent=visualItems[Math.floor(Math.random()*visualItems.length)];fakeStep++;if(fakeStep>=maxFake){clearInterval(interval);const results={};let totalCoins=0;let jackpotCommission=0;let jackpotToPlayer=0;const nonCoinPrizes=[];for(let i=0;i<spins;i++){const p=pickPrize();if(p.type==='coins'){if(p.id==='jackpot'){const comm=Math.floor(p.value*0.01);jackpotCommission+=comm;jackpotToPlayer+=(p.value-comm);}else{totalCoins+=p.value;}}else{nonCoinPrizes.push(p);}results[p.name]=(results[p.name]||0)+1;}localStorage.setItem('wheel_spins','0');if(currentUID)database.ref('users/'+currentUID+'/wheelSpins').set(0).catch(()=>{});if(totalCoins>0)addCoins(totalCoins);if(jackpotToPlayer>0)addCoins(jackpotToPlayer);if(jackpotCommission>0){database.ref('adminEarnings/jackpotCommission').transaction(c=>(c||0)+jackpotCommission);database.ref('globalAnnouncements').push({text:'🏆 '+currentNick+' выиграл ДЖЕКПОТ в Колесе Фортуны!',fromUid:currentUID,fromNick:currentNick,time:Date.now()}).catch(()=>{});}nonCoinPrizes.forEach(p=>applyPrize(p));display.textContent='🏆';let html=`<div style="font-weight:bold;margin-bottom:6px;">🎰 Прокручено ${spins} раз!</div>`;if(totalCoins>0)html+=`<div style="font-size:14px;color:#f1c40f;margin-bottom:6px;">💰 Монеты: +${totalCoins} 🪙</div>`;Object.keys(results).forEach(k=>{html+=`<div style="font-size:12px;">${k} — <b>${results[k]}x</b></div>`;});resultEl.innerHTML=html;playWin();createConfetti();wheelSpinning=false;updateWheelUI();}},100);}
+function animateWheel(prize){wheelSpinning=true;const display=$('wheel-display');const resultEl=$('wheel-result');$('wheel-spin-1').style.opacity='0.5';$('wheel-spin-all').style.opacity='0.5';$('wheel-spin-1').style.cursor='not-allowed';$('wheel-spin-all').style.cursor='not-allowed';resultEl.textContent='🎡 Крутится...';const visualItems=WHEEL_PRIZES.map(p=>p.name);const totalSteps=30+Math.floor(Math.random()*15);let step=0;function tick(){playSpinTick();display.textContent=visualItems[Math.floor(Math.random()*visualItems.length)];step++;let delay;if(step<totalSteps*0.5)delay=60;else if(step<totalSteps*0.75)delay=120;else if(step<totalSteps*0.9)delay=200;else delay=300;if(step>=totalSteps){display.textContent=prize.name;applyPrize(prize).then(result=>{resultEl.innerHTML='🎉 Выпало: <b>'+result+'</b>';});playWin();createConfetti();wheelSpinning=false;updateWheelUI();return;}setTimeout(tick,delay);}tick();}
+function animateWheelFast(firstPrize,totalSpins){wheelSpinning=true;const display=$('wheel-display');const resultEl=$('wheel-result');$('wheel-spin-1').style.opacity='0.5';$('wheel-spin-all').style.opacity='0.5';$('wheel-spin-1').style.cursor='not-allowed';$('wheel-spin-all').style.cursor='not-allowed';resultEl.textContent='🎰 Быстрая прокрутка...';const visualItems=WHEEL_PRIZES.map(p=>p.name);let step=0;const maxSteps=10;const interval=setInterval(()=>{display.textContent=visualItems[Math.floor(Math.random()*visualItems.length)];step++;if(step>=maxSteps){clearInterval(interval);const results={};let totalCoins=0;let jackpotCommission=0;let jackpotToPlayer=0;const nonCoinPrizes=[];function processPrize(p){if(p.type==='coins'){if(p.id==='jackpot'){const comm=Math.floor(p.value*0.01);jackpotCommission+=comm;jackpotToPlayer+=(p.value-comm);}else{totalCoins+=p.value;}}else{nonCoinPrizes.push(p);}results[p.name]=(results[p.name]||0)+1;}processPrize(firstPrize);for(let i=1;i<totalSpins;i++)processPrize(pickPrize());localStorage.setItem('wheel_spins','0');if(currentUID)database.ref('users/'+currentUID+'/wheelSpins').set(0).catch(()=>{});if(totalCoins>0)addCoins(totalCoins);if(jackpotToPlayer>0)addCoins(jackpotToPlayer);if(jackpotCommission>0){database.ref('adminEarnings/jackpotCommission').transaction(c=>(c||0)+jackpotCommission);database.ref('globalAnnouncements').push({text:'🏆 '+currentNick+' выиграл ДЖЕКПОТ в Колесе Фортуны!',fromUid:currentUID,fromNick:currentNick,time:Date.now()}).catch(()=>{});}Promise.all(nonCoinPrizes.map(p=>applyPrize(p)));display.textContent='🏆';let html=`<div style="font-weight:bold;margin-bottom:6px;">🎰 Прокручено ${totalSpins} раз!</div>`;if(totalCoins>0)html+=`<div style="font-size:14px;color:#f1c40f;margin-bottom:6px;">💰 Монеты: +${totalCoins} 🪙</div>`;Object.keys(results).forEach(k=>{html+=`<div style="font-size:12px;">${k} — <b>${results[k]}x</b></div>`;});resultEl.innerHTML=html;playWin();createConfetti();wheelSpinning=false;updateWheelUI();}},80);}
+function spinWheelAll(){if(wheelSpinning)return;const spins=parseInt(localStorage.getItem('wheel_spins')||'0');if(spins<1){alert('❌ Нет вращений!');return;}wheelSpinning=true;const display=$('wheel-display');const resultEl=$('wheel-result');$('wheel-spin-1').style.opacity='0.5';$('wheel-spin-all').style.opacity='0.5';$('wheel-spin-1').style.cursor='not-allowed';$('wheel-spin-all').style.cursor='not-allowed';resultEl.textContent='🎰 Крутим '+spins+' раз...';const visualItems=WHEEL_PRIZES.map(p=>p.name);let fakeStep=0;const maxFake=Math.min(spins,30);const interval=setInterval(()=>{display.textContent=visualItems[Math.floor(Math.random()*visualItems.length)];fakeStep++;if(fakeStep>=maxFake){clearInterval(interval);const results={};let totalCoins=0;let jackpotCommission=0;let jackpotToPlayer=0;const nonCoinPrizes=[];for(let i=0;i<spins;i++){const p=pickPrize();if(p.type==='coins'){if(p.id==='jackpot'){const comm=Math.floor(p.value*0.01);jackpotCommission+=comm;jackpotToPlayer+=(p.value-comm);}else{totalCoins+=p.value;}}else{nonCoinPrizes.push(p);}results[p.name]=(results[p.name]||0)+1;}localStorage.setItem('wheel_spins','0');if(currentUID)database.ref('users/'+currentUID+'/wheelSpins').set(0).catch(()=>{});if(totalCoins>0)addCoins(totalCoins);if(jackpotToPlayer>0)addCoins(jackpotToPlayer);if(jackpotCommission>0){database.ref('adminEarnings/jackpotCommission').transaction(c=>(c||0)+jackpotCommission);database.ref('globalAnnouncements').push({text:'🏆 '+currentNick+' выиграл ДЖЕКПОТ в Колесе Фортуны!',fromUid:currentUID,fromNick:currentNick,time:Date.now()}).catch(()=>{});}Promise.all(nonCoinPrizes.map(p=>applyPrize(p)));display.textContent='🏆';let html=`<div style="font-weight:bold;margin-bottom:6px;">🎰 Прокручено ${spins} раз!</div>`;if(totalCoins>0)html+=`<div style="font-size:14px;color:#f1c40f;margin-bottom:6px;">💰 Монеты: +${totalCoins} 🪙</div>`;Object.keys(results).forEach(k=>{html+=`<div style="font-size:12px;">${k} — <b>${results[k]}x</b></div>`;});resultEl.innerHTML=html;playWin();createConfetti();wheelSpinning=false;updateWheelUI();}},100);}
 
-/* ГЛОБАЛЬНЫЕ УВЕДОМЛЕНИЯ */
+/* УВЕДОМЛЕНИЯ */
 function showGlobalAnnouncement(text){const el=document.createElement('div');el.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff006e,#fb5607,#ffbe0b);color:#fff;padding:14px 22px;border-radius:14px;font-weight:900;font-size:14px;box-shadow:0 8px 30px rgba(255,0,110,.6);text-align:center;z-index:99999;max-width:90vw;animation:annIn .4s ease;';el.textContent=text;document.body.appendChild(el);setTimeout(()=>{el.style.transition='opacity .5s, transform .5s';el.style.opacity='0';el.style.transform='translate(-50%,-20px)';setTimeout(()=>el.remove(),500);},6000);}
 const styleAnn=document.createElement('style');styleAnn.textContent='@keyframes annIn{from{opacity:0;transform:translate(-50%,-30px) scale(.9);}to{opacity:1;transform:translate(-50%,0) scale(1);}}';document.head.appendChild(styleAnn);
+function showBoosterExpired(name){const el=document.createElement('div');el.style.cssText='position:fixed;top:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;padding:12px 20px;border-radius:12px;font-weight:bold;font-size:14px;box-shadow:0 8px 25px rgba(231,76,60,.5);z-index:99999;text-align:center;max-width:90vw;animation:boostIn .4s ease;';el.innerHTML='💎 '+(name||'Буст')+' истёк!';document.body.appendChild(el);playLose();setTimeout(()=>{el.style.transition='opacity .5s, transform .5s';el.style.opacity='0';el.style.transform='translate(-50%,-20px)';setTimeout(()=>el.remove(),500);},5000);}
+const styleBoost=document.createElement('style');styleBoost.textContent='@keyframes boostIn{from{opacity:0;transform:translate(-50%,-30px) scale(.9);}to{opacity:1;transform:translate(-50%,0) scale(1);}}';document.head.appendChild(styleBoost);
+function showAdminCommissionNotify(text){const el=document.createElement('div');el.style.cssText='position:fixed;top:120px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;padding:12px 20px;border-radius:12px;font-weight:bold;font-size:13px;box-shadow:0 8px 25px rgba(46,204,113,.5);z-index:99999;text-align:center;max-width:90vw;animation:boostIn .4s ease;';el.innerHTML='💰 '+text;document.body.appendChild(el);playBonusSound();setTimeout(()=>{el.style.transition='opacity .5s, transform .5s';el.style.opacity='0';el.style.transform='translate(-50%,-20px)';setTimeout(()=>el.remove(),500);},6000);}
+setInterval(()=>{if(!currentUID)return;const inv=getInventory();const now=Date.now();let changed=false;Object.keys(inv).forEach(k=>{const item=inv[k];if(item.type==='booster' && item.activeUntil && item.activeUntil<now){showBoosterExpired(item.name);delete inv[k];changed=true;}});if(changed){setInventory(inv);syncInventoryToDB();}},60000);
 
 /* УВЕДОМЛЕНИЕ АДМИНУ О КОМИССИЯХ */
 function checkAdminEarnings(){if(!isAdmin)return;database.ref('adminEarnings').once('value').then(s=>{const data=s.val()||{};const total=(data.clanCommission||0)+(data.wheelCommission||0)+(data.jackpotCommission||0);const notify=$('admin-notify');if(!notify)return;if(total>=20000 && !adminNotifyShown){adminNotifyShown=true;notify.style.display='block';notify.innerHTML=`💰 У вас накопилось <b>${total} 🪙</b> с комиссий!<br><span style="font-size:12px;">Нажмите, чтобы собрать</span>`;notify.onclick=()=>{notify.style.display='none';collectCommission();};playBonusSound();}else if(total<20000){adminNotifyShown=false;notify.style.display='none';}});}
@@ -767,6 +870,10 @@ auth.onAuthStateChanged(user=>{
             loadBcstincnChampions();
             setTimeout(checkAdminEarnings,2000);
             setInterval(checkAdminEarnings,60000);
+            if(window.adminNotifListener){database.ref('adminNotifications').off('child_added',window.adminNotifListener);}
+            window.adminNotifListener=database.ref('adminNotifications').limitToLast(1).on('child_added',snap=>{if(!isAdmin)return;const n=snap.val();if(!n||!n.text)return;if(n.fromUid===currentUID)return;showAdminCommissionNotify(n.text);});
+            if(window.globalAnnListener){database.ref('globalAnnouncements').off('child_added',window.globalAnnListener);}
+            window.globalAnnListener=database.ref('globalAnnouncements').limitToLast(1).on('child_added',snap=>{const a=snap.val();if(!a||!a.text)return;if(a.fromUid===currentUID)return;showGlobalAnnouncement(a.text);});
         }).catch(()=>playerNameEl.textContent='Игрок');
     } else {
         nickClose.disabled=true;nickClose.style.opacity='0.5';nickClose.style.cursor='not-allowed';
@@ -857,4 +964,4 @@ createBoard();updateUI();
 const coinEl=$('coin-count');if(coinEl)coinEl.textContent=getCoins();
 </script>
 </body>
-</html>
+    </html>    
