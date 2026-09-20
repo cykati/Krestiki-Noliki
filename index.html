@@ -1675,7 +1675,7 @@ $('set-admin-panel').addEventListener('click',()=>{settingsModal.classList.remov
 $('admin-panel-close').addEventListener('click',()=>$('admin-panel-modal').classList.remove('active'));
 $('admin-all-players').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');$('all-players-modal').classList.add('active');loadAllPlayers();});
 $('admin-give-titles').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');showGiveTitleModal();});
-$('admin-title-history').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');alert('Модуль в разработке');});
+$('admin-title-history').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');showTitleHistory();});
 $('admin-bans').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');alert('Модуль в разработке');});
 
 /* ============================================================
@@ -1729,10 +1729,62 @@ function showGiveTitleModal(){
             if(!selectedUid){alert('Выберите игрока');return;}
             const titleKey = $('give-title-select').value;
             database.ref('users/'+selectedUid+'/titles/'+titleKey).set(true).then(()=>{
+                database.ref('titleHistory/'+selectedUid).push({
+                    title: titleKey,
+                    titleName: TITLES[titleKey].name,
+                    givenBy: currentNick,
+                    givenByUid: currentUID,
+                    targetNick: selectedNick,
+                    time: Date.now()
+                });
                 alert('✅ Титул выдан игроку '+selectedNick);
                 m.remove();
             }).catch(err=>alert('Ошибка: '+err.message));
         });
+    });
+}
+
+/* ============================================================
+   ADMIN — история выдач
+   ============================================================ */
+function showTitleHistory(){
+    const existing = $('title-history-modal');
+    if(existing) existing.remove();
+    const m = document.createElement('div');
+    m.id = 'title-history-modal';
+    m.className = 'modal-overlay active';
+    m.innerHTML = `<div class="modal" style="max-width:95vw;min-width:320px;text-align:left;max-height:85vh;overflow-y:auto;">
+        <h2 style="text-align:center;">📜 История выдач титулов</h2>
+        <div id="title-history-content">Загрузка...</div>
+        <button id="title-history-close" style="background:#555;margin-top:12px;">Закрыть</button>
+    </div>`;
+    document.body.appendChild(m);
+    $('title-history-close').addEventListener('click',()=>m.remove());
+
+    database.ref('titleHistory').once('value').then(s=>{
+        const data = s.val()||{};
+        const all = [];
+        Object.keys(data).forEach(uid=>{
+            const entries = data[uid];
+            Object.keys(entries).forEach(key=>{
+                const e = entries[key];
+                all.push({uid, ...e});
+            });
+        });
+        all.sort((a,b)=>(b.time||0)-(a.time||0));
+        const cont = $('title-history-content');
+        if(all.length===0){cont.innerHTML='<div style="text-align:center;padding:20px;opacity:0.7;">Пока нет выдач</div>';return;}
+        let html = '';
+        all.forEach(e=>{
+            const date = new Date(e.time).toLocaleString('ru-RU');
+            html += `<div style="padding:8px;margin-bottom:6px;background:rgba(0,0,0,.2);border-radius:8px;font-size:12px;">
+                <div><b>${e.titleName||e.title}</b></div>
+                <div style="opacity:0.8;">Кому: <b>${e.targetNick||e.uid}</b></div>
+                <div style="opacity:0.8;">Кем: ${e.givenBy||'—'}</div>
+                <div style="opacity:0.6;font-size:10px;">${date}</div>
+            </div>`;
+        });
+        cont.innerHTML = html;
     });
 }
 
@@ -1744,4 +1796,4 @@ createBoard();updateUI();
 const coinEl = $('coin-count');if(coinEl) coinEl.textContent = getCoins();
 </script>
 </body>
-    </html>
+                                                </html>
