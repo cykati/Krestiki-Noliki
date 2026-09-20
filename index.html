@@ -318,6 +318,8 @@ h1{margin-bottom:15px;color:#2b5b8c;font-size:24px;}
 
 <div class="modal-overlay" id="clan-view-modal"><div class="modal" style="max-width:95vw;min-width:340px;text-align:left;"><div id="clan-view-content"></div><button id="clan-view-close" style="background:#555;margin-top:12px;">Закрыть</button></div></div>
 
+<div class="modal-overlay" id="clan-requests-modal"><div class="modal" style="max-width:95vw;min-width:340px;text-align:left;"><h2 style="text-align:center;">📩 Заявки в клан</h2><div id="clan-requests-content"></div><button id="clan-requests-close" style="background:#555;margin-top:12px;">Закрыть</button></div></div>
+
 <div class="modal-overlay" id="tournaments-modal"><div class="modal" style="max-width:95vw;min-width:340px;"><h2 style="text-align:center;">🏆 Турниры</h2><div style="text-align:center;padding:20px;opacity:0.7;">Турниры скоро появятся!</div><button id="tournaments-close" style="background:#555;margin-top:12px;">Закрыть</button></div></div>
 
 <div style="text-align:center;margin-top:30px;margin-bottom:30px;width:100%;max-width:360px;">
@@ -1065,8 +1067,58 @@ function renderClanProfile(container, clan, isMember){
 }
 function requestJoinClan(clanId, leaderNick){
     if(myClanId){alert('Вы уже в клане');return;}
-    database.ref('clanInvites/'+leaderNick.toLowerCase()).push({clanId,from:currentNick,fromUid:currentUID,createdAt:Date.now()}).then(()=>{
+    database.ref('clanRequests/'+clanId+'/'+currentUID).set({
+        nick: currentNick,
+        uid: currentUID,
+        avatar: currentAvatar,
+        createdAt: Date.now()
+    }).then(()=>{
         alert('✅ Заявка отправлена лидеру!');
+    }).catch(err=>alert('Ошибка: '+err.message));
+}
+function openClanRequests(){
+    if(!myClanId){alert('Вы не в клане');return;}
+    if(myClanData && myClanData.leaderUid !== currentUID){
+        alert('Только глава может смотреть заявки');
+        return;
+    }
+    $('clan-requests-modal').classList.add('active');
+    database.ref('clanRequests/'+myClanId).on('value', s=>{
+        const data = s.val()||{};
+        const arr = Object.values(data);
+        const content = $('clan-requests-content');
+        if(arr.length===0){
+            content.innerHTML = '<div style="text-align:center;padding:20px;opacity:0.7;">Заявок пока нет</div>';
+            return;
+        }
+        let html = '';
+        arr.forEach(r=>{
+            const av = r.avatar ? '<span style="font-size:22px;">'+r.avatar+'</span>' : '👤';
+            html += `<div class="clan-member-row"><div class="member-avatar">${av}</div><div class="member-info"><div class="member-name">${r.nick}</div></div><button class="accept-req" data-uid="${r.uid}" style="background:#2ecc71;color:#fff;border:none;padding:6px 10px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:12px;">✅</button><button class="reject-req" data-uid="${r.uid}" style="background:#e74c3c;color:#fff;border:none;padding:6px 10px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:12px;margin-left:4px;">❌</button></div>`;
+        });
+        content.innerHTML = html;
+        content.querySelectorAll('.accept-req').forEach(b=>b.addEventListener('click',()=>acceptClanRequest(b.dataset.uid)));
+        content.querySelectorAll('.reject-req').forEach(b=>b.addEventListener('click',()=>rejectClanRequest(b.dataset.uid)));
+    });
+}
+function acceptClanRequest(uid){
+    database.ref('clanRequests/'+myClanId+'/'+uid).once('value').then(s=>{
+        const req = s.val();
+        if(!req) return;
+        const updates = {};
+        updates['clans/'+myClanId+'/members/'+uid] = {nick:req.nick,uid:req.uid,role:'member',joinedAt:Date.now(),wins:0,avatar:req.avatar||'👤'};
+        updates['clans/'+myClanId+'/memberCount'] = ((myClanData&&myClanData.memberCount)||0)+1;
+        updates['users/'+uid+'/clanId'] = myClanId;
+        updates['clanRequests/'+myClanId+'/'+uid] = null;
+        database.ref().update(updates).then(()=>{
+            alert('✅ '+req.nick+' принят в клан!');
+        });
+    });
+}
+function rejectClanRequest(uid){
+    if(!confirm('Отклонить заявку?')) return;
+    database.ref('clanRequests/'+myClanId+'/'+uid).remove().then(()=>{
+        alert('❌ Заявка отклонена');
     });
 }
 function renderMyClan(container){
@@ -1080,7 +1132,7 @@ function renderMyClan(container){
         const av = clan.avatar ? '<span style="font-size:36px;">'+clan.avatar+'</span>' : '⚔️';
         const clanBcstincn = getBcstincnClanBadgeHTML(clan.id);
         let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}${clanBcstincn}</div><div class="clan-profile-sub">🏷️ [${clan.tag}]</div><div class="clan-profile-sub">👑 ${clan.leaderNick}</div></div></div>`;
-        html += `<div class="clan-tabs"><button data-clan-subtab="members" class="active">👥 Участники</button><button data-clan-subtab="chat">💬 Чат</button></div><div id="clan-subcontent"></div>`;
+        html += `<div class="clan-tabs"><button data-clan-subtab="members" class="active">👥 Участники</button><button data-clan-subtab="chat">💬 Чат</button><button id="clan-requests-btn">📩 Заявки</button></div><div id="clan-subcontent"></div>`;
         if(clan.leaderUid !== currentUID) html += `<button id="clan-leave-btn" style="width:100%;margin-top:10px;padding:10px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-size:13px;">🚪 Покинуть клан</button>`;
         container.innerHTML = html;
         renderClanSubTab('members', clan);
@@ -1091,6 +1143,12 @@ function renderMyClan(container){
                 renderClanSubTab(btn.dataset.clanSubtab, clan);
             });
         });
+        const reqBtn = container.querySelector('#clan-requests-btn');
+        if(reqBtn && clan.leaderUid === currentUID){
+            reqBtn.addEventListener('click', openClanRequests);
+        } else if(reqBtn){
+            reqBtn.style.display = 'none';
+        }
         const lv = container.querySelector('#clan-leave-btn');
         if(lv) lv.addEventListener('click',()=>leaveClan(clan.id));
     });
@@ -1515,6 +1573,10 @@ $('leaders-close').addEventListener('click',()=>$('leaders-modal').classList.rem
 $('all-players-close').addEventListener('click',()=>$('all-players-modal').classList.remove('active'));
 $('tournaments-close').addEventListener('click',()=>$('tournaments-modal').classList.remove('active'));
 $('clans-close').addEventListener('click',()=>{$('clans-modal').classList.remove('active');cleanupClanListeners();});
+$('clan-requests-close').addEventListener('click',()=>{
+    $('clan-requests-modal').classList.remove('active');
+    if(myClanId) database.ref('clanRequests/'+myClanId).off();
+});
 $('quests-close').addEventListener('click',()=>$('quests-modal').classList.remove('active'));
 document.querySelectorAll('.quest-tabs button').forEach(btn=>{
     btn.addEventListener('click',()=>{
