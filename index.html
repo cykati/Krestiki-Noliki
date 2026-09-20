@@ -1121,6 +1121,30 @@ function rejectClanRequest(uid){
         alert('❌ Заявка отклонена');
     });
 }
+function changeClanRole(uid, role){
+    if(!myClanId || !myClanData || myClanData.leaderUid !== currentUID){
+        alert('Только глава может менять роли');
+        return;
+    }
+    database.ref('clans/'+myClanId+'/members/'+uid+'/role').set(role).then(()=>{
+        alert('✅ Роль изменена');
+    }).catch(err=>alert('Ошибка: '+err.message));
+}
+function kickFromClan(uid){
+    if(!myClanId || !myClanData || myClanData.leaderUid !== currentUID){
+        alert('Только глава может кикать');
+        return;
+    }
+    const nick = (myClanData.members[uid] && myClanData.members[uid].nick) || 'игрока';
+    if(!confirm('Кикнуть '+nick+' из клана?')) return;
+    const updates = {};
+    updates['clans/'+myClanId+'/members/'+uid] = null;
+    updates['clans/'+myClanId+'/memberCount'] = Math.max(0, ((myClanData&&myClanData.memberCount)||1)-1);
+    updates['users/'+uid+'/clanId'] = null;
+    database.ref().update(updates).then(()=>{
+        alert('✅ Игрок кикнут');
+    });
+}
 function renderMyClan(container){
     if(!myClanId){container.innerHTML='<div style="text-align:center;padding:20px;">Вы не в клане</div>';return;}
     container.innerHTML = 'Загрузка...';
@@ -1129,6 +1153,8 @@ function renderMyClan(container){
         const clan = s.val(); if(!clan) return;
         myClanData = clan;
         applyTitleToNick();
+        const subContent = $('clan-subcontent');
+        if(subContent && document.querySelector('[data-clan-subtab="chat"].active')) return;
         const av = clan.avatar ? '<span style="font-size:36px;">'+clan.avatar+'</span>' : '⚔️';
         const clanBcstincn = getBcstincnClanBadgeHTML(clan.id);
         let html = `<div class="clan-profile-header"><div class="clan-profile-avatar">${av}</div><div style="flex:1;"><div class="clan-profile-name">${clan.name}${clanBcstincn}</div><div class="clan-profile-sub">🏷️ [${clan.tag}]</div><div class="clan-profile-sub">👑 ${clan.leaderNick}</div></div></div>`;
@@ -1162,9 +1188,26 @@ function renderClanSubTab(tab, clan){
             const roleInfo = getRoleInfo(m.role);
             const av = m.avatar ? '<span style="font-size:18px;">'+m.avatar+'</span>' : '👤';
             const bcstincnBadge = getBcstincnBadgeHTML(m.uid);
-            html += `<div class="clan-member-row"><div class="member-avatar">${av}</div><div class="member-info"><div class="member-name">${m.nick}${bcstincnBadge} <span class="member-role ${roleInfo.cssClass}">${roleInfo.name}</span></div></div></div>`;
+            const isLeader = myClanData && myClanData.leaderUid === currentUID;
+            const isSelf = m.uid === currentUID;
+            let controls = '';
+            if(isLeader && !isSelf){
+                controls = `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;">
+                    <button class="clan-role-btn" data-uid="${m.uid}" data-role="vice" style="background:#e74c3c;color:#fff;border:none;padding:4px 8px;border-radius:5px;font-size:10px;cursor:pointer;">🥈 Вице</button>
+                    <button class="clan-role-btn" data-uid="${m.uid}" data-role="officer" style="background:#3498db;color:#fff;border:none;padding:4px 8px;border-radius:5px;font-size:10px;cursor:pointer;">⚔️ Офицер</button>
+                    <button class="clan-role-btn" data-uid="${m.uid}" data-role="member" style="background:#95a5a6;color:#fff;border:none;padding:4px 8px;border-radius:5px;font-size:10px;cursor:pointer;">👤 Участник</button>
+                    <button class="clan-kick-btn" data-uid="${m.uid}" style="background:#8e44ad;color:#fff;border:none;padding:4px 8px;border-radius:5px;font-size:10px;cursor:pointer;">🚪 Кик</button>
+                </div>`;
+            }
+            html += `<div class="clan-member-row" style="flex-direction:column;align-items:flex-start;"><div style="display:flex;align-items:center;gap:8px;width:100%;"><div class="member-avatar">${av}</div><div class="member-info"><div class="member-name">${m.nick}${bcstincnBadge} <span class="member-role ${roleInfo.cssClass}">${roleInfo.name}</span></div></div></div>${controls}</div>`;
         });
         sc.innerHTML = html;
+        sc.querySelectorAll('.clan-role-btn').forEach(btn=>{
+            btn.addEventListener('click',()=>changeClanRole(btn.dataset.uid, btn.dataset.role));
+        });
+        sc.querySelectorAll('.clan-kick-btn').forEach(btn=>{
+            btn.addEventListener('click',()=>kickFromClan(btn.dataset.uid));
+        });
     }
     else if(tab==='chat'){
         sc.innerHTML = `<div class="clan-chat"><div class="clan-chat-messages" id="clan-chat-messages">Загрузка...</div><div class="clan-chat-input"><input type="text" id="clan-chat-input" placeholder="Сообщение..." maxlength="200"><button id="clan-chat-send">📨</button></div></div>`;
@@ -1613,9 +1656,67 @@ $('mode-friend').addEventListener('click',()=>{vsBot=false;$('mode-modal').class
 $('set-admin-panel').addEventListener('click',()=>{settingsModal.classList.remove('active');$('admin-panel-modal').classList.add('active');});
 $('admin-panel-close').addEventListener('click',()=>$('admin-panel-modal').classList.remove('active'));
 $('admin-all-players').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');$('all-players-modal').classList.add('active');loadAllPlayers();});
-$('admin-give-titles').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');alert('Откройте титул игрока в списке');});
+$('admin-give-titles').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');showGiveTitleModal();});
 $('admin-title-history').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');alert('Модуль в разработке');});
 $('admin-bans').addEventListener('click',()=>{$('admin-panel-modal').classList.remove('active');alert('Модуль в разработке');});
+
+/* ============================================================
+   ADMIN — выдача титула (выбор игрока из списка)
+   ============================================================ */
+function showGiveTitleModal(){
+    const existing = $('give-title-modal');
+    if(existing) existing.remove();
+    const m = document.createElement('div');
+    m.id = 'give-title-modal';
+    m.className = 'modal-overlay active';
+    m.innerHTML = `<div class="modal" style="max-width:95vw;min-width:320px;text-align:left;max-height:85vh;overflow-y:auto;">
+        <h2 style="text-align:center;">🎖️ Выдать титул</h2>
+        <div id="give-title-players" style="max-height:180px;overflow-y:auto;margin-bottom:10px;">Загрузка игроков...</div>
+        <label style="font-size:12px;font-weight:bold;color:#f1c40f;">Титул</label>
+        <select id="give-title-select" style="width:100%;padding:8px 12px;border-radius:8px;border:2px solid var(--bg);background:var(--bg);color:var(--text);font-size:13px;margin-bottom:12px;margin-top:4px;">
+            ${Object.keys(TITLES).map(k=>'<option value="'+k+'">'+TITLES[k].name+'</option>').join('')}
+        </select>
+        <button id="give-title-confirm" style="background:#2ecc71;">✅ Выдать</button>
+        <button id="give-title-close" style="background:#555;">Закрыть</button>
+    </div>`;
+    document.body.appendChild(m);
+    $('give-title-close').addEventListener('click',()=>m.remove());
+
+    // загрузка игроков
+    database.ref('users').once('value').then(s=>{
+        const users = s.val()||{};
+        const list = Object.values(users).filter(u=>u.nick);
+        const cont = $('give-title-players');
+        if(list.length===0){cont.innerHTML='<div style="opacity:0.7;">Нет игроков</div>';return;}
+        let html = '';
+        list.forEach(u=>{
+            const av = u.avatar ? '<span style="font-size:18px;">'+u.avatar+'</span>' : '👤';
+            html += `<div class="clan-member-row" data-uid="${u.uid||Object.keys(users).find(k=>users[k]===u)}" style="cursor:pointer;">
+                <div class="member-avatar">${av}</div>
+                <div class="member-info"><div class="member-name">${u.nick}</div></div>
+            </div>`;
+        });
+        cont.innerHTML = html;
+        let selectedUid = null;
+        let selectedNick = '';
+        cont.querySelectorAll('.clan-member-row').forEach(row=>{
+            row.addEventListener('click',()=>{
+                cont.querySelectorAll('.clan-member-row').forEach(r=>r.style.borderColor='transparent');
+                row.style.borderColor = '#2ecc71';
+                selectedUid = row.dataset.uid;
+                selectedNick = row.querySelector('.member-name').textContent;
+            });
+        });
+        $('give-title-confirm').addEventListener('click',()=>{
+            if(!selectedUid){alert('Выберите игрока');return;}
+            const titleKey = $('give-title-select').value;
+            database.ref('users/'+selectedUid+'/titles/'+titleKey).set(true).then(()=>{
+                alert('✅ Титул выдан игроку '+selectedNick);
+                m.remove();
+            }).catch(err=>alert('Ошибка: '+err.message));
+        });
+    });
+}
 
 /* ============================================================
    INIT
@@ -1625,4 +1726,4 @@ createBoard();updateUI();
 const coinEl = $('coin-count');if(coinEl) coinEl.textContent = getCoins();
 </script>
 </body>
-    </html>
+                                                                                                                                                                                                                          </html>
